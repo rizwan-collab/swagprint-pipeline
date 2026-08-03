@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SwagPrint Sales Pipeline</title>
+<!-- v16 | auto-deploy active -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234f46e5'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='system-ui,sans-serif' font-size='20' font-weight='700' fill='white'%3ES%3C/text%3E%3C/svg%3E">
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -135,7 +136,7 @@
   .card-detail-val a:hover { text-decoration: underline; }
   .card-notes-full { font-size: 11px; color: var(--text3); font-style: italic; line-height: 1.4; margin-bottom: 6px; }
 
-  /* CARD ACTIONS — hover when collapsed, always visible when expanded */
+  /* CARD ACTIONS â hover when collapsed, always visible when expanded */
   .card-actions { display: none; gap: 4px; margin-top: 8px; }
   .card:hover .card-actions { display: flex; }
   .card.expanded .card-actions { display: flex; position: static; }
@@ -168,7 +169,7 @@
   .panel-list { flex: 1; overflow-y: auto; padding: 8px; display: flex; flex-direction: column; gap: 6px; }
   .panel-list::-webkit-scrollbar { width: 4px; }
   .panel-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-  /* ─── ACTIVITY LOG ───────────────────────────────────────────────────────── */
+  /* âââ ACTIVITY LOG âââââââââââââââââââââââââââââââââââââââââââââââââââââââââ */
   .act-section { border-top: 1px solid var(--border); margin-top: 8px; padding-top: 8px; }
   .act-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
   .act-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--text3); }
@@ -188,7 +189,7 @@
   .act-type-btn { flex: 1; padding: 8px 4px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface2); color: var(--text3); font-size: 12px; font-weight: 600; cursor: pointer; transition: all .15s; }
   .act-type-btn.active { border-color: var(--accent); background: rgba(99,102,241,.12); color: var(--accent); }
   .act-type-btn:hover:not(.active) { border-color: var(--text3); color: var(--text); }
-  /* ─── ADD STAGE COLUMN ───────────────────────────────────────────────────── */
+  /* âââ ADD STAGE COLUMN âââââââââââââââââââââââââââââââââââââââââââââââââââââ */
   .add-stage-col { width: 180px; min-width: 160px; border: 2px dashed var(--border); border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text3); transition: all .15s; flex-shrink: 0; margin: 0 4px; }
   .add-stage-col:hover { border-color: var(--accent); color: var(--accent); background: rgba(99,102,241,.04); }
   .add-stage-inner { display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: none; }
@@ -319,7 +320,7 @@
     .nav { gap: 8px; padding: 10px 12px; }
   }
 
-  /* ─── LOGIN OVERLAY ──────────────────────────────────────────────────────── */
+  /* âââ LOGIN OVERLAY ââââââââââââââââââââââââââââââââââââââââââââââââââââââââ */
   #login-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; }
   .login-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 40px 36px; width: 380px; box-shadow: 0 8px 40px rgba(0,0,0,.12); }
   .login-logo { font-size: 22px; font-weight: 700; color: var(--accent2); text-align: center; margin-bottom: 4px; }
@@ -347,7 +348,7 @@
   .login-submit { width: 100%; margin-top: 16px; padding: 12px; font-size: 14px; font-weight: 600; }
   .login-no-users { text-align: center; color: var(--text3); font-size: 13px; padding: 20px 0; line-height: 1.6; }
 
-  /* ─── USER MANAGEMENT MODAL ──────────────────────────────────────────────── */
+  /* âââ USER MANAGEMENT MODAL ââââââââââââââââââââââââââââââââââââââââââââââââ */
   .user-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
   .user-row:last-child { border-bottom: none; }
   .user-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -365,13 +366,13 @@
   .um-field input, .um-field select { padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: 13px; outline: none; }
   .um-field input:focus, .um-field select:focus { border-color: var(--accent); }
 
-  /* ─── NAV USER DISPLAY ───────────────────────────────────────────────────── */
+  /* âââ NAV USER DISPLAY âââââââââââââââââââââââââââââââââââââââââââââââââââââ */
   .nav-user { display: inline-flex; align-items: center; gap: 7px; padding: 5px 10px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface2); font-size: 12px; color: var(--text2); cursor: default; white-space: nowrap; }
   .nav-user-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
   .nav-user.admin-user { border-color: rgba(99,102,241,.3); background: rgba(99,102,241,.06); color: var(--accent2); }
   .nav-user.admin-user .nav-user-dot { background: var(--accent); }
 
-  /* ─── STATS BAR COLLAPSE ─────────────────────────────────────────────────── */
+  /* âââ STATS BAR COLLAPSE âââââââââââââââââââââââââââââââââââââââââââââââââââ */
   .stats-bar { position:relative; }
   .stats-toggle { position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--text3); cursor:pointer; font-size:14px; padding:4px 6px; border-radius:6px; transition:all .15s; line-height:1; z-index:1; }
   .stats-toggle:hover { background:var(--surface2); color:var(--text); }
@@ -379,7 +380,7 @@
   .stats-bar.collapsed .stat-divider { display:none; }
   .stats-bar.collapsed { padding:6px 20px; min-height:0; }
   .stats-bar.collapsed .stats-toggle { position:static; transform:none; }
-  /* ── MULTI-CONTACT ROWS ─────────────────────────────────────── */
+  /* ââ MULTI-CONTACT ROWS âââââââââââââââââââââââââââââââââââââââ */
   .contact-row { display:flex; gap:6px; align-items:center; margin-bottom:5px; }
   .contact-row input { flex:1; padding:8px 10px; border-radius:8px; border:1px solid var(--border); background:var(--surface2); color:var(--text); font-size:13px; outline:none; transition:border-color .15s; }
   .contact-row input:focus { border-color:var(--accent); }
@@ -395,13 +396,13 @@
 <div id="login-overlay">
   <div class="login-card">
     <div class="login-logo">SwagPrint</div>
-    <div class="login-tagline">Sales Pipeline — sign in to continue</div>
+    <div class="login-tagline">Sales Pipeline â sign in to continue</div>
 
     <!-- Step 1: Pick a user -->
     <div class="login-step active" id="login-step-1">
       <div class="login-step-title">Select your account</div>
       <div class="login-users" id="login-user-list">
-        <div class="login-no-users">Loading users…</div>
+        <div class="login-no-users">Loading usersâ¦</div>
       </div>
     </div>
 
@@ -411,7 +412,7 @@
       <div class="login-who" id="login-who-name"></div>
       <div class="login-who-role" id="login-who-role"></div>
       <div class="login-pin-label">Enter your PIN</div>
-      <input id="login-pin-input" type="password" inputmode="numeric" maxlength="8" placeholder="••••" autocomplete="off" oninput="loginPinInput()" onkeydown="if(event.key==='Enter')attemptLogin()">
+      <input id="login-pin-input" type="password" inputmode="numeric" maxlength="8" placeholder="â¢â¢â¢â¢" autocomplete="off" oninput="loginPinInput()" onkeydown="if(event.key==='Enter')attemptLogin()">
       <div class="login-error" id="login-error"></div>
       <button class="btn btn-primary login-submit" onclick="attemptLogin()">Sign In</button>
     </div>
@@ -435,8 +436,8 @@
             <input id="um-name" type="text" placeholder="e.g. Alex" maxlength="40">
           </div>
           <div class="um-field" style="max-width:120px">
-            <label>PIN (4–8 digits)</label>
-            <input id="um-pin" type="password" inputmode="numeric" placeholder="••••" maxlength="8">
+            <label>PIN (4â8 digits)</label>
+            <input id="um-pin" type="password" inputmode="numeric" placeholder="â¢â¢â¢â¢" maxlength="8">
           </div>
           <div class="um-field" style="max-width:110px">
             <label>Role</label>
@@ -460,7 +461,7 @@
 <nav class="nav">
   <div class="nav-logo">SwagPrint <span>Pipeline</span></div>
   <div class="search-wrap">
-    <input id="search-input" type="text" placeholder="Search deals… (CmdK)" autocomplete="off">
+    <input id="search-input" type="text" placeholder="Search dealsâ¦ (CmdK)" autocomplete="off">
  </div>
   <div class="nav-actions">
     <button class="btn btn-ghost" id="nav-manage-btn" onclick="openUmModal()" style="display:none" title="Manage team users">Users</button>
@@ -484,9 +485,9 @@
   <div class="stat-divider"></div>
   <div class="stat"><span class="stat-label">Won (30d)</span><span class="stat-value green" id="st-won">$0</span></div>
   <div class="stat-divider"></div>
-  <div class="stat" title="Average days from open to close (all won deals)"><span class="stat-label">Avg Close</span><span class="stat-value" id="st-avgclose">—</span></div>
+  <div class="stat" title="Average days from open to close (all won deals)"><span class="stat-label">Avg Close</span><span class="stat-value" id="st-avgclose">â</span></div>
   <div class="stat-divider"></div>
-  <div class="stat"><span class="stat-label">Close Rate</span><span class="stat-value" id="st-cr">—</span></div>
+  <div class="stat"><span class="stat-label">Close Rate</span><span class="stat-value" id="st-cr">â</span></div>
   <div class="stat-divider"></div>
   <div class="stat"><span class="stat-label">Total Won</span><span class="stat-value green" id="st-totalwon">$0</span></div>
   <div class="stat-divider"></div>
@@ -494,16 +495,16 @@
   <div class="stat-divider"></div>
   <div class="stat" title="Average value per active deal"><span class="stat-label">Avg Value</span><span class="stat-value" id="st-avg">$0</span></div>
   <div class="stat-divider"></div>
-  <div class="stat" title="Most common product in pipeline"><span class="stat-label">Top Product</span><span class="stat-value" id="st-topprod" style="font-size:11px;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">—</span></div>
+  <div class="stat" title="Most common product in pipeline"><span class="stat-label">Top Product</span><span class="stat-value" id="st-topprod" style="font-size:11px;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">â</span></div>
   <div class="stat-divider"></div>
   <div class="stat" title="Deals added in the last 7 days"><span class="stat-label">New (7d)</span><span class="stat-value" id="st-new7">0</span></div>
   <div class="stat-divider"></div>
-  <div class="stat" title="Average days deals have been in their current stage"><span class="stat-label">Avg Age</span><span class="stat-value" id="st-avgage">—</span></div>
+  <div class="stat" title="Average days deals have been in their current stage"><span class="stat-label">Avg Age</span><span class="stat-value" id="st-avgage">â</span></div>
   <div class="stat-divider"></div>
   <div class="stat" title="Largest single deal in pipeline"><span class="stat-label">Biggest Deal</span><span class="stat-value" id="st-biggest">$0</span></div>
   <div class="stat-divider"></div>
   <div class="stat" title="Weighted value of deals with close dates in next 30 days"><span class="stat-label">Forecast 30d</span><span class="stat-value" id="st-forecast30" style="color:#f59e0b">$0</span></div>
-  <button class="stats-toggle" onclick="toggleStatsBar()" id="stats-toggle-btn" title="Collapse stats bar">▲</button>
+  <button class="stats-toggle" onclick="toggleStatsBar()" id="stats-toggle-btn" title="Collapse stats bar">â²</button>
 </div>
 
 <!-- FILTER BAR -->
@@ -520,8 +521,8 @@
   </select>
   <div class="filter-sep"></div>
   <span class="chip" onclick="setValueFilter('u500',this)">Under $500</span>
-  <span class="chip" onclick="setValueFilter('500-2000',this)">$500–$2k</span>
-  <span class="chip" onclick="setValueFilter('2000-10000',this)">$2k–$10k</span>
+  <span class="chip" onclick="setValueFilter('500-2000',this)">$500â$2k</span>
+  <span class="chip" onclick="setValueFilter('2000-10000',this)">$2kâ$10k</span>
   <span class="chip" onclick="setValueFilter('10000',this)">$10k+</span>
   <div class="filter-sep"></div>
   <select class="owner-select" id="stage-filter" onchange="setStageFilter(this.value)">
@@ -542,11 +543,11 @@
 <div class="board-wrap">
   <div class="board" id="board"></div>
   <div class="side-panel collapsed" id="side-panel">
-    <button class="panel-open-btn" onclick="toggleSidePanel()" title="Show Won / Lost deals">▶</button>
+    <button class="panel-open-btn" onclick="toggleSidePanel()" title="Show Won / Lost deals">â¶</button>
     <div class="panel-tabs">
       <div class="panel-tab active" id="tab-won" onclick="setPanelTab('won')">Won</div>
       <div class="panel-tab" id="tab-lost" onclick="setPanelTab('lost')">Lost</div>
-      <button class="panel-close-btn" onclick="toggleSidePanel()" title="Hide panel">◀</button>
+      <button class="panel-close-btn" onclick="toggleSidePanel()" title="Hide panel">â</button>
     </div>
     <div class="panel-section">
       <h3>Close Rate</h3>
@@ -558,7 +559,7 @@
             transform="rotate(-90 26 26)" style="transition:stroke-dashoffset .6s ease,stroke .3s"/>
         </svg>
         <div class="cr-info">
-          <div class="cr-pct" id="cr-pct">—</div>
+          <div class="cr-pct" id="cr-pct">â</div>
           <div class="cr-sub" id="cr-sub">No closed deals yet</div>
         </div>
       </div>
@@ -572,15 +573,15 @@
   <div class="modal">
     <div class="modal-head">
       <h2 id="modal-title">Add Deal</h2>
-      <button class="modal-x" onclick="closeModal()">✕</button>
+      <button class="modal-x" onclick="closeModal()">â</button>
     </div>
     <div class="modal-body">
       <form id="deal-form" onsubmit="saveDeal(event)">
         <div class="deal-grid">
-          <!-- ESSENTIAL FIELDS — always visible -->
+          <!-- ESSENTIAL FIELDS â always visible -->
           <div class="fg full"><label>Company / Account Name *</label><input id="f-name" type="text" placeholder="e.g. Acme Corp" required autocomplete="off"></div>
           <div class="fg full">
-            <label>Contacts <span style="font-weight:400;color:var(--text3);font-size:11px">— who are you talking to?</span></label>
+            <label>Contacts <span style="font-weight:400;color:var(--text3);font-size:11px">â who are you talking to?</span></label>
             <div id="contacts-rows"></div>
             <button type="button" class="btn-add-contact" onclick="addContactRow()">+ Add a Row</button>
           </div>
@@ -601,13 +602,13 @@
               <option value="proposal">Proposal Made</option>
             </select>
           </div>
-          <div class="fg full"><label>Notes <span style="font-weight:400;color:var(--text3);font-size:11px">— what's the opportunity?</span></label><textarea id="f-notes" placeholder="Quick note about this deal…" rows="2"></textarea></div>
+          <div class="fg full"><label>Notes <span style="font-weight:400;color:var(--text3);font-size:11px">â what's the opportunity?</span></label><textarea id="f-notes" placeholder="Quick note about this dealâ¦" rows="2"></textarea></div>
         </div>
 
         <!-- MORE DETAILS TOGGLE -->
         <div style="margin-top:12px">
           <button type="button" onclick="toggleMoreFields(this)" style="background:none;border:none;color:var(--text3);font-size:12px;cursor:pointer;padding:4px 0;display:flex;align-items:center;gap:4px">
-            <span id="more-fields-arrow">▶</span> More details (email, owner, product, follow-up, LTV…)
+            <span id="more-fields-arrow">â¶</span> More details (email, owner, product, follow-up, LTVâ¦)
           </button>
           <div id="more-fields" style="display:none;margin-top:10px">
             <div class="deal-grid">
@@ -625,7 +626,7 @@
               <div class="fg"><label>Follow-Up Date</label><input id="f-followup" type="date"></div>
               <div class="fg"><label>Est. Close Date</label><input id="f-closedate" type="date"></div>
               <div class="fg full">
-                <label>Attachments <span style="font-weight:400;color:var(--text3);font-size:11px">(PDFs, quotes — max 2MB each)</span></label>
+                <label>Attachments <span style="font-weight:400;color:var(--text3);font-size:11px">(PDFs, quotes â max 2MB each)</span></label>
                 <div id="attach-drop" style="border:2px dashed var(--border);border-radius:8px;padding:10px;text-align:center;cursor:pointer;transition:all .15s" onclick="document.getElementById('attach-input').click()" ondragover="attachDragOver(event)" ondragleave="attachDragLeave(event)" ondrop="attachDrop(event)">
                   <div style="font-size:13px;opacity:.5;font-weight:600">ATTACH</div>
                   <div style="font-size:11px;color:var(--text3)">Drop files or click to upload</div>
@@ -661,7 +662,7 @@
       <div class="fg">
         <label>Select Deal</label>
         <select id="close-select" style="background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:8px 10px;color:var(--text);font-size:13px;outline:none;width:100%;cursor:pointer">
-          <option value="">— Choose a deal —</option>
+          <option value="">â Choose a deal â</option>
  </select>
  </div>
       <div class="fg">
@@ -692,7 +693,7 @@
       <div style="display:flex;align-items:center;gap:10px;margin-left:auto">
         <span id="rq-progress" style="font-size:12px;color:var(--text3)"></span>
         <button class="btn btn-ghost" style="padding:4px 10px;font-size:12px" onclick="rqSkipAll()">Skip All</button>
-        <button class="btn btn-ghost" onclick="closeReviewModal()">✕</button>
+        <button class="btn btn-ghost" onclick="closeReviewModal()">â</button>
       </div>
     </div>
     <div style="padding:14px 20px;background:var(--surface2);border-bottom:1px solid var(--border);flex-shrink:0">
@@ -731,7 +732,7 @@
         ondragover="importDragOver(event)" ondragleave="importDragLeave(event)" ondrop="importDrop(event)">
         <div style="font-size:28px;margin-bottom:6px;opacity:.5">&#8682;</div>
         <div style="font-size:13px;font-weight:600;color:var(--text2)">Drop CSV files here or click to browse</div>
-        <div style="font-size:11px;color:var(--text3);margin-top:3px">Multiple files supported — all will be merged into one import</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:3px">Multiple files supported â all will be merged into one import</div>
         <input id="import-file-input" type="file" accept=".csv,.txt,.tsv" multiple style="display:none" onchange="handleFileSelect(this.files)">
       </div>
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
@@ -740,10 +741,10 @@
         <div style="flex:1;height:1px;background:var(--border)"></div>
       </div>
       <div class="fg">
-        <textarea id="import-ta" class="import-ta" placeholder="Paste CSV data here — one file at a time, or mix multiple pastes…" oninput="parseImportPreview()"></textarea>
+        <textarea id="import-ta" class="import-ta" placeholder="Paste CSV data here â one file at a time, or mix multiple pastesâ¦" oninput="parseImportPreview()"></textarea>
         <div class="import-hint">
           CSV header: <code>name,company,contact,email,owner,value,stage,product,priority,notes,ltv,followUpDate,closeDate</code><br>
-          Stages: <code>qualified · contacted · quote · proposal</code> &nbsp;|&nbsp; Priority: <code>high · medium · low</code> &nbsp;|&nbsp; Dates: <code>YYYY-MM-DD</code>
+          Stages: <code>qualified Â· contacted Â· quote Â· proposal</code> &nbsp;|&nbsp; Priority: <code>high Â· medium Â· low</code> &nbsp;|&nbsp; Dates: <code>YYYY-MM-DD</code>
         </div>
       </div>
       <div id="import-preview-wrap" style="display:none;margin-top:14px">
@@ -754,7 +755,7 @@
       </div>
     </div>
     <div class="modal-foot">
-      <button class="btn btn-ghost" onclick="downloadImportTemplate()" style="margin-right:auto;font-size:12px" title="Download a ready-to-fill CSV template">⬇ Template</button>
+      <button class="btn btn-ghost" onclick="downloadImportTemplate()" style="margin-right:auto;font-size:12px" title="Download a ready-to-fill CSV template">â¬ Template</button>
       <button class="btn btn-outline" onclick="closeImportModal()">Cancel</button>
       <button class="btn btn-primary" id="import-confirm-btn" onclick="confirmImport()" disabled>Import Deals</button>
     </div>
@@ -769,7 +770,7 @@
       <button class="modal-x" onclick="closeChangelog()">x</button>
     </div>
     <div style="padding:10px 20px 6px;display:flex;gap:8px;align-items:center;border-bottom:1px solid var(--border);flex-shrink:0">
-      <input id="cl-search" type="text" placeholder="Search log…" style="flex:1;padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;outline:none" oninput="renderChangelog()">
+      <input id="cl-search" type="text" placeholder="Search logâ¦" style="flex:1;padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;outline:none" oninput="renderChangelog()">
       <select id="cl-filter" onchange="renderChangelog()" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:12px;outline:none">
         <option value="">All Actions</option>
         <option value="created">Created</option>
@@ -791,22 +792,22 @@
   <div class="modal" style="width:420px">
     <div class="modal-head">
       <h2>Log Activity</h2>
-      <button class="modal-x" onclick="closeActivityModal()">✕</button>
+      <button class="modal-x" onclick="closeActivityModal()">â</button>
     </div>
     <div class="modal-body">
       <input type="hidden" id="act-deal-id">
       <div class="fg">
         <label>Type</label>
         <div class="act-type-row" id="act-type-row">
-          <button type="button" class="act-type-btn active" data-type="call" onclick="pickActType('call',this)">📞 Call</button>
-          <button type="button" class="act-type-btn" data-type="email" onclick="pickActType('email',this)">✉ Email</button>
-          <button type="button" class="act-type-btn" data-type="text" onclick="pickActType('text',this)">💬 Text</button>
-          <button type="button" class="act-type-btn" data-type="social" onclick="pickActType('social',this)">🔗 Social</button>
+          <button type="button" class="act-type-btn active" data-type="call" onclick="pickActType('call',this)">ð Call</button>
+          <button type="button" class="act-type-btn" data-type="email" onclick="pickActType('email',this)">â Email</button>
+          <button type="button" class="act-type-btn" data-type="text" onclick="pickActType('text',this)">ð¬ Text</button>
+          <button type="button" class="act-type-btn" data-type="social" onclick="pickActType('social',this)">ð Social</button>
         </div>
       </div>
       <div class="fg">
-        <label>Notes <span style="font-weight:400;color:var(--text3);font-size:11px">— what happened?</span></label>
-        <textarea id="act-notes" rows="3" placeholder="Left voicemail, sent follow-up, connected on LinkedIn…" style="resize:vertical"></textarea>
+        <label>Notes <span style="font-weight:400;color:var(--text3);font-size:11px">â what happened?</span></label>
+        <textarea id="act-notes" rows="3" placeholder="Left voicemail, sent follow-up, connected on LinkedInâ¦" style="resize:vertical"></textarea>
       </div>
     </div>
     <div class="modal-foot">
@@ -821,12 +822,12 @@
   <div class="modal" style="width:360px">
     <div class="modal-head">
       <h2>Add Column</h2>
-      <button class="modal-x" onclick="closeAddStageModal()">✕</button>
+      <button class="modal-x" onclick="closeAddStageModal()">â</button>
     </div>
     <div class="modal-body">
       <div class="fg">
         <label>Stage Name *</label>
-        <input id="as-name" type="text" placeholder="e.g. Discovery, Demo Sent, Onboarding…" maxlength="30">
+        <input id="as-name" type="text" placeholder="e.g. Discovery, Demo Sent, Onboardingâ¦" maxlength="30">
       </div>
       <div class="fg">
         <label>Color</label>
@@ -843,7 +844,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ─── CONFIG ──────────────────────────────────────────────────────────────────
+// âââ CONFIG ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 const FIREBASE_CONFIG = {
   apiKey:            "AIzaSyBiRp3LzG-LSE6GRKiw7C58iLg41IwXiU",
   authDomain:        "swag-rt-20260727x.firebaseapp.com",
@@ -863,13 +864,13 @@ const DEFAULT_STAGES = [
 ];
 let STAGES = [...DEFAULT_STAGES];
 
-// ─── CONSTANTS ────────────────────────────────────────────────────────────────
+// âââ CONSTANTS ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 const NOW = Date.now();
 const DAY = 86400000;
-// Legacy seed IDs — auto-cleared on load so placeholder data never appears
+// Legacy seed IDs â auto-cleared on load so placeholder data never appears
 const LEGACY_SEED_IDS = new Set(['d1','d2','d3','d4','d5','a1','a2','a3']);
 
-// ─── STATE ────────────────────────────────────────────────────────────────────
+// âââ STATE ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 let deals = [], archive = [];
 let activeFilter = 'all', activeOwner = '', activeValue = '', activeStageFilter = '', searchQuery = '';
 let dragId = null, editId = null, closeOutcome = '', panelTab = 'won';
@@ -879,19 +880,19 @@ let customStages = [], customStagesRef = null;
 let actType = 'call', selectedStageColor = '#6366f1';
 const STAGE_COLORS = ['#64748B','#7C3AED','#2563EB','#0891B2','#059669','#d97706','#dc2626','#ec4899','#f59e0b','#10b981','#6366f1','#8b5cf6'];
 
-// ─── AUTH STATE ───────────────────────────────────────────────────────────────
+// âââ AUTH STATE âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 const AUTH_KEY = 'sp_auth_session';
 let currentSession = null; // { userId, name, role }
 let usersRef = null;
 let usersCache = {};   // { userId: { name, pin, role } }
 let changelogRef = null;
 
-// ─── FIREBASE ─────────────────────────────────────────────────────────────────
+// âââ FIREBASE âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 try {
   firebase.initializeApp(FIREBASE_CONFIG);
   const db = firebase.database();
 
-  // ── Load users first, then check session ─────────────────────────────────
+  // ââ Load users first, then check session âââââââââââââââââââââââââââââââââ
   usersRef = db.ref('pipeline/users');
   usersRef.once('value', snap => {
     const data = snap.val();
@@ -906,13 +907,13 @@ try {
     }
   }).catch(() => { usersCache = {}; checkSession(); });
 
-  // ── Live users listener (for user management UI) ──────────────────────────
+  // ââ Live users listener (for user management UI) ââââââââââââââââââââââââââ
   usersRef.on('value', snap => { usersCache = snap.val() || {}; refreshOwnerSelect(); });
 
-  // ── Changelog ref ─────────────────────────────────────────────────────────
+  // ââ Changelog ref âââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
   changelogRef = db.ref('pipeline/changelog');
 
-  // ── Custom stages ref ──────────────────────────────────────────────────────
+  // ââ Custom stages ref ââââââââââââââââââââââââââââââââââââââââââââââââââââââ
   customStagesRef = db.ref('pipeline/customStages');
   customStagesRef.on('value', snap => {
     customStages = snap.val() || [];
@@ -970,7 +971,7 @@ function ls() {
 }
 function save() { push(); ls(); }
 
-// ─── HELPERS ──────────────────────────────────────────────────────────────────
+// âââ HELPERS ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 const uid = () => 'x' + Math.random().toString(36).slice(2,10);
 const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const fmt = n => { const v = Number(n)||0; if (v===0) return '$0'; if (v>=1000) return '$'+(v/1000).toFixed(v%1000===0?0:1)+'k'; return '$'+v; };
@@ -987,7 +988,7 @@ function agingBadge(d) {
   return `<span class="card-aging aging-stale"> ${days}d stale</span>`;
 }
 
-// ─── FILTER / SEARCH ──────────────────────────────────────────────────────────
+// âââ FILTER / SEARCH ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function setFilter(f, el) {
   activeFilter = f;
   document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
@@ -998,7 +999,7 @@ function setFilter(f, el) {
 function setOwnerFilter(v) { activeOwner = v; render(); }
 function setStageFilter(v) { activeStageFilter = v; render(); }
 
-// ─── AUTH SYSTEM ─────────────────────────────────────────────────────────────
+// âââ AUTH SYSTEM âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function checkSession() {
   try {
     const raw = localStorage.getItem(AUTH_KEY);
@@ -1013,7 +1014,7 @@ function checkSession() {
       }
     }
   } catch(e) {}
-  // No valid session — show login
+  // No valid session â show login
   currentSession = null;
   showLoginScreen();
 }
@@ -1120,7 +1121,7 @@ function updateNavForUser() {
   if (display) {
     display.style.display = 'inline-flex';
     display.className = 'nav-user' + (currentSession.role === 'admin' ? ' admin-user' : '');
-    display.innerHTML = `<span class="nav-user-dot"></span>${esc(currentSession.name)}<span style="font-size:10px;opacity:.7">${currentSession.role === 'admin' ? ' · Admin' : ''}</span>`;
+    display.innerHTML = `<span class="nav-user-dot"></span>${esc(currentSession.name)}<span style="font-size:10px;opacity:.7">${currentSession.role === 'admin' ? ' Â· Admin' : ''}</span>`;
   }
   if (logoutBtn) logoutBtn.style.display = '';
   if (manageBtn) manageBtn.style.display = currentSession.role === 'admin' ? '' : 'none';
@@ -1128,7 +1129,7 @@ function updateNavForUser() {
   if (clBtn) clBtn.style.display = currentSession.role === 'admin' ? '' : 'none';
 }
 
-// ─── OWNER SELECT (add deal modal) ───────────────────────────────────────────
+// âââ OWNER SELECT (add deal modal) âââââââââââââââââââââââââââââââââââââââââââ
 function refreshOwnerSelect() {
   const sel = document.getElementById('f-owner');
   if (!sel) return;
@@ -1139,7 +1140,7 @@ function refreshOwnerSelect() {
   if (cur) sel.value = cur;
 }
 
-// ─── CHANGELOG ────────────────────────────────────────────────────────────────
+// âââ CHANGELOG ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function logChange(action, dealId, dealName, details) {
   if (!changelogRef) return;
   const entry = {
@@ -1157,7 +1158,7 @@ function logChange(action, dealId, dealName, details) {
 let changelogCache = [];
 function openChangelog() {
   document.getElementById('changelog-overlay').style.display = 'flex';
-  document.getElementById('cl-list').innerHTML = '<div style="color:var(--text3);font-size:13px;padding:20px 0">Loading…</div>';
+  document.getElementById('cl-list').innerHTML = '<div style="color:var(--text3);font-size:13px;padding:20px 0">Loadingâ¦</div>';
   document.getElementById('cl-search').value = '';
   document.getElementById('cl-filter').value = '';
   if (!changelogRef) { document.getElementById('cl-list').innerHTML = '<div style="color:var(--text3);font-size:13px">Changelog not available offline.</div>'; return; }
@@ -1193,7 +1194,7 @@ function renderChangelog() {
   }).join('');
 }
 
-// ─── USER MANAGEMENT ─────────────────────────────────────────────────────────
+// âââ USER MANAGEMENT âââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function openUmModal() {
   if (!currentSession || currentSession.role !== 'admin') return;
   renderUmUsers();
@@ -1217,7 +1218,7 @@ function renderUmUsers() {
       <div class="user-info">
         <span class="user-name-text">${esc(u.name)}</span>
         <span class="user-role-badge ${u.role==='admin'?'admin-badge':''}">${u.role==='admin'?'Admin':'Rep'}</span>
-        <div class="user-pin-display">PIN: ${'•'.repeat(String(u.pin||'').length)}</div>
+        <div class="user-pin-display">PIN: ${'â¢'.repeat(String(u.pin||'').length)}</div>
       </div>
       <button class="btn btn-ghost" style="font-size:12px;padding:4px 10px" onclick="resetPin('${id}')">Reset PIN</button>
       ${u.role !== 'admin' || Object.values(usersCache).filter(x=>x.role==='admin').length > 1 ?
@@ -1231,7 +1232,7 @@ function addUser() {
   const role = document.getElementById('um-role').value;
   const err  = document.getElementById('um-error');
   if (!name) { err.textContent = 'Name is required.'; return; }
-  if (!pin || !/^\d{4,8}$/.test(pin)) { err.textContent = 'PIN must be 4–8 digits.'; return; }
+  if (!pin || !/^\d{4,8}$/.test(pin)) { err.textContent = 'PIN must be 4â8 digits.'; return; }
   // Check duplicate name
   if (Object.values(usersCache).some(u => u.name.toLowerCase() === name.toLowerCase())) {
     err.textContent = 'A user with that name already exists.'; return;
@@ -1258,9 +1259,9 @@ function removeUser(id, name) {
 }
 
 function resetPin(id) {
-  const newPin = prompt('Enter new PIN for this user (4–8 digits):');
+  const newPin = prompt('Enter new PIN for this user (4â8 digits):');
   if (newPin === null) return;
-  if (!/^\d{4,8}$/.test(newPin.trim())) { toast('Invalid PIN — must be 4–8 digits.'); return; }
+  if (!/^\d{4,8}$/.test(newPin.trim())) { toast('Invalid PIN â must be 4â8 digits.'); return; }
   if (usersRef) usersRef.child(id + '/pin').set(newPin.trim(), () => { renderUmUsers(); toast('PIN updated.'); });
 }
 
@@ -1310,7 +1311,7 @@ function applyFilters(list) {
 // Stage probability weights for weighted pipeline
 const STAGE_PROB = { qualified:.2, contacted:.3, quote:.5, proposal:.65 };
 
-// ─── STATS ────────────────────────────────────────────────────────────────────
+// âââ STATS ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function updateStats() {
   const vis = applyFilters(deals);
   const total = vis.reduce((s,d)=>s+(Number(d.value)||0),0);
@@ -1332,7 +1333,7 @@ function updateStats() {
     avgClEl.textContent = avgDays+'d';
     avgClEl.className = 'stat-value '+(avgDays<=30?'green':avgDays<=60?'yellow':'red');
   } else {
-    avgClEl.textContent = '—';
+    avgClEl.textContent = 'â';
     avgClEl.className = 'stat-value';
   }
 
@@ -1344,7 +1345,7 @@ function updateStats() {
     const pct = Math.round(wonN/total2*100);
     crEl.textContent = pct+'%';
     crEl.className = 'stat-value '+(pct>=60?'green':pct>=40?'yellow':'red');
-  } else { crEl.textContent = '—'; crEl.className = 'stat-value'; }
+  } else { crEl.textContent = 'â'; crEl.className = 'stat-value'; }
 
   // Total won all-time
   const totalWon = archive.filter(a=>a.outcome==='won').reduce((s,a)=>s+(Number(a.value)||0),0);
@@ -1363,7 +1364,7 @@ function updateStats() {
   const prodCounts = {};
   vis.forEach(d => { if (d.product) prodCounts[d.product] = (prodCounts[d.product]||0)+1; });
   const topProd = Object.entries(prodCounts).sort((a,b)=>b[1]-a[1])[0];
-  set('st-topprod', topProd ? `${topProd[0]} (${topProd[1]})` : '—');
+  set('st-topprod', topProd ? `${topProd[0]} (${topProd[1]})` : 'â');
 
   // New deals in last 7 days
   const new7 = deals.filter(d => d.createdAt && (now - Number(d.createdAt)) < 7*DAY).length;
@@ -1372,7 +1373,7 @@ function updateStats() {
   // Avg age (days in current stage)
   const avgAge = vis.length > 0 ? Math.round(vis.reduce((s,d)=>s+daysSince(d.stageEnteredAt||d.createdAt),0)/vis.length) : 0;
   const ageEl = document.getElementById('st-avgage');
-  ageEl.textContent = avgAge > 0 ? avgAge+'d' : '—';
+  ageEl.textContent = avgAge > 0 ? avgAge+'d' : 'â';
   ageEl.className = 'stat-value '+(avgAge<=7?'green':avgAge<=21?'yellow':'red');
 
   // Biggest deal
@@ -1390,7 +1391,7 @@ function updateStats() {
 
 function set(id, val) { const e=document.getElementById(id); if(e) e.textContent=val; }
 
-// ─── OWNER DROPDOWN ───────────────────────────────────────────────────────────
+// âââ OWNER DROPDOWN âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function refreshOwnerDropdown() {
   const sel = document.getElementById('owner-filter');
   const lbl = document.getElementById('rep-filter-label');
@@ -1413,7 +1414,7 @@ function refreshOwnerDropdown() {
     allOwners.map(o=>`<option value="${esc(o)}"${o===cur?' selected':''}>${esc(o)}</option>`).join('');
 }
 
-// ─── RENDER ───────────────────────────────────────────────────────────────────
+// âââ RENDER âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function render() { updateStats(); refreshOwnerDropdown(); renderBoard(); renderPanel(); }
 
 function renderBoard() {
@@ -1423,7 +1424,7 @@ function renderBoard() {
     const colVal = cards.reduce((sum,d)=>sum+(Number(d.value)||0),0);
     const isCol = collapsedCols.has(s.id);
     const isCustom = s.id.startsWith('custom_');
-    const delBtn = isCustom ? `<button class="col-del-btn" onclick="deleteCustomStage('${s.id}');event.stopPropagation()" title="Remove column">✕</button>` : '';
+    const delBtn = isCustom ? `<button class="col-del-btn" onclick="deleteCustomStage('${s.id}');event.stopPropagation()" title="Remove column">â</button>` : '';
     return `<div class="col${isCol?' collapsed':''}" id="col-${s.id}"
       ondragover="dOver(event,'${s.id}')"
       ondrop="dDrop(event,'${s.id}')"
@@ -1438,7 +1439,7 @@ function renderBoard() {
           ${colVal>0?`<span class="col-val">${fmt(colVal)}</span>`:''}
         </div>
         ${delBtn}
-        <button class="col-collapse-btn" onclick="toggleCol('${s.id}',event)" title="${isCol?'Expand':'Collapse'} column">${isCol?'›':'‹'}</button>
+        <button class="col-collapse-btn" onclick="toggleCol('${s.id}',event)" title="${isCol?'Expand':'Collapse'} column">${isCol?'âº':'â¹'}</button>
       </div>
       <div class="cards" id="cards-${s.id}">
         ${cards.length ? cards.map(cardHTML).join('') : `<div style="padding:18px 0;text-align:center;color:var(--text3);font-size:12px">Drop here</div>`}
@@ -1460,7 +1461,7 @@ function renderBoard() {
         <span class="col-count" style="background:rgba(16,185,129,.15);color:var(--green)">${wonItems.length}</span>
         ${wonVal>0?`<span class="col-val" style="color:var(--green)">${fmt(wonVal)}</span>`:''}
       </div>
-      <button class="col-collapse-btn" onclick="toggleCol('won',event)" title="${wonCol?'Expand':'Collapse'} column">${wonCol?'›':'‹'}</button>
+      <button class="col-collapse-btn" onclick="toggleCol('won',event)" title="${wonCol?'Expand':'Collapse'} column">${wonCol?'âº':'â¹'}</button>
     </div>
     <div class="cards">
       ${wonItems.length ? wonItems.map(a => archiveCardHTML(a)).join('') : '<div style="padding:18px 0;text-align:center;color:var(--text3);font-size:12px">No won deals yet</div>'}
@@ -1481,7 +1482,7 @@ function renderBoard() {
         <span class="col-count" style="background:rgba(239,68,68,.15);color:var(--red)">${lostItems.length}</span>
         ${lostVal>0?`<span class="col-val" style="color:var(--red)">${fmt(lostVal)}</span>`:''}
       </div>
-      <button class="col-collapse-btn" onclick="toggleCol('lost',event)" title="${lostCol?'Expand':'Collapse'} column">${lostCol?'›':'‹'}</button>
+      <button class="col-collapse-btn" onclick="toggleCol('lost',event)" title="${lostCol?'Expand':'Collapse'} column">${lostCol?'âº':'â¹'}</button>
     </div>
     <div class="cards">
       ${lostItems.length ? lostItems.map(a => archiveCardHTML(a)).join('') : '<div style="padding:18px 0;text-align:center;color:var(--text3);font-size:12px">No lost deals yet</div>'}
@@ -1500,7 +1501,7 @@ function renderBoard() {
       <div class="col-meta">
         <span class="col-count" style="background:rgba(107,114,128,.15);color:#9ca3af">${spamItems.length}</span>
       </div>
-      <button class="col-collapse-btn" onclick="toggleCol('spam',event)" title="${spamCol?'Expand':'Collapse'} column">${spamCol?'›':'‹'}</button>
+      <button class="col-collapse-btn" onclick="toggleCol('spam',event)" title="${spamCol?'Expand':'Collapse'} column">${spamCol?'âº':'â¹'}</button>
     </div>
     <div class="cards">
       ${spamItems.length ? spamItems.map(a => archiveCardHTML(a)).join('') : '<div style="padding:18px 0;text-align:center;color:var(--text3);font-size:12px">No spam flagged</div>'}
@@ -1562,7 +1563,7 @@ function cardHTML(d) {
     : d.followUpDate ? `<div class="card-followup">${fmtDate(d.followUpDate)}</div>` : '';
   const emailBtn = primaryEmail ? `
     <div class="email-popup-wrap" onclick="event.stopPropagation()">
-      <button class="ca-btn mail" onclick="toggleEmailPopup('epop-${d.id}',event)">✉ Email ▾</button>
+      <button class="ca-btn mail" onclick="toggleEmailPopup('epop-${d.id}',event)">â Email â¾</button>
       <div class="email-popup" id="epop-${d.id}">
         <div class="email-popup-item" onclick="openGmail('${esc(primaryEmail)}','${esc(d.name)}')">Open in Gmail</div>
         <div class="email-popup-item" onclick="copyEmail('${esc(primaryEmail)}')">Copy Email</div>
@@ -1570,7 +1571,7 @@ function cardHTML(d) {
       </div>
     </div>` : '';
 
-  // Expanded section — contacts list
+  // Expanded section â contacts list
   const contactsDetail = contactsList.length
     ? `<div class="card-detail" style="flex-direction:column;align-items:flex-start;gap:3px"><span class="card-detail-lbl">Contact${contactsList.length>1?'s':''}</span><div>${contactsList.map(c=>{
         const nm = c.name ? esc(c.name) : '';
@@ -1582,7 +1583,7 @@ function cardHTML(d) {
     d.ltv     ? `<div class="card-detail"><span class="card-detail-lbl">LTV</span><span class="card-detail-val" style="color:#a78bfa;font-weight:600">${fmt(d.ltv)}</span></div>` : '',
     d.notes   ? `<div class="card-detail"><span class="card-detail-lbl">Notes</span><span class="card-detail-val" style="font-style:italic;color:var(--text3)">${esc(d.notes)}</span></div>` : '',
     d.closeDate ? `<div class="card-detail"><span class="card-detail-lbl">Close</span><span class="card-detail-val">${fmtDate(d.closeDate)}</span></div>` : '',
-    d.followUpDate ? `<div class="card-detail"><span class="card-detail-lbl">Follow-up</span><span class="card-detail-val${isOverdue(d)?' overdue':''}" style="${isOverdue(d)?'color:var(--red);font-weight:600':''}">${fmtDate(d.followUpDate)}${isOverdue(d)?' — overdue':''}</span></div>` : '',
+    d.followUpDate ? `<div class="card-detail"><span class="card-detail-lbl">Follow-up</span><span class="card-detail-val${isOverdue(d)?' overdue':''}" style="${isOverdue(d)?'color:var(--red);font-weight:600':''}">${fmtDate(d.followUpDate)}${isOverdue(d)?' â overdue':''}</span></div>` : '',
     `<div class="card-detail"><span class="card-detail-lbl">In Stage</span><span class="card-detail-val">${daysSince(d.stageEnteredAt||d.createdAt)}d</span></div>`,
     (d.priority && d.priorityBy) ? `<div class="card-detail"><span class="card-detail-lbl">Flagged by</span><span class="card-detail-val" style="color:var(--yellow)">${esc(d.priorityBy)}</span></div>` : '',
     (d.attachments && d.attachments.length) ? `<div class="card-detail" style="flex-direction:column;align-items:flex-start;gap:4px"><span class="card-detail-lbl">Files (${d.attachments.length})</span><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px">${d.attachments.map(f=>`<a href="${f.url}" download="${esc(f.name)}" target="_blank" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:11px;color:var(--text2);text-decoration:none;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(f.name)}">${fileIcon(f.name)} ${esc(f.name)}</a>`).join('')}</div></div>` : '',
@@ -1593,7 +1594,7 @@ function cardHTML(d) {
   const actItems = acts.map(a => `<div class="act-item">
     <span class="act-badge act-${a.type}">${actTypeLabel(a.type)}</span>
     <span class="act-meta">${new Date(a.at).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</span>
-    ${a.by?`<span class="act-by">· ${esc(a.by)}</span>`:''}
+    ${a.by?`<span class="act-by">Â· ${esc(a.by)}</span>`:''}
     ${a.notes?`<div class="act-note">${esc(a.notes)}</div>`:''}
   </div>`).join('');
   const actSection = `<div class="act-section">
@@ -1601,7 +1602,7 @@ function cardHTML(d) {
       <span class="act-title">Activity${acts.length?` (${acts.length})`:''}</span>
       <button class="act-log-btn" onclick="openActivityModal('${d.id}');event.stopPropagation()">+ Log</button>
     </div>
-    ${actItems || '<div class="act-empty">No activity yet — log a call, email, or text</div>'}
+    ${actItems || '<div class="act-empty">No activity yet â log a call, email, or text</div>'}
   </div>`;
 
   return `<div class="card" id="card-${d.id}" draggable="true"
@@ -1633,7 +1634,7 @@ function cardHTML(d) {
   </div>`;
 }
 
-// ─── PANEL ────────────────────────────────────────────────────────────────────
+// âââ PANEL ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function setPanelTab(tab) {
   panelTab = tab;
   document.getElementById('tab-won').className = 'panel-tab'+(tab==='won'?' active':'');
@@ -1654,7 +1655,7 @@ function renderPanel() {
   }
   const pctEl = document.getElementById('cr-pct');
   const subEl = document.getElementById('cr-sub');
-  if (pctEl) pctEl.textContent = total>0 ? pct+'%' : '—';
+  if (pctEl) pctEl.textContent = total>0 ? pct+'%' : 'â';
   if (subEl) subEl.textContent = total>0 ? `${wonN} won / ${lostN} lost` : 'No closed deals yet';
 
   const items = archive.filter(a=>a.outcome===panelTab).sort((a,b)=>b.closedAt-a.closedAt);
@@ -1663,7 +1664,7 @@ function renderPanel() {
   if (!items.length) { list.innerHTML = `<div class="empty-msg">No ${panelTab} deals yet</div>`; return; }
   list.innerHTML = items.map(a => `<div class="panel-card">
     <div class="pc-name">${esc(a.name)}</div>
-    <div class="pc-co">${esc(a.company||'')} · ${new Date(a.closedAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit'})}</div>
+    <div class="pc-co">${esc(a.company||'')} Â· ${new Date(a.closedAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit'})}</div>
     ${a.lossReason?`<div class="pc-loss"> ${esc(a.lossReason)}</div>`:''}
     <div class="pc-footer">
       <span class="pc-val" style="color:${a.outcome==='won'?'var(--green)':'var(--red)'}">${fmt(a.value)}</span>
@@ -1672,14 +1673,14 @@ function renderPanel() {
  </div>`).join('');
 }
 
-// ─── SIDE PANEL TOGGLE ───────────────────────────────────────────────────────
+// âââ SIDE PANEL TOGGLE âââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function toggleSidePanel() {
   const panel = document.getElementById('side-panel');
   if (!panel) return;
   panel.classList.toggle('collapsed');
 }
 
-// ─── ACTIVITY LOG ─────────────────────────────────────────────────────────────
+// âââ ACTIVITY LOG âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function actTypeLabel(t) { return {call:'Call',email:'Email',text:'Text',social:'Social'}[t]||t; }
 
 function openActivityModal(dealId) {
@@ -1710,7 +1711,7 @@ function saveActivity() {
   toast(`${actTypeLabel(actType)} logged`);
 }
 
-// ─── ADD / DELETE CUSTOM STAGE ────────────────────────────────────────────────
+// âââ ADD / DELETE CUSTOM STAGE ââââââââââââââââââââââââââââââââââââââââââââââââ
 function openAddStageModal() {
   document.getElementById('as-name').value = '';
   selectedStageColor = '#6366f1';
@@ -1743,7 +1744,7 @@ function saveNewStage() {
 
 function deleteCustomStage(id) {
   const inUse = deals.filter(d => d.stage === id).length;
-  if (inUse > 0) { toast(`Can't delete — ${inUse} deal${inUse>1?'s':''} still in this column`); return; }
+  if (inUse > 0) { toast(`Can't delete â ${inUse} deal${inUse>1?'s':''} still in this column`); return; }
   if (!confirm('Remove this column?')) return;
   customStages = customStages.filter(s => s.id !== id);
   STAGES = [...DEFAULT_STAGES, ...customStages];
@@ -1752,7 +1753,7 @@ function deleteCustomStage(id) {
   toast('Column removed');
 }
 
-// ─── STAGE PICKER (dynamic) ───────────────────────────────────────────────────
+// âââ STAGE PICKER (dynamic) âââââââââââââââââââââââââââââââââââââââââââââââââââ
 function stageSubtitle(id) {
   const subs = { nurture:'Not ready yet', qualified:'Good prospect', contacted:'In conversation', quote:'Waiting on them', proposal:'Formal proposal out' };
   return subs[id] || 'Custom stage';
@@ -1769,7 +1770,7 @@ function refreshStagePicker(selectedStage) {
   sel.value = selectedStage;
 }
 
-// ─── CARD EXPAND / COLLAPSE ───────────────────────────────────────────────────
+// âââ CARD EXPAND / COLLAPSE âââââââââââââââââââââââââââââââââââââââââââââââââââ
 function toggleCard(id, e) {
   // Don't toggle if clicking a button, link, or action area
   if (e.target.closest('.ca-btn') || e.target.closest('.card-actions') || e.target.tagName === 'A') return;
@@ -1798,10 +1799,10 @@ function toggleCol(colId, e) {
   }
   // Update button icon
   const btn = el.querySelector('.col-collapse-btn');
-  if (btn) btn.textContent = collapsedCols.has(colId) ? '›' : '‹';
+  if (btn) btn.textContent = collapsedCols.has(colId) ? 'âº' : 'â¹';
 }
 
-// ─── DRAG & DROP ──────────────────────────────────────────────────────────────
+// âââ DRAG & DROP ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function dStart(e, id) {
   dragId = id;
   e.dataTransfer.effectAllowed = 'move';
@@ -1823,14 +1824,14 @@ function dDrop(e, stageId) {
     const prevStage = d.stage;
     d.stage = stageId;
     d.stageEnteredAt = Date.now();
-    logChange('stage', d.id, d.name, `${stageLabel(prevStage)} → ${stageLabel(stageId)}`);
+    logChange('stage', d.id, d.name, `${stageLabel(prevStage)} â ${stageLabel(stageId)}`);
     save();
     toast(`Moved to ${stageLabel(stageId)}`);
   }
   dragId = null;
 }
 
-// ─── STAGE PICKER ─────────────────────────────────────────────────────────────
+// âââ STAGE PICKER âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function pickStage(stage, btn) {
   document.querySelectorAll('.stage-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
@@ -1846,10 +1847,10 @@ function toggleMoreFields(btn) {
   const arrow = document.getElementById('more-fields-arrow');
   const open = el.style.display === 'none';
   el.style.display = open ? 'block' : 'none';
-  arrow.textContent = open ? '▼' : '▶';
+  arrow.textContent = open ? 'â¼' : 'â¶';
 }
 
-// ─── CONTACT ROWS ─────────────────────────────────────────────────────────────
+// âââ CONTACT ROWS âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function resetContactRows() {
   document.getElementById('contacts-rows').innerHTML = '';
   addContactRow();
@@ -1872,7 +1873,7 @@ function addContactRow(name, email) {
   const ei = document.createElement('input');
   ei.type = 'email'; ei.className = 'contact-email'; ei.placeholder = 'Email'; ei.value = email;
   const rb = document.createElement('button');
-  rb.type = 'button'; rb.className = 'contact-remove'; rb.title = 'Remove'; rb.textContent = '×';
+  rb.type = 'button'; rb.className = 'contact-remove'; rb.title = 'Remove'; rb.textContent = 'Ã';
   rb.onclick = function() { removeContactRow(this); };
   row.appendChild(ni); row.appendChild(ei); row.appendChild(rb);
   container.appendChild(row);
@@ -1899,7 +1900,7 @@ function getContacts() {
   return contacts;
 }
 
-// ─── ADD MODAL ────────────────────────────────────────────────────────────────
+// âââ ADD MODAL ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function openAddModal(preStage) {
   editId = null;
   document.getElementById('modal-title').textContent = 'Add Deal';
@@ -1910,7 +1911,7 @@ function openAddModal(preStage) {
   resetContactRows();
   // Reset more fields section
   document.getElementById('more-fields').style.display = 'none';
-  document.getElementById('more-fields-arrow').textContent = '▶';
+  document.getElementById('more-fields-arrow').textContent = 'â¶';
   // Default stage = contacted (most common new deal), or pre-specified
   syncStagePicker(preStage || 'contacted');
   // Populate owner dropdown; pre-fill with current rep's name if they're a rep
@@ -1935,7 +1936,7 @@ function openEdit(id) {
   fv('f-product', d.product); fv('f-priority', d.priority||'medium'); fv('f-followup', d.followUpDate);
   fv('f-closedate', d.closeDate); fv('f-notes', d.notes);
   fv('f-stage-entered', d.stageEnteredAt||''); fv('f-created-at', d.createdAt||'');
-  // Populate contacts — support legacy single contact/email fields
+  // Populate contacts â support legacy single contact/email fields
   const existingContacts = d.contacts && d.contacts.length
     ? d.contacts
     : (d.contact ? [{ name: d.contact, email: d.email || '' }] : []);
@@ -1944,7 +1945,7 @@ function openEdit(id) {
   // Show more fields if they have data
   const hasExtra = d.company||d.email||d.owner||d.product||d.ltv||d.followUpDate||d.closeDate;
   document.getElementById('more-fields').style.display = hasExtra ? 'block' : 'none';
-  document.getElementById('more-fields-arrow').textContent = hasExtra ? '▼' : '▶';
+  document.getElementById('more-fields-arrow').textContent = hasExtra ? 'â¼' : 'â¶';
   const atts = d.attachments || [];
   document.getElementById('f-attachments').value = JSON.stringify(atts);
   renderAttachList(atts);
@@ -1991,14 +1992,14 @@ function saveDeal(e) {
     if (idx>=0) deals[idx]=obj; else deals.push(obj);
     toast('Deal updated');
     const changes = [];
-    if (existing && stageChanged) changes.push(`Stage: ${stageLabel(existing.stage)} → ${stageLabel(newStage)}`);
-    if (existing && existing.owner !== obj.owner) changes.push(`Owner: ${existing.owner||'None'} → ${obj.owner||'None'}`);
+    if (existing && stageChanged) changes.push(`Stage: ${stageLabel(existing.stage)} â ${stageLabel(newStage)}`);
+    if (existing && existing.owner !== obj.owner) changes.push(`Owner: ${existing.owner||'None'} â ${obj.owner||'None'}`);
     logChange(stageChanged ? 'stage' : (existing && existing.owner !== obj.owner ? 'assigned' : 'edited'),
       obj.id, obj.name, changes.length ? changes.join('; ') : 'Deal details updated');
   } else {
     deals.push(obj);
     toast('Deal added');
-    logChange('created', obj.id, obj.name, `Stage: ${stageLabel(newStage)}${obj.owner ? ' · Assigned to ' + obj.owner : ''}`);
+    logChange('created', obj.id, obj.name, `Stage: ${stageLabel(newStage)}${obj.owner ? ' Â· Assigned to ' + obj.owner : ''}`);
   }
   save();
   closeModal();
@@ -2026,7 +2027,7 @@ function deleteDeal(id) {
   toast('Deal deleted');
 }
 
-// ─── REVIEW QUEUE ─────────────────────────────────────────────────────────────
+// âââ REVIEW QUEUE âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 let rqQueue = [], rqIndex = 0;
 let rqStats = { contacted:0, quote:0, nurture:0, spam:0, skipped:0 };
 
@@ -2074,7 +2075,7 @@ function rqRender() {
     if (rqStats.nurture)   parts.push(`${rqStats.nurture} moved to Nurture`);
     if (rqStats.spam)      parts.push(`${rqStats.spam} flagged as Spam`);
     if (rqStats.skipped)   parts.push(`${rqStats.skipped} skipped`);
-    document.getElementById('rq-summary').textContent = parts.length ? parts.join(' · ') : 'No actions taken.';
+    document.getElementById('rq-summary').textContent = parts.length ? parts.join(' Â· ') : 'No actions taken.';
     document.getElementById('rq-queue-info').textContent = 'All done!';
     return;
   }
@@ -2085,7 +2086,7 @@ function rqRender() {
   const d = rqQueue[rqIndex];
   const remaining = total - rqIndex;
   document.getElementById('rq-queue-info').textContent =
-    `${remaining} deal${remaining===1?'':'s'} remaining · ${d.stage === 'qualified' ? 'Qualified' : 'Nurture'} stage`;
+    `${remaining} deal${remaining===1?'':'s'} remaining Â· ${d.stage === 'qualified' ? 'Qualified' : 'Nurture'} stage`;
 
   const stageLabel = STAGES.find(s=>s.id===d.stage);
   const stageColor = stageLabel ? stageLabel.color : '#64748b';
@@ -2165,15 +2166,15 @@ function rqQuickSpam() {
   rqRender();
 }
 
-// ─── CLOSE DEAL ───────────────────────────────────────────────────────────────
+// âââ CLOSE DEAL âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function openCloseModal() {
   closeOutcome = '';
   ['ob-won','ob-lost','ob-spam'].forEach(id => { const el=document.getElementById(id); if(el){ el.style.outline=''; el.style.opacity=''; } });
   document.getElementById('loss-wrap').style.display='none';
   document.getElementById('loss-reason').value='';
   const sel = document.getElementById('close-select');
-  sel.innerHTML = '<option value="">— Choose a deal —</option>' +
-    deals.map(d=>`<option value="${d.id}">${esc(d.name)} · ${fmt(d.value)}</option>`).join('');
+  sel.innerHTML = '<option value="">â Choose a deal â</option>' +
+    deals.map(d=>`<option value="${d.id}">${esc(d.name)} Â· ${fmt(d.value)}</option>`).join('');
   document.getElementById('close-overlay').classList.add('open');
 }
 function closeCloseModal() { document.getElementById('close-overlay').classList.remove('open'); }
@@ -2206,13 +2207,13 @@ function confirmClose() {
   });
   deals = deals.filter(x=>x.id!==id);
   const lossReason = closeOutcome==='lost'?(document.getElementById('loss-reason').value.trim()||''):'';
-  logChange('closed', id, d.name, closeOutcome==='won' ? 'Won' : `Lost${lossReason ? ' — ' + lossReason : ''}`);
+  logChange('closed', id, d.name, closeOutcome==='won' ? 'Won' : `Lost${lossReason ? ' â ' + lossReason : ''}`);
   save();
   closeCloseModal();
   toast(closeOutcome==='won' ? 'Deal Won!' : 'Deal Lost');
 }
 
-// ─── CSV EXPORT ───────────────────────────────────────────────────────────────
+// âââ CSV EXPORT âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function exportCSV() {
   const rows = [['Deal Name','Company','Contact','Email','Owner','Value','Stage','Priority','Product','Follow-Up Date','Est. Close Date','Days In Stage','Notes']];
   deals.forEach(d => {
@@ -2235,7 +2236,7 @@ function exportCSV() {
   toast('CSV downloaded');
 }
 
-// ─── IMPORT ───────────────────────────────────────────────────────────────────
+// âââ IMPORT âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 let importParsed = [];
 
 function openImportModal() {
@@ -2253,7 +2254,7 @@ function closeImportModal() {
   if (fi) fi.value = '';
 }
 
-// ─── FILE DROP ZONE ───────────────────────────────────────────────────────────
+// âââ FILE DROP ZONE âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function importDragOver(e) {
   e.preventDefault();
   const dz = document.getElementById('import-dropzone');
@@ -2399,12 +2400,12 @@ function parseImportPreview() {
   const colLabels = ['Deal Name','Company','Owner','Value','Stage','Priority'];
   const tableHTML = `<thead><tr>${colLabels.map(c=>`<th>${c}</th>`).join('')}</tr></thead>
     <tbody>${importParsed.map(d=>`<tr>${cols.map(c=>{
-      const v = c==='value'?fmt(d[c]):c==='stage'?stageLabel(d[c]):(d[c]||'—');
+      const v = c==='value'?fmt(d[c]):c==='stage'?stageLabel(d[c]):(d[c]||'â');
       return `<td>${esc(String(v))}</td>`;
     }).join('')}</tr>`).join('')}</tbody>`;
 
   document.getElementById('import-preview-table').innerHTML = tableHTML;
-  document.getElementById('import-preview-label').textContent = `Preview · ${importParsed.length} deal${importParsed.length!==1?'s':''} ready to import`;
+  document.getElementById('import-preview-label').textContent = `Preview Â· ${importParsed.length} deal${importParsed.length!==1?'s':''} ready to import`;
   wrap.style.display = 'block';
   btn.disabled = false;
 }
@@ -2436,11 +2437,11 @@ function confirmImport() {
   save();
   closeImportModal();
   let msg = `Imported ${newDeals.length} deal${newDeals.length!==1?'s':''}`;
-  if (dupes>0) msg += ` (${dupes} skipped — name already exists)`;
+  if (dupes>0) msg += ` (${dupes} skipped â name already exists)`;
   toast(msg);
 }
 
-// ─── IMPORT TEMPLATE ─────────────────────────────────────────────────────────
+// âââ IMPORT TEMPLATE âââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function downloadImportTemplate() {
   const headers = 'name,company,contact,email,owner,value,stage,product,priority,notes,ltv,followUpDate,closeDate';
   const example = '"Acme Corp","Acme Inc","Jane Smith","jane@acme.com","Craig","5000","qualified","Custom Pens","high","Great logo fit","10000","2026-08-15","2026-09-30"';
@@ -2452,23 +2453,23 @@ function downloadImportTemplate() {
   toast('Template downloaded');
 }
 
-// ─── STATS BAR TOGGLE ────────────────────────────────────────────────────────
+// âââ STATS BAR TOGGLE ââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function toggleStatsBar() {
   const bar = document.getElementById('stats-bar');
   const btn = document.getElementById('stats-toggle-btn');
   if (!bar) return;
   const collapsed = bar.classList.toggle('collapsed');
-  if (btn) btn.textContent = collapsed ? '▼' : '▲';
+  if (btn) btn.textContent = collapsed ? 'â¼' : 'â²';
   if (btn) btn.title = collapsed ? 'Expand stats bar' : 'Collapse stats bar';
 }
 
-// ─── SEARCH ───────────────────────────────────────────────────────────────────
+// âââ SEARCH âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 document.getElementById('search-input').addEventListener('input', e => {
   searchQuery = e.target.value;
   render();
 });
 
-// ─── KEYBOARD SHORTCUTS ───────────────────────────────────────────────────────
+// âââ KEYBOARD SHORTCUTS âââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 document.addEventListener('keydown', e => {
   if (e.key==='Escape') { closeModal(); closeCloseModal(); closeImportModal(); closeActivityModal(); closeAddStageModal(); }
   if ((e.metaKey||e.ctrlKey) && e.key==='k') {
@@ -2478,7 +2479,7 @@ document.addEventListener('keydown', e => {
   }
 });
 
-// ─── TOAST ────────────────────────────────────────────────────────────────────
+// âââ TOAST ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 let toastTimer;
 function toast(msg) {
   const el = document.getElementById('toast');
@@ -2488,7 +2489,7 @@ function toast(msg) {
   toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
 }
 
-// ─── BOOT ─────────────────────────────────────────────────────────────────────
+// âââ BOOT âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 // Show local data immediately while Firebase connects
 try {
   const raw = localStorage.getItem(LS_KEY);
@@ -2499,7 +2500,7 @@ try {
   }
 } catch(e) {}
 
-// ─── EMAIL POPUP ──────────────────────────────────────────────────────────────
+// âââ EMAIL POPUP ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function toggleEmailPopup(id, e) {
   e.stopPropagation();
   const popup = document.getElementById(id);
@@ -2513,7 +2514,7 @@ function toggleEmailPopup(id, e) {
   }
 }
 function openGmail(email, dealName) {
-  const subject = encodeURIComponent('SwagPrint Follow-Up — ' + dealName);
+  const subject = encodeURIComponent('SwagPrint Follow-Up â ' + dealName);
   window.open(`https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(email)}&su=${subject}`, '_blank');
 }
 function copyEmail(email) {
@@ -2524,7 +2525,7 @@ function copyEmail(email) {
   });
 }
 
-// ─── FILE ATTACHMENTS ─────────────────────────────────────────────────────────
+// âââ FILE ATTACHMENTS âââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function fileIcon(name) {
   const ext = (name||'').split('.').pop().toLowerCase();
   if (['pdf'].includes(ext)) return 'PDF';
@@ -2541,7 +2542,7 @@ function renderAttachList(atts) {
       <span>${fileIcon(f.name)}</span>
       <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1" title="${esc(f.name)}">${esc(f.name)}</span>
       <span style="color:var(--text3);font-size:10px">${f.size}</span>
-      <button onclick="removeAttachment(${i})" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:14px;padding:0 2px;line-height:1" title="Remove">×</button>
+      <button onclick="removeAttachment(${i})" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:14px;padding:0 2px;line-height:1" title="Remove">Ã</button>
     </div>`).join('');
 }
 function removeAttachment(idx) {
