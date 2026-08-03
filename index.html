@@ -344,6 +344,8 @@
   .login-pin-label { font-size: 12px; color: var(--text3); margin-bottom: 8px; }
   #login-pin-input { width: 100%; padding: 14px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--surface2); color: var(--text); font-size: 22px; text-align: center; letter-spacing: 10px; outline: none; transition: border-color .15s; }
   #login-pin-input:focus { border-color: var(--accent); }
+  #login-email-input { width: 100%; padding: 13px 14px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--surface2); color: var(--text); font-size: 15px; outline: none; transition: border-color .15s; box-sizing: border-box; }
+  #login-email-input:focus { border-color: var(--accent); }
   .login-error { color: var(--red); font-size: 12px; text-align: center; margin-top: 10px; min-height: 18px; }
   .login-submit { width: 100%; margin-top: 16px; padding: 12px; font-size: 14px; font-weight: 600; }
   .login-no-users { text-align: center; color: var(--text3); font-size: 13px; padding: 20px 0; line-height: 1.6; }
@@ -398,12 +400,12 @@
     <div class="login-logo">SwagPrint</div>
     <div class="login-tagline">Sales Pipeline &mdash; sign in to continue</div>
 
-    <!-- Step 1: Pick a user -->
+    <!-- Step 1: Enter email -->
     <div class="login-step active" id="login-step-1">
-      <div class="login-step-title">Select your account</div>
-      <div class="login-users" id="login-user-list">
-        <div class="login-no-users">Loading users…</div>
-      </div>
+      <div class="login-step-title">Enter your email address</div>
+      <input id="login-email-input" type="email" placeholder="you@company.com" autocomplete="email" onkeydown="if(event.key==='Enter')submitLoginEmail()">
+      <div class="login-error" id="login-email-error" style="margin-top:8px;min-height:16px"></div>
+      <button class="btn btn-primary login-submit" style="margin-top:14px" onclick="submitLoginEmail()">Next &rarr;</button>
     </div>
 
     <!-- Step 2: Enter PIN -->
@@ -435,9 +437,13 @@
             <label>Name</label>
             <input id="um-name" type="text" placeholder="e.g. Alex" maxlength="40">
           </div>
+          <div class="um-field">
+            <label>Email</label>
+            <input id="um-email" type="email" placeholder="alex@company.com" maxlength="120">
+          </div>
           <div class="um-field" style="max-width:120px">
             <label>PIN (4–8 digits)</label>
-            <input id="um-pin" type="password" inputmode="numeric" placeholder="••••" maxlength="8">
+            <input id="um-pin" type="text" inputmode="numeric" placeholder="e.g. 1234" maxlength="8">
           </div>
           <div class="um-field" style="max-width:110px">
             <label>Role</label>
@@ -901,7 +907,7 @@ try {
     const data = snap.val();
     if (!data || Object.keys(data).length === 0) {
       // Seed a default admin on first run
-      usersRef.push({ name: 'Rizwan', pin: '1234', role: 'admin' }, () => {
+      usersRef.push({ name: 'Rizwan', email: 'rizwan@swagprint.com', pin: '1234', role: 'admin' }, () => {
         usersRef.once('value', s2 => { usersCache = s2.val() || {}; checkSession(); });
       });
     } else {
@@ -1027,10 +1033,14 @@ function checkSession() {
 function showLoginScreen() {
   const overlay = document.getElementById('login-overlay');
   if (overlay) overlay.style.display = 'flex';
-  renderLoginUsers();
-  // Show step 1
+  // Reset to email step
   document.getElementById('login-step-1').classList.add('active');
   document.getElementById('login-step-2').classList.remove('active');
+  const emailInput = document.getElementById('login-email-input');
+  if (emailInput) { emailInput.value = ''; }
+  const emailErr = document.getElementById('login-email-error');
+  if (emailErr) emailErr.textContent = '';
+  setTimeout(() => { const el = document.getElementById('login-email-input'); if(el) el.focus(); }, 80);
 }
 
 function hideLoginOverlay() {
@@ -1038,28 +1048,20 @@ function hideLoginOverlay() {
   if (overlay) overlay.style.display = 'none';
 }
 
-function renderLoginUsers() {
-  const list = document.getElementById('login-user-list');
-  if (!list) return;
-  const users = Object.entries(usersCache);
-  if (users.length === 0) {
-    list.innerHTML = '<div class="login-no-users">No users found.<br>Contact your admin to set up accounts.</div>';
+function submitLoginEmail() {
+  const emailInput = document.getElementById('login-email-input');
+  const errEl = document.getElementById('login-email-error');
+  const email = (emailInput ? emailInput.value.trim().toLowerCase() : '');
+  if (!email) { if(errEl) errEl.textContent = 'Please enter your email address.'; return; }
+  // Find user by email (case-insensitive)
+  const found = Object.entries(usersCache).find(([id, u]) => (u.email||'').toLowerCase() === email);
+  if (!found) {
+    if(errEl) errEl.textContent = 'No account found with that email. Contact your admin.';
     return;
   }
-  // Sort: admins first, then alphabetical
-  users.sort((a,b) => {
-    if (a[1].role === 'admin' && b[1].role !== 'admin') return -1;
-    if (b[1].role === 'admin' && a[1].role !== 'admin') return 1;
-    return (a[1].name||'').localeCompare(b[1].name||'');
-  });
-  list.innerHTML = users.map(([id, u]) => `
-    <button class="login-user-btn ${u.role==='admin'?'admin-btn':''}" onclick="selectLoginUser('${id}','${esc(u.name)}','${u.role}')">
-      <div class="lub-avatar">${esc(u.name).charAt(0).toUpperCase()}</div>
-      <div class="lub-info">
-        <span class="lub-name">${esc(u.name)}</span>
-        <span class="lub-role">${u.role === 'admin' ? 'Admin' : 'Sales Rep'}</span>
-      </div>
-    </button>`).join('');
+  if(errEl) errEl.textContent = '';
+  const [id, u] = found;
+  selectLoginUser(id, u.name, u.role);
 }
 
 let loginSelectedId = null, loginSelectedName = '', loginSelectedRole = '';
@@ -1080,6 +1082,7 @@ function loginBack() {
   document.getElementById('login-step-2').classList.remove('active');
   document.getElementById('login-step-1').classList.add('active');
   document.getElementById('login-error').textContent = '';
+  setTimeout(() => { const el = document.getElementById('login-email-input'); if(el) el.focus(); }, 80);
 }
 
 function loginPinInput() {
@@ -1097,9 +1100,13 @@ function attemptLogin() {
     document.getElementById('login-pin-input').focus();
     return;
   }
-  // Success
+  // Success — track login
   currentSession = { userId: loginSelectedId, name: user.name, role: user.role };
   localStorage.setItem(AUTH_KEY, JSON.stringify(currentSession));
+  if (usersRef) {
+    usersRef.child(loginSelectedId + '/loginCount').transaction(c => (c || 0) + 1);
+    usersRef.child(loginSelectedId + '/lastLogin').set(Date.now());
+  }
   hideLoginOverlay();
   updateNavForUser();
   render();
@@ -1220,32 +1227,43 @@ function renderUmUsers() {
   list.innerHTML = users.map(([id, u]) => `
     <div class="user-row">
       <div class="user-avatar ${u.role==='admin'?'admin-av':''}">${esc(u.name).charAt(0).toUpperCase()}</div>
-      <div class="user-info">
-        <span class="user-name-text">${esc(u.name)}</span>
-        <span class="user-role-badge ${u.role==='admin'?'admin-badge':''}">${u.role==='admin'?'Admin':'Rep'}</span>
-        <div class="user-pin-display">PIN: ${'•'.repeat(String(u.pin||'').length)}</div>
+      <div class="user-info" style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+          <span class="user-name-text">${esc(u.name)}</span>
+          <span class="user-role-badge ${u.role==='admin'?'admin-badge':''}">${u.role==='admin'?'Admin':'Rep'}</span>
+        </div>
+        ${u.email ? `<div style="font-size:11px;color:var(--text3);margin-top:2px">${esc(u.email)} <span style="cursor:pointer;color:var(--accent);font-size:10px" onclick="setUserEmail('${id}')">edit</span></div>` : `<div style="font-size:11px;color:var(--yellow);margin-top:2px;cursor:pointer" onclick="setUserEmail('${id}')">⚠ No email — click to set</div>`}
+        <div style="display:flex;gap:12px;margin-top:3px;flex-wrap:wrap">
+          <div class="user-pin-display">PIN: <span style="font-family:monospace;font-weight:700;letter-spacing:2px;color:var(--text)">${esc(String(u.pin||''))}</span></div>
+          <div style="font-size:11px;color:var(--text3)">Logins: <strong style="color:var(--text)">${u.loginCount||0}</strong>${u.lastLogin ? ' &bull; Last: '+new Date(u.lastLogin).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : ''}</div>
+        </div>
       </div>
-      <button class="btn btn-ghost" style="font-size:12px;padding:4px 10px" onclick="resetPin('${id}')">Reset PIN</button>
+      <button class="btn btn-ghost" style="font-size:12px;padding:4px 10px;flex-shrink:0" onclick="resetPin('${id}')">Reset PIN</button>
       ${u.role !== 'admin' || Object.values(usersCache).filter(x=>x.role==='admin').length > 1 ?
-        `<button class="btn btn-ghost" style="font-size:12px;padding:4px 10px;color:var(--red)" onclick="removeUser('${id}','${esc(u.name)}')">Remove</button>` : ''}
+        `<button class="btn btn-ghost" style="font-size:12px;padding:4px 10px;color:var(--red);flex-shrink:0" onclick="removeUser('${id}','${esc(u.name)}')">Remove</button>` : ''}
     </div>`).join('');
 }
 
 function addUser() {
-  const name = document.getElementById('um-name').value.trim();
-  const pin  = document.getElementById('um-pin').value.trim();
-  const role = document.getElementById('um-role').value;
-  const err  = document.getElementById('um-error');
+  const name  = document.getElementById('um-name').value.trim();
+  const email = document.getElementById('um-email').value.trim().toLowerCase();
+  const pin   = document.getElementById('um-pin').value.trim();
+  const role  = document.getElementById('um-role').value;
+  const err   = document.getElementById('um-error');
   if (!name) { err.textContent = 'Name is required.'; return; }
+  if (!email || !email.includes('@')) { err.textContent = 'A valid email is required.'; return; }
   if (!pin || !/^\d{4,8}$/.test(pin)) { err.textContent = 'PIN must be 4–8 digits.'; return; }
-  // Check duplicate name
   if (Object.values(usersCache).some(u => u.name.toLowerCase() === name.toLowerCase())) {
     err.textContent = 'A user with that name already exists.'; return;
   }
+  if (Object.values(usersCache).some(u => (u.email||'').toLowerCase() === email)) {
+    err.textContent = 'A user with that email already exists.'; return;
+  }
   err.textContent = '';
   if (usersRef) {
-    usersRef.push({ name, pin, role }, () => {
+    usersRef.push({ name, email, pin, role }, () => {
       document.getElementById('um-name').value = '';
+      document.getElementById('um-email').value = '';
       document.getElementById('um-pin').value = '';
       document.getElementById('um-role').value = 'rep';
       renderUmUsers();
@@ -1268,6 +1286,18 @@ function resetPin(id) {
   if (newPin === null) return;
   if (!/^\d{4,8}$/.test(newPin.trim())) { toast('Invalid PIN — must be 4–8 digits.'); return; }
   if (usersRef) usersRef.child(id + '/pin').set(newPin.trim(), () => { renderUmUsers(); toast('PIN updated.'); });
+}
+
+function setUserEmail(id) {
+  const current = (usersCache[id] || {}).email || '';
+  const newEmail = prompt('Enter email address for this user:', current);
+  if (newEmail === null) return;
+  const email = newEmail.trim().toLowerCase();
+  if (!email || !email.includes('@')) { toast('Invalid email address.'); return; }
+  // Check duplicate (ignore current user's own email)
+  const dup = Object.entries(usersCache).find(([uid, u]) => uid !== id && (u.email||'').toLowerCase() === email);
+  if (dup) { toast('That email is already assigned to another user.'); return; }
+  if (usersRef) usersRef.child(id + '/email').set(email, () => { renderUmUsers(); toast('Email updated.'); });
 }
 
 // Legacy no-op stubs (old team badge system removed)
