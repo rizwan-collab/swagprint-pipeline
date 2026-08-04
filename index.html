@@ -543,6 +543,14 @@
   <span class="chip" onclick="setFilter('hasltv',this)" title="Deals with LTV data">Has LTV</span>
   <span class="chip" onclick="setFilter('highltv',this)" title="LTV over $5k">High LTV $5k+</span>
   <span class="chip" id="my-deals-chip" onclick="setFilter('mydeals',this)" title="Only deals assigned to you">My Deals</span>
+  <div class="filter-sep"></div>
+  <span class="filter-label">Close Month:</span>
+  <select class="owner-select" id="month-filter" onchange="setMonthFilter(this.value)">
+    <option value="">All Months</option>
+  </select>
+</div>
+<!-- MONTHLY TOTALS BAR -->
+<div id="monthly-totals-bar" style="display:none;align-items:center;gap:8px;padding:8px 20px;background:var(--bg);border-bottom:1px solid var(--border);flex-wrap:wrap;overflow-x:auto">
 </div>
 
 <!-- BOARD + SIDE PANEL -->
@@ -631,6 +639,8 @@
               <div class="fg"><label>LTV ($) <span style="font-weight:400;color:var(--text3);font-size:11px">lifetime value</span></label><input id="f-ltv" type="number" placeholder="0" min="0"></div>
               <div class="fg"><label>Follow-Up Date</label><input id="f-followup" type="date"></div>
               <div class="fg"><label>Est. Close Date</label><input id="f-closedate" type="date"></div>
+              <div class="fg"><label>Vendor Name</label><input id="f-vendor" type="text" placeholder="e.g. SanMar, S&S Activewear"></div>
+              <div class="fg"><label>Vendor POC</label><input id="f-poc" type="text" placeholder="Vendor rep name / contact"></div>
               <div class="fg full">
                 <label>Attachments <span style="font-weight:400;color:var(--text3);font-size:11px">(PDFs, quotes — max 2MB each)</span></label>
                 <div id="attach-drop" style="border:2px dashed var(--border);border-radius:8px;padding:10px;text-align:center;cursor:pointer;transition:all .15s" onclick="document.getElementById('attach-input').click()" ondragover="attachDragOver(event)" ondragleave="attachDragLeave(event)" ondrop="attachDrop(event)">
@@ -823,6 +833,27 @@
   </div>
 </div>
 
+<!-- DEAL VIEW POPUP -->
+<div class="overlay" id="deal-view-overlay" style="display:none">
+  <div class="modal" style="width:720px;max-height:88vh;display:flex;flex-direction:column">
+    <div class="modal-head" style="align-items:flex-start;gap:12px">
+      <div style="flex:1;min-width:0">
+        <h2 id="dv-name" style="margin:0;font-size:18px;line-height:1.2;word-break:break-word"></h2>
+        <div id="dv-company" style="font-size:13px;color:var(--text3);margin-top:3px"></div>
+        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap" id="dv-badges"></div>
+      </div>
+      <button class="modal-x" onclick="closeDealView()" style="flex-shrink:0;margin-top:2px">✕</button>
+    </div>
+    <div id="dv-body" style="flex:1;overflow-y:auto;padding:20px;display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start"></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" id="dv-delete-btn" style="color:var(--red);margin-right:auto;font-size:12px">Delete</button>
+      <button class="btn btn-outline" onclick="closeDealView()">Close</button>
+      <button class="btn btn-ghost" id="dv-log-btn">+ Log Activity</button>
+      <button class="btn btn-primary" id="dv-edit-btn">Edit Deal</button>
+    </div>
+  </div>
+</div>
+
 <!-- ADD STAGE MODAL -->
 <div class="overlay" id="addstage-overlay">
   <div class="modal" style="width:360px">
@@ -878,7 +909,7 @@ const LEGACY_SEED_IDS = new Set(['d1','d2','d3','d4','d5','a1','a2','a3']);
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
 let deals = [], archive = [];
-let activeFilter = 'all', activeOwner = '', activeValue = '', activeStageFilter = '', searchQuery = '';
+let activeFilter = 'all', activeOwner = '', activeValue = '', activeStageFilter = '', searchQuery = '', activeMonthFilter = '';
 let dragId = null, editId = null, closeOutcome = '', panelTab = 'won';
 let collapsedCols = new Set();
 let dbRef = null, fbReady = false;
@@ -1009,6 +1040,63 @@ function setFilter(f, el) {
 }
 function setOwnerFilter(v) { activeOwner = v; render(); }
 function setStageFilter(v) { activeStageFilter = v; render(); }
+
+function setMonthFilter(v) { activeMonthFilter = v; render(); }
+
+function refreshMonthFilter() {
+  const sel = document.getElementById('month-filter');
+  if (!sel) return;
+  // Build month options from deals that have a closeDate
+  const monthMap = {};
+  deals.forEach(d => {
+    if (!d.closeDate) return;
+    const dt = new Date(d.closeDate);
+    if (isNaN(dt)) return;
+    const key = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`;
+    const label = dt.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    if (!monthMap[key]) monthMap[key] = { label, total: 0, count: 0 };
+    monthMap[key].total += Number(d.value) || 0;
+    monthMap[key].count++;
+  });
+  const months = Object.entries(monthMap).sort((a,b) => a[0].localeCompare(b[0]));
+  const prev = sel.value;
+  sel.innerHTML = '<option value="">All Months</option>' +
+    months.map(([k,v]) =>
+      `<option value="${k}">${v.label} — ${v.count} deal${v.count!==1?'s':''} · ${v.total>=1000?'$'+(v.total/1000).toFixed(1)+'k':'$'+v.total}</option>`
+    ).join('');
+  if (prev) sel.value = prev;
+
+  // Render monthly totals bar
+  const bar = document.getElementById('monthly-totals-bar');
+  if (!bar) return;
+  if (!months.length) { bar.style.display = 'none'; return; }
+  const activePipelineDeals = deals.filter(d => !['won','lost'].includes(d.stage));
+  const barMonths = {};
+  activePipelineDeals.forEach(d => {
+    if (!d.closeDate) return;
+    const dt = new Date(d.closeDate);
+    if (isNaN(dt)) return;
+    const key = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`;
+    const label = dt.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    if (!barMonths[key]) barMonths[key] = { label, total: 0, count: 0 };
+    barMonths[key].total += Number(d.value) || 0;
+    barMonths[key].count++;
+  });
+  const barEntries = Object.entries(barMonths).sort((a,b) => a[0].localeCompare(b[0]));
+  if (!barEntries.length) { bar.style.display = 'none'; return; }
+  const maxVal = Math.max(...barEntries.map(([,v]) => v.total));
+  bar.style.display = 'flex';
+  bar.innerHTML = barEntries.map(([key, v]) => {
+    const pct = maxVal > 0 ? Math.round((v.total / maxVal) * 72) + 28 : 28;
+    const isActive = activeMonthFilter === key;
+    return `<div onclick="document.getElementById('month-filter').value='${key}';setMonthFilter('${key}')"
+      style="cursor:pointer;padding:6px 12px;border-radius:8px;background:${isActive?'var(--accent2)22':'var(--surface2)'};border:1px solid ${isActive?'var(--accent2)':'var(--border)'};text-align:center;min-width:90px;transition:all .15s">
+      <div style="font-size:11px;font-weight:700;color:${isActive?'var(--accent2)':'var(--text3)'};">${v.label}</div>
+      <div style="font-size:14px;font-weight:700;color:${isActive?'var(--accent2)':'var(--text)'};">${v.total>=1000?'$'+(v.total/1000).toFixed(1)+'k':'$'+v.total}</div>
+      <div style="font-size:10px;color:var(--text3)">${v.count} deal${v.count!==1?'s':''}</div>
+    </div>`;
+  }).join('');
+}
 
 // ─── AUTH SYSTEM ─────────────────────────────────────────────────────────────
 function checkSession() {
@@ -1340,6 +1428,13 @@ function applyFilters(list) {
     r = me ? r.filter(d => (d.owner||'').toLowerCase() === me) : r;
   }
   if (activeStageFilter)        r = r.filter(d => d.stage === activeStageFilter);
+  if (activeMonthFilter) {
+    r = r.filter(d => {
+      if (!d.closeDate) return false;
+      const dt = new Date(d.closeDate);
+      return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}` === activeMonthFilter;
+    });
+  }
   return r;
 }
 
@@ -1450,7 +1545,7 @@ function refreshOwnerDropdown() {
 }
 
 // ─── RENDER ───────────────────────────────────────────────────────────────────
-function render() { updateStats(); refreshOwnerDropdown(); renderBoard(); renderPanel(); }
+function render() { updateStats(); refreshOwnerDropdown(); refreshMonthFilter(); renderBoard(); renderPanel(); }
 
 function renderBoard() {
   const vis = applyFilters(deals);
@@ -1628,7 +1723,7 @@ function cardHTML(d) {
   const acts = (d.activities || []).slice().reverse();
   const actItems = acts.map(a => `<div class="act-item">
     <span class="act-badge act-${a.type}">${actTypeLabel(a.type)}</span>
-    <span class="act-meta">${new Date(a.at).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</span>
+    <span class="act-meta">${new Date(a.at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})} ${new Date(a.at).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})}</span>
     ${a.by?`<span class="act-by">· ${esc(a.by)}</span>`:''}
     ${a.notes?`<div class="act-note">${esc(a.notes)}</div>`:''}
   </div>`).join('');
@@ -1640,9 +1735,9 @@ function cardHTML(d) {
     ${actItems || '<div class="act-empty">No activity yet — log a call, email, or text</div>'}
   </div>`;
 
-  return `<div class="card" id="card-${d.id}" draggable="true"
+  return `<div class="card" id="card-${d.id}" draggable="true" style="cursor:pointer"
     ondragstart="dStart(event,'${d.id}')"
-    onclick="toggleCard('${d.id}',event)">
+    onclick="openDealView('${d.id}',event)">
     <div class="card-top">
       <div class="card-name">${esc(d.name)}</div>
       <span class="card-priority ${priCls}">${d.priority}</span>
@@ -1654,6 +1749,7 @@ function cardHTML(d) {
     </div>
     ${(d.priority && d.priorityBy)?`<div style="font-size:10px;color:var(--text3);margin-bottom:3px"><span style="color:var(--yellow)">${esc(d.priorityBy)}</span> flagged ${d.priority}</div>`:''}
     ${notesHTML}${tagsRow}${followHTML}
+    ${d.closeDate ? `<div style="display:inline-flex;align-items:center;gap:4px;margin-bottom:4px;padding:2px 7px;border-radius:4px;background:var(--surface2);border:1px solid var(--border);font-size:10px;font-weight:600;color:var(--text3)">🎯 Close: ${fmtDate(d.closeDate)}</div>` : ''}
     ${agingBadge(d)}
     <div class="card-extra">
       ${detailRows}
@@ -1743,6 +1839,10 @@ function saveActivity() {
   if (!d.activities) d.activities = [];
   d.activities.push({ id: uid(), type: actType, notes, by: currentSession ? currentSession.name : '', at: Date.now() });
   save(); closeActivityModal(); render();
+  if (dealViewId === dealId) {
+    const updated = deals.find(x => x.id === dealId);
+    if (updated) { renderDealView(updated); document.getElementById('deal-view-overlay').style.display = 'flex'; }
+  }
   toast(`${actTypeLabel(actType)} logged`);
 }
 
@@ -1812,6 +1912,103 @@ function toggleCard(id, e) {
   const el = document.getElementById('card-'+id);
   if (!el) return;
   el.classList.toggle('expanded');
+}
+
+// ─── DEAL VIEW POPUP ──────────────────────────────────────────────────────────
+let dealViewId = null;
+
+function openDealView(id, e) {
+  if (e && (e.target.closest('.ca-btn') || e.target.closest('.card-actions') ||
+      e.target.tagName === 'A' || e.target.closest('.email-popup-wrap'))) return;
+  dealViewId = id;
+  const d = deals.find(x => x.id === id);
+  if (!d) return;
+  renderDealView(d);
+  document.getElementById('deal-view-overlay').style.display = 'flex';
+}
+
+function closeDealView() {
+  document.getElementById('deal-view-overlay').style.display = 'none';
+  dealViewId = null;
+}
+
+function renderDealView(d) {
+  document.getElementById('dv-name').textContent = d.name;
+  document.getElementById('dv-company').textContent = d.company || '';
+
+  // Badges row
+  const sColor = stageColor(d.stage);
+  const priColors = { high: '#ef4444', medium: '#f59e0b', low: '#6b7280' };
+  const priColor = priColors[d.priority] || '#6b7280';
+  const ageDays = daysSince(d.stageEnteredAt || d.createdAt);
+  const ageColor = ageDays < 3 ? '#10b981' : ageDays < 7 ? '#f59e0b' : '#ef4444';
+  document.getElementById('dv-badges').innerHTML = [
+    `<span style="padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:${sColor}22;color:${sColor};border:1px solid ${sColor}55">${stageLabel(d.stage)}</span>`,
+    d.priority ? `<span style="padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:${priColor}22;color:${priColor}">${d.priority}</span>` : '',
+    `<span style="padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:${ageColor}18;color:${ageColor}">${ageDays}d in stage</span>`,
+    isOverdue(d) ? `<span style="padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:#ef444422;color:#ef4444">Follow-up overdue</span>` : '',
+  ].filter(Boolean).join('');
+
+  // Helper: labelled field
+  const dvField = (label, val, style='') => val
+    ? `<div style="margin-bottom:14px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:4px">${label}</div><div style="font-size:14px;color:var(--text);${style}">${val}</div></div>`
+    : '';
+
+  // Contacts
+  const contactsList = (d.contacts && d.contacts.length)
+    ? d.contacts : (d.contact ? [{ name: d.contact, email: d.email || '' }] : []);
+  const contactsHTML = contactsList.length
+    ? `<div style="margin-bottom:14px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:4px">Contact${contactsList.length > 1 ? 's' : ''}</div>${contactsList.map(c =>
+        `<div style="font-size:14px;color:var(--text);margin-bottom:4px">${c.name ? esc(c.name) : ''}${c.email ? ` <a href="mailto:${esc(c.email)}" style="color:var(--accent2);font-size:12px" onclick="event.stopPropagation()">${esc(c.email)}</a>` : ''}</div>`
+      ).join('')}</div>` : '';
+
+  // Attachments
+  const attHTML = (d.attachments && d.attachments.length)
+    ? `<div style="margin-bottom:14px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:6px">Files (${d.attachments.length})</div><div style="display:flex;flex-wrap:wrap;gap:6px">${d.attachments.map(f =>
+        `<a href="${f.url}" download="${esc(f.name)}" target="_blank" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--text2);text-decoration:none;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${fileIcon(f.name)} ${esc(f.name)}</a>`
+      ).join('')}</div></div>` : '';
+
+  const leftCol = [
+    dvField('Deal Value', d.value ? fmt(d.value) : '', 'font-size:22px;font-weight:700;color:var(--accent2)'),
+    d.ltv ? `<div style="margin-bottom:14px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:4px">LTV</div><div style="font-size:16px;font-weight:700;color:#a78bfa">${fmt(d.ltv)}</div></div>` : '',
+    contactsHTML,
+    dvField('Owner / Rep', esc(d.owner||'')),
+    dvField('Product', esc(d.product||'')),
+    dvField('Vendor', esc(d.vendor||'')),
+    dvField('Vendor POC', esc(d.poc||'')),
+    dvField('Follow-Up', d.followUpDate ? fmtDate(d.followUpDate) : '', isOverdue(d) ? 'color:#ef4444;font-weight:700' : ''),
+    dvField('Est. Close', d.closeDate ? fmtDate(d.closeDate) : ''),
+    d.notes ? `<div style="margin-bottom:14px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:4px">Notes</div><div style="font-size:13px;color:var(--text2);line-height:1.6;font-style:italic">${esc(d.notes)}</div></div>` : '',
+    attHTML,
+  ].filter(Boolean).join('');
+
+  // Activity log (right column)
+  const acts = (d.activities || []).slice().reverse();
+  const actItemsHTML = acts.map(a => `
+    <div style="border-bottom:1px solid var(--border);padding:10px 0">
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px">
+        <span class="act-badge act-${a.type}">${actTypeLabel(a.type)}</span>
+        <span style="font-size:11px;color:var(--text3)">${new Date(a.at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})} at ${new Date(a.at).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})}</span>
+        ${a.by ? `<span style="font-size:11px;color:var(--text3);font-style:italic">· ${esc(a.by)}</span>` : ''}
+      </div>
+      ${a.notes ? `<div style="font-size:13px;color:var(--text2);line-height:1.5">${esc(a.notes)}</div>` : ''}
+    </div>`).join('');
+
+  const rightCol = `
+    <div>
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between">
+        Activity ${acts.length ? `(${acts.length})` : ''}
+        <button class="act-log-btn" onclick="closeDealView();setTimeout(()=>openActivityModal('${d.id}'),80)">+ Log</button>
+      </div>
+      ${actItemsHTML || '<div style="font-size:12px;color:var(--text3);font-style:italic;padding:8px 0">No activity logged yet</div>'}
+    </div>`;
+
+  document.getElementById('dv-body').innerHTML = `<div>${leftCol}</div>${rightCol}`;
+
+  // Wire footer buttons
+  document.getElementById('dv-edit-btn').onclick = () => { closeDealView(); openEdit(d.id); };
+  document.getElementById('dv-log-btn').onclick  = () => { closeDealView(); setTimeout(() => openActivityModal(d.id), 80); };
+  document.getElementById('dv-delete-btn').onclick = () => { closeDealView(); deleteDeal(d.id); };
 }
 
 function toggleArcCard(id, e) {
@@ -1970,6 +2167,7 @@ function openEdit(id) {
   fv('f-owner', d.owner); fv('f-value', d.value); fv('f-ltv', d.ltv||0);
   fv('f-product', d.product); fv('f-priority', d.priority||'medium'); fv('f-followup', d.followUpDate);
   fv('f-closedate', d.closeDate); fv('f-notes', d.notes);
+  fv('f-vendor', d.vendor||''); fv('f-poc', d.poc||'');
   fv('f-stage-entered', d.stageEnteredAt||''); fv('f-created-at', d.createdAt||'');
   // Populate contacts — support legacy single contact/email fields
   const existingContacts = d.contacts && d.contacts.length
@@ -1978,7 +2176,7 @@ function openEdit(id) {
   populateContactRows(existingContacts);
   syncStagePicker(d.stage || 'contacted');
   // Show more fields if they have data
-  const hasExtra = d.company||d.email||d.owner||d.product||d.ltv||d.followUpDate||d.closeDate;
+  const hasExtra = d.company||d.email||d.owner||d.product||d.ltv||d.followUpDate||d.closeDate||d.vendor||d.poc;
   document.getElementById('more-fields').style.display = hasExtra ? 'block' : 'none';
   document.getElementById('more-fields-arrow').textContent = hasExtra ? '▼' : '▶';
   const atts = d.attachments || [];
@@ -2017,6 +2215,8 @@ function saveDeal(e) {
     followUpDate:document.getElementById('f-followup').value,
     closeDate:   document.getElementById('f-closedate').value,
     notes:       document.getElementById('f-notes').value.trim(),
+    vendor:      document.getElementById('f-vendor').value.trim(),
+    poc:         document.getElementById('f-poc').value.trim(),
     attachments: JSON.parse(document.getElementById('f-attachments').value || '[]'),
     createdAt:   prevCreated || Date.now(),
     stageEnteredAt: (stageChanged || !prevEntered) ? Date.now() : prevEntered,
