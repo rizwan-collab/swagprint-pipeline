@@ -903,7 +903,8 @@
       <button class="modal-x" onclick="closeEmailScripts()">✕</button>
     </div>
     <div class="es-body" id="es-scripts-body"></div>
-    <div class="es-foot">
+    <div class="es-foot" style="gap:8px;justify-content:space-between">
+      <div style="display:flex;gap:6px" id="es-quick-actions"></div>
       <button class="btn btn-outline" onclick="closeEmailScripts()">Close</button>
     </div>
   </div>
@@ -1768,16 +1769,7 @@ function cardHTML(d) {
     ? `<div class="card-followup overdue">Follow-up overdue</div>`
     : d.followUpDate ? `<div class="card-followup">${fmtDate(d.followUpDate)}</div>` : '';
   const emailBtn = primaryEmail ? `
-    <div class="email-popup-wrap" onclick="event.stopPropagation()">
-      <button class="ca-btn mail" onclick="toggleEmailPopup('epop-${d.id}',event)">✉ Email ▾</button>
-      <div class="email-popup" id="epop-${d.id}">
-        <div class="email-popup-item" onclick="openEmailScripts('${d.id}')">Suggested Scripts</div>
-        <div class="email-popup-divider"></div>
-        <div class="email-popup-item" onclick="openGmail('${esc(primaryEmail)}','${esc(d.name)}')">Open in Gmail</div>
-        <div class="email-popup-item" onclick="copyEmail('${esc(primaryEmail)}')">Copy Email</div>
-        <div class="email-popup-item" onclick="window.location='mailto:${esc(primaryEmail)}'">Default Mail App</div>
-      </div>
-    </div>` : '';
+    <button class="ca-btn mail" onclick="openEmailScripts('${d.id}');event.stopPropagation()">Email</button>` : '';
 
   // Expanded section — contacts list
   const contactsDetail = contactsList.length
@@ -1995,7 +1987,7 @@ let dealViewId = null;
 
 function openDealView(id, e) {
   if (e && (e.target.closest('.ca-btn') || e.target.closest('.card-actions') ||
-      e.target.tagName === 'A' || e.target.closest('.email-popup-wrap'))) return;
+      e.target.tagName === 'A')) return;
   dealViewId = id;
   const d = deals.find(x => x.id === id);
   if (!d) return;
@@ -2882,6 +2874,15 @@ function openEmailScripts(dealId) {
 
   // Store scripts for copy function
   window._esScripts = scripts;
+  // Quick action buttons in footer
+  const qa = document.getElementById('es-quick-actions');
+  if (qa) {
+    qa.innerHTML = email
+      ? `<span style="font-size:12px;color:var(--text3);align-self:center">${esc(email)}</span>
+         <button class="btn btn-outline" style="font-size:11px;padding:4px 10px" onclick="openGmail('${esc(email)}','${esc(d.name)}')">Open Gmail (blank)</button>
+         <button class="btn btn-outline" style="font-size:11px;padding:4px 10px" onclick="copyEmail('${esc(email)}')">Copy Address</button>`
+      : '';
+  }
   document.getElementById('es-overlay').classList.add('open');
 }
 
