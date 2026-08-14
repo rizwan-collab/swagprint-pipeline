@@ -1107,6 +1107,58 @@ function agingBadge(d) {
   return `<span class="card-aging aging-stale"> ${days}d stale</span>`;
 }
 
+// ─── DEAL SCORE ───────────────────────────────────────────────────────────────
+function dealScore(d) {
+  let score = 0;
+
+  // Activity recency (0–40 pts)
+  const acts = d.activities || [];
+  const lastActAt = acts.length ? Math.max(...acts.map(a => Number(a.at))) : Number(d.createdAt || 0);
+  const actAge = lastActAt ? Math.floor((Date.now() - lastActAt) / 86400000) : 999;
+  if      (actAge === 0)  score += 40;
+  else if (actAge <= 2)   score += 35;
+  else if (actAge <= 5)   score += 25;
+  else if (actAge <= 10)  score += 12;
+  else if (actAge <= 21)  score += 5;
+  // 21+ days: 0
+
+  // Stage progression (0–25 pts)
+  const stagePts = { nurture:3, qualified:8, contacted:14, quote:20, proposal:25 };
+  score += stagePts[d.stage] || 0;
+
+  // Close date urgency (0–20 pts)
+  if (d.closeDate) {
+    const daysToClose = Math.ceil((new Date(d.closeDate) - new Date()) / 86400000);
+    if      (daysToClose < 0)   score += 5;   // overdue close — deal may be dead
+    else if (daysToClose <= 7)  score += 20;
+    else if (daysToClose <= 14) score += 15;
+    else if (daysToClose <= 30) score += 10;
+    else                         score += 5;
+  }
+
+  // Priority (0–10 pts)
+  if      (d.priority === 'high')   score += 10;
+  else if (d.priority === 'medium') score += 5;
+  else                              score += 2;
+
+  // Activity count bonus (0–5 pts — engaged prospects)
+  if      (acts.length >= 5) score += 5;
+  else if (acts.length >= 2) score += 3;
+  else if (acts.length >= 1) score += 1;
+
+  return Math.min(100, Math.max(0, score));
+}
+
+function dealScoreBadge(d) {
+  const s = dealScore(d);
+  let color, label;
+  if      (s >= 75) { color = '#10b981'; label = 'Hot'; }
+  else if (s >= 50) { color = '#f59e0b'; label = 'Warm'; }
+  else if (s >= 25) { color = '#f97316'; label = 'Cool'; }
+  else              { color = '#ef4444'; label = 'Cold'; }
+  return `<span title="Deal Score: ${s}/100" style="display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:4px;background:${color}18;border:1px solid ${color}44;font-size:10px;font-weight:700;color:${color};cursor:default">${s} ${label}</span>`;
+}
+
 // ─── FILTER / SEARCH ──────────────────────────────────────────────────────────
 function setFilter(f, el) {
   activeFilter = f;
@@ -1813,9 +1865,10 @@ function cardHTML(d) {
       <span class="card-priority ${priCls}">${d.priority}</span>
     </div>
     ${d.company?`<div class="card-co">${esc(d.company)}</div>`:''}
-    <div style="display:flex;align-items:baseline;gap:8px">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
       <div class="card-value">${fmt(d.value)}</div>
       ${d.ltv?`<span style="font-size:10px;color:#a78bfa;font-weight:600" title="Lifetime Value">LTV ${fmt(d.ltv)}</span>`:''}
+      ${dealScoreBadge(d)}
     </div>
     ${(d.priority && d.priorityBy)?`<div style="font-size:10px;color:var(--text3);margin-bottom:3px"><span style="color:var(--yellow)">${esc(d.priorityBy)}</span> flagged ${d.priority}</div>`:''}
     ${notesHTML}${tagsRow}${followHTML}
@@ -2015,6 +2068,7 @@ function renderDealView(d) {
     d.priority ? `<span style="padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:${priColor}22;color:${priColor}">${d.priority}</span>` : '',
     `<span style="padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:${ageColor}18;color:${ageColor}">${ageDays}d in stage</span>`,
     isOverdue(d) ? `<span style="padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:#ef444422;color:#ef4444">Follow-up overdue</span>` : '',
+    dealScoreBadge(d),
   ].filter(Boolean).join('');
 
   // Helper: labelled field
