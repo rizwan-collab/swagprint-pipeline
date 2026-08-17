@@ -238,6 +238,10 @@
   .col.lost-col .col-header { background: rgba(239,68,68,.06); }
   .col.spam-col { border-color: rgba(107,114,128,.3); opacity: .75; }
   .col.spam-col .col-header { background: rgba(107,114,128,.06); }
+  /* During drag: block pointer events on archive column children so dragover always fires on the column itself */
+  body.dragging-active .won-col *,
+  body.dragging-active .lost-col *,
+  body.dragging-active .spam-col * { pointer-events: none !important; }
   .arc-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 9px; padding: 10px 11px; cursor: pointer; transition: border-color .15s; }
   .arc-card:hover { border-color: var(--accent); }
   .arc-card.expanded { border-color: var(--accent); cursor: default; }
@@ -2161,7 +2165,10 @@ function toggleCol(colId, e) {
 function dStart(e, id) {
   dragId = id;
   e.dataTransfer.effectAllowed = 'move';
-  setTimeout(() => document.getElementById('card-'+id)?.classList.add('dragging'), 0);
+  setTimeout(() => {
+    document.getElementById('card-'+id)?.classList.add('dragging');
+    document.body.classList.add('dragging-active');
+  }, 0);
 }
 function dOver(e, stageId) {
   e.preventDefault();
@@ -2169,9 +2176,15 @@ function dOver(e, stageId) {
   document.querySelectorAll('.col').forEach(c => c.classList.remove('drag-over'));
   document.getElementById('col-'+stageId)?.classList.add('drag-over');
 }
-function dLeave(e) { e.currentTarget?.classList.remove('drag-over'); }
+function dLeave(e) {
+  // Only remove highlight when leaving to an element outside this column
+  if (!e.currentTarget?.contains(e.relatedTarget)) {
+    e.currentTarget?.classList.remove('drag-over');
+  }
+}
 function dDrop(e, stageId) {
   e.preventDefault();
+  document.body.classList.remove('dragging-active');
   document.querySelectorAll('.col').forEach(c => c.classList.remove('drag-over'));
   if (!dragId) return;
   const d = deals.find(x=>x.id===dragId);
@@ -2185,9 +2198,15 @@ function dDrop(e, stageId) {
   }
   dragId = null;
 }
+document.addEventListener('dragend', () => {
+  document.body.classList.remove('dragging-active');
+  document.querySelectorAll('.col').forEach(c => c.classList.remove('drag-over'));
+  dragId = null;
+});
 
 function dDropArchive(e, outcome) {
   e.preventDefault();
+  document.body.classList.remove('dragging-active');
   document.querySelectorAll('.col').forEach(c => c.classList.remove('drag-over'));
   if (!dragId) return;
   const d = deals.find(x=>x.id===dragId);
