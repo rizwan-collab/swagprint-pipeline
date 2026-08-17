@@ -1710,7 +1710,7 @@ function renderBoard() {
   const wonItems = archive.filter(a=>a.outcome==='won').sort((a,b)=>b.closedAt-a.closedAt);
   const wonVal = wonItems.reduce((s,a)=>s+(Number(a.value)||0),0);
   const wonCol = collapsedCols.has('won');
-  const wonHTML = `<div class="col won-col${wonCol?' collapsed':''}" id="col-won">
+  const wonHTML = `<div class="col won-col${wonCol?' collapsed':''}" id="col-won" ondragover="dOver(event,'won')" ondrop="dDropArchive(event,'won')" ondragleave="dLeave(event)">
     <div class="col-header">
       <div class="col-dot" style="background:var(--green)"></div>
       <div class="col-title">Won</div>
@@ -1731,7 +1731,7 @@ function renderBoard() {
   const lostItems = archive.filter(a=>a.outcome==='lost').sort((a,b)=>b.closedAt-a.closedAt);
   const lostVal = lostItems.reduce((s,a)=>s+(Number(a.value)||0),0);
   const lostCol = collapsedCols.has('lost');
-  const lostHTML = `<div class="col lost-col${lostCol?' collapsed':''}" id="col-lost">
+  const lostHTML = `<div class="col lost-col${lostCol?' collapsed':''}" id="col-lost" ondragover="dOver(event,'lost')" ondrop="dDropArchive(event,'lost')" ondragleave="dLeave(event)">
     <div class="col-header">
       <div class="col-dot" style="background:var(--red)"></div>
       <div class="col-title">Lost</div>
@@ -1751,7 +1751,7 @@ function renderBoard() {
   // Spam column
   const spamItems = archive.filter(a=>a.outcome==='spam').sort((a,b)=>b.closedAt-a.closedAt);
   const spamCol = collapsedCols.has('spam');
-  const spamHTML = `<div class="col spam-col${spamCol?' collapsed':''}" id="col-spam">
+  const spamHTML = `<div class="col spam-col${spamCol?' collapsed':''}" id="col-spam" ondragover="dOver(event,'spam')" ondrop="dDropArchive(event,'spam')" ondragleave="dLeave(event)">
     <div class="col-header">
       <div class="col-dot" style="background:#6b7280"></div>
       <div class="col-title">Spam / Scam</div>
@@ -2184,6 +2184,27 @@ function dDrop(e, stageId) {
     toast(`Moved to ${stageLabel(stageId)}`);
   }
   dragId = null;
+}
+
+function dDropArchive(e, outcome) {
+  e.preventDefault();
+  document.querySelectorAll('.col').forEach(c => c.classList.remove('drag-over'));
+  if (!dragId) return;
+  const d = deals.find(x=>x.id===dragId);
+  if (!d) { dragId = null; return; }
+  const label = outcome==='won' ? 'Won' : outcome==='lost' ? 'Lost' : 'Spam/Scam';
+  archive.push({
+    id: uid(), name:d.name, company:d.company||'',
+    contacts: d.contacts||[], contact:d.contact||'',
+    email:d.email||'', owner:d.owner||'', value:d.value, outcome,
+    closedAt:Date.now(), createdAt:d.createdAt||Date.now(), lossReason:''
+  });
+  logChange('closed', d.id, d.name, label);
+  deals = deals.filter(x=>x.id!==dragId);
+  dragId = null;
+  save();
+  render();
+  toast(outcome==='won' ? 'Deal Won! 🎉' : outcome==='lost' ? 'Deal marked Lost' : 'Marked as Spam');
 }
 
 // ─── STAGE PICKER ─────────────────────────────────────────────────────────────
