@@ -6,7 +6,6 @@
 <title>SwagPrint Sales Pipeline</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234f46e5'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='system-ui,sans-serif' font-size='20' font-weight='700' fill='white'%3ES%3C/text%3E%3C/svg%3E">
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
   :root {
@@ -74,24 +73,6 @@
   .email-popup.open { display: block; }
   .email-popup-item { display: flex; align-items: center; gap: 8px; padding: 9px 14px; font-size: 13px; color: var(--text); cursor: pointer; transition: background .12s; white-space: nowrap; }
   .email-popup-item:hover { background: var(--surface2); }
-  .email-popup-divider { height: 1px; background: var(--border); margin: 4px 0; }
-  /* Email Script Modal */
-  .es-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:1200; align-items:center; justify-content:center; padding:20px; }
-  .es-overlay.open { display:flex; }
-  .es-modal { background:var(--surface); border:1px solid var(--border); border-radius:16px; width:680px; max-width:100%; max-height:90vh; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(0,0,0,.4); }
-  .es-head { display:flex; align-items:center; justify-content:space-between; padding:18px 20px 14px; border-bottom:1px solid var(--border); }
-  .es-head h3 { font-size:16px; font-weight:700; color:var(--text); margin:0; }
-  .es-head .es-sub { font-size:12px; color:var(--text3); margin-top:3px; }
-  .es-body { flex:1; overflow-y:auto; padding:16px 20px; display:flex; flex-direction:column; gap:14px; }
-  .es-card { border:1px solid var(--border); border-radius:10px; overflow:hidden; transition:border-color .15s; }
-  .es-card:hover { border-color:var(--accent2); }
-  .es-card-head { display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:var(--surface2); border-bottom:1px solid var(--border); }
-  .es-type { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; padding:3px 8px; border-radius:20px; }
-  .es-card-actions { display:flex; gap:6px; }
-  .es-subject { padding:10px 14px 4px; font-size:13px; font-weight:600; color:var(--text); }
-  .es-subject span { color:var(--text3); font-weight:400; font-size:11px; margin-right:6px; text-transform:uppercase; letter-spacing:.4px; }
-  .es-body-text { padding:4px 14px 12px; font-size:13px; color:var(--text2); line-height:1.6; white-space:pre-wrap; max-height:130px; overflow-y:auto; }
-  .es-foot { padding:14px 20px; border-top:1px solid var(--border); display:flex; justify-content:flex-end; }
   .email-popup-item .epi { font-size: 15px; width: 18px; text-align: center; }
 
   /* BOARD LAYOUT */
@@ -203,6 +184,31 @@
   .act-by { font-size: 10px; color: var(--text3); font-style: italic; }
   .act-note { width: 100%; font-size: 11px; color: var(--text2); padding-left: 2px; line-height: 1.4; margin-top: 1px; }
   .act-empty { font-size: 11px; color: var(--text3); font-style: italic; }
+  /* ── Action Items ── */
+  .ai-section { border-top: 1px solid var(--border); margin-top: 8px; padding-top: 8px; }
+  .ai-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; }
+  .ai-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--text3); display: flex; align-items: center; gap: 5px; }
+  .ai-count-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 15px; height: 15px; background: #f59e0b; color: #fff; font-size: 9px; font-weight: 700; border-radius: 8px; padding: 0 4px; }
+  .ai-add-btn { background: none; border: 1px solid var(--border); color: var(--text3); font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 5px; cursor: pointer; transition: all .15s; }
+  .ai-add-btn:hover { border-color: #f59e0b; color: #f59e0b; }
+  .ai-item { display: flex; align-items: flex-start; gap: 7px; padding: 4px 0; border-bottom: 1px solid var(--surface2); }
+  .ai-item:last-of-type { border-bottom: none; }
+  .ai-check { width: 14px; height: 14px; flex-shrink: 0; margin-top: 2px; cursor: pointer; accent-color: #f59e0b; }
+  .ai-body { flex: 1; min-width: 0; }
+  .ai-text { font-size: 12px; color: var(--text2); line-height: 1.4; word-break: break-word; }
+  .ai-text.done { text-decoration: line-through; color: var(--text3); }
+  .ai-meta { font-size: 10px; color: var(--text3); margin-top: 1px; }
+  .ai-del { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 12px; padding: 0 2px; opacity: 0; flex-shrink: 0; transition: opacity .15s; line-height: 1; }
+  .ai-item:hover .ai-del { opacity: 1; }
+  .ai-del:hover { color: var(--red); }
+  .ai-input-row { display: none; gap: 6px; margin-top: 7px; }
+  .ai-input-row.open { display: flex; }
+  .ai-input { flex: 1; font-size: 12px; padding: 5px 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); outline: none; }
+  .ai-input:focus { border-color: #f59e0b; }
+  .ai-save-btn { font-size: 12px; padding: 5px 10px; background: #f59e0b; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; white-space: nowrap; }
+  .ai-save-btn:hover { background: #d97706; }
+  .ai-empty { font-size: 11px; color: var(--text3); font-style: italic; }
+  .card-ai-indicator { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; color: #f59e0b; font-weight: 600; margin-top: 3px; }
   .act-type-row { display: flex; gap: 6px; flex-wrap: wrap; }
   .act-type-btn { flex: 1; padding: 8px 4px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface2); color: var(--text3); font-size: 12px; font-weight: 600; cursor: pointer; transition: all .15s; }
   .act-type-btn.active { border-color: var(--accent); background: rgba(99,102,241,.12); color: var(--accent); }
@@ -238,10 +244,6 @@
   .col.lost-col .col-header { background: rgba(239,68,68,.06); }
   .col.spam-col { border-color: rgba(107,114,128,.3); opacity: .75; }
   .col.spam-col .col-header { background: rgba(107,114,128,.06); }
-  /* During drag: block pointer events on archive column children so dragover always fires on the column itself */
-  body.dragging-active .won-col *,
-  body.dragging-active .lost-col *,
-  body.dragging-active .spam-col * { pointer-events: none !important; }
   .arc-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 9px; padding: 10px 11px; cursor: pointer; transition: border-color .15s; }
   .arc-card:hover { border-color: var(--accent); }
   .arc-card.expanded { border-color: var(--accent); cursor: default; }
@@ -366,8 +368,6 @@
   .login-pin-label { font-size: 12px; color: var(--text3); margin-bottom: 8px; }
   #login-pin-input { width: 100%; padding: 14px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--surface2); color: var(--text); font-size: 22px; text-align: center; letter-spacing: 10px; outline: none; transition: border-color .15s; }
   #login-pin-input:focus { border-color: var(--accent); }
-  #login-email-input { width: 100%; padding: 13px 14px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--surface2); color: var(--text); font-size: 15px; outline: none; transition: border-color .15s; box-sizing: border-box; }
-  #login-email-input:focus { border-color: var(--accent); }
   .login-error { color: var(--red); font-size: 12px; text-align: center; margin-top: 10px; min-height: 18px; }
   .login-submit { width: 100%; margin-top: 16px; padding: 12px; font-size: 14px; font-weight: 600; }
   .login-no-users { text-align: center; color: var(--text3); font-size: 13px; padding: 20px 0; line-height: 1.6; }
@@ -420,14 +420,14 @@
 <div id="login-overlay">
   <div class="login-card">
     <div class="login-logo">SwagPrint</div>
-    <div class="login-tagline">Sales Pipeline &mdash; sign in to continue</div>
+    <div class="login-tagline">Sales Pipeline — sign in to continue</div>
 
-    <!-- Step 1: Enter email -->
+    <!-- Step 1: Pick a user -->
     <div class="login-step active" id="login-step-1">
-      <div class="login-step-title">Enter your email address</div>
-      <input id="login-email-input" type="email" placeholder="you@company.com" autocomplete="email" onkeydown="if(event.key==='Enter')submitLoginEmail()">
-      <div class="login-error" id="login-email-error" style="margin-top:8px;min-height:16px"></div>
-      <button class="btn btn-primary login-submit" style="margin-top:14px" onclick="submitLoginEmail()">Next &rarr;</button>
+      <div class="login-step-title">Select your account</div>
+      <div class="login-users" id="login-user-list">
+        <div class="login-no-users">Loading users…</div>
+      </div>
     </div>
 
     <!-- Step 2: Enter PIN -->
@@ -459,13 +459,9 @@
             <label>Name</label>
             <input id="um-name" type="text" placeholder="e.g. Alex" maxlength="40">
           </div>
-          <div class="um-field">
-            <label>Email</label>
-            <input id="um-email" type="email" placeholder="alex@company.com" maxlength="120">
-          </div>
           <div class="um-field" style="max-width:120px">
             <label>PIN (4–8 digits)</label>
-            <input id="um-pin" type="text" inputmode="numeric" placeholder="e.g. 1234" maxlength="8">
+            <input id="um-pin" type="password" inputmode="numeric" placeholder="••••" maxlength="8">
           </div>
           <div class="um-field" style="max-width:110px">
             <label>Role</label>
@@ -543,7 +539,6 @@
   <span class="chip" onclick="setFilter('stale',this)">Stale 5d+</span>
   <span class="chip" onclick="setFilter('big',this)">Big Deals $5k+</span>
   <span class="chip" onclick="setFilter('overdue',this)">Overdue Follow-up</span>
-  <span class="filter-label" id="rep-filter-label" style="margin-left:4px">Rep:</span>
   <select class="owner-select" id="owner-filter" onchange="setOwnerFilter(this.value)">
     <option value="">All Owners</option>
   </select>
@@ -565,14 +560,6 @@
   <span class="chip" onclick="setFilter('hasltv',this)" title="Deals with LTV data">Has LTV</span>
   <span class="chip" onclick="setFilter('highltv',this)" title="LTV over $5k">High LTV $5k+</span>
   <span class="chip" id="my-deals-chip" onclick="setFilter('mydeals',this)" title="Only deals assigned to you">My Deals</span>
-  <div class="filter-sep"></div>
-  <span class="filter-label">Close Month:</span>
-  <select class="owner-select" id="month-filter" onchange="setMonthFilter(this.value)">
-    <option value="">All Months</option>
-  </select>
-</div>
-<!-- MONTHLY TOTALS BAR -->
-<div id="monthly-totals-bar" style="display:none;align-items:center;gap:8px;padding:8px 20px;background:var(--bg);border-bottom:1px solid var(--border);flex-wrap:wrap;overflow-x:auto">
 </div>
 
 <!-- BOARD + SIDE PANEL -->
@@ -650,48 +637,7 @@
             <div class="deal-grid">
               <div class="fg"><label>Company (legal name)</label><input id="f-company" type="text" placeholder="Company name"></div>
               <div class="fg"><label>Owner / Rep</label><select id="f-owner" style="padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:14px;width:100%;outline:none"><option value="">Unassigned</option></select></div>
-              <div class="fg"><label>Product / Item</label><input id="f-product" type="text" placeholder="e.g. Custom 20oz Tumblers"></div>
-              <div class="fg"><label>Category</label>
-                <select id="f-category">
-                  <option value="">— Select a category —</option>
-                  <optgroup label="Apparel">
-                    <option value="Custom T-Shirts">Custom T-Shirts</option>
-                    <option value="Hoodies & Sweatshirts">Hoodies &amp; Sweatshirts</option>
-                    <option value="Polo Shirts">Polo Shirts</option>
-                    <option value="Custom Hats & Caps">Custom Hats &amp; Caps</option>
-                    <option value="Jackets & Vests">Jackets &amp; Vests</option>
-                  </optgroup>
-                  <optgroup label="Drinkware">
-                    <option value="Tumblers & Mugs">Tumblers &amp; Mugs</option>
-                    <option value="Water Bottles">Water Bottles</option>
-                    <option value="Can Coolers / Koozies">Can Coolers / Koozies</option>
-                  </optgroup>
-                  <optgroup label="Bags & Totes">
-                    <option value="Custom Tote Bags">Custom Tote Bags</option>
-                    <option value="Backpacks & Duffel Bags">Backpacks &amp; Duffel Bags</option>
-                    <option value="Drawstring Bags">Drawstring Bags</option>
-                  </optgroup>
-                  <optgroup label="Tech & Office">
-                    <option value="Tech Accessories">Tech Accessories</option>
-                    <option value="Pens & Writing">Pens &amp; Writing</option>
-                    <option value="Notebooks & Journals">Notebooks &amp; Journals</option>
-                    <option value="Desk Items">Desk Items</option>
-                  </optgroup>
-                  <optgroup label="Events & Promo">
-                    <option value="Event Swag Kits">Event Swag Kits</option>
-                    <option value="Trade Show Giveaways">Trade Show Giveaways</option>
-                    <option value="Corporate Gift Sets">Corporate Gift Sets</option>
-                    <option value="Employee Welcome Kits">Employee Welcome Kits</option>
-                    <option value="Lanyards & Badges">Lanyards &amp; Badges</option>
-                    <option value="Promotional Items">Promotional Items</option>
-                  </optgroup>
-                  <optgroup label="Printing">
-                    <option value="Banners & Signage">Banners &amp; Signage</option>
-                    <option value="Stickers & Decals">Stickers &amp; Decals</option>
-                    <option value="Branded Packaging">Branded Packaging</option>
-                  </optgroup>
-                </select>
-              </div>
+              <div class="fg"><label>Product</label><input id="f-product" type="text" placeholder="e.g. Custom Totes"></div>
               <div class="fg"><label>Priority</label>
                 <select id="f-priority">
                   <option value="medium">Medium</option>
@@ -702,8 +648,6 @@
               <div class="fg"><label>LTV ($) <span style="font-weight:400;color:var(--text3);font-size:11px">lifetime value</span></label><input id="f-ltv" type="number" placeholder="0" min="0"></div>
               <div class="fg"><label>Follow-Up Date</label><input id="f-followup" type="date"></div>
               <div class="fg"><label>Est. Close Date</label><input id="f-closedate" type="date"></div>
-              <div class="fg"><label>Vendor Name</label><input id="f-vendor" type="text" placeholder="e.g. SanMar, S&S Activewear"></div>
-              <div class="fg"><label>Vendor POC</label><input id="f-poc" type="text" placeholder="Vendor rep name / contact"></div>
               <div class="fg full">
                 <label>Attachments <span style="font-weight:400;color:var(--text3);font-size:11px">(PDFs, quotes — max 2MB each)</span></label>
                 <div id="attach-drop" style="border:2px dashed var(--border);border-radius:8px;padding:10px;text-align:center;cursor:pointer;transition:all .15s" onclick="document.getElementById('attach-input').click()" ondragover="attachDragOver(event)" ondragleave="attachDragLeave(event)" ondrop="attachDrop(event)">
@@ -896,45 +840,6 @@
   </div>
 </div>
 
-<!-- EMAIL SCRIPT MODAL -->
-<div class="es-overlay" id="es-overlay" onclick="if(event.target===this)closeEmailScripts()">
-  <div class="es-modal">
-    <div class="es-head">
-      <div>
-        <h3>Email Scripts</h3>
-        <div class="es-sub" id="es-context-label">Suggested scripts based on deal context</div>
-      </div>
-      <button class="modal-x" onclick="closeEmailScripts()">✕</button>
-    </div>
-    <div class="es-body" id="es-scripts-body"></div>
-    <div class="es-foot" style="gap:8px;justify-content:space-between">
-      <div style="display:flex;gap:6px" id="es-quick-actions"></div>
-      <button class="btn btn-outline" onclick="closeEmailScripts()">Close</button>
-    </div>
-  </div>
-</div>
-
-<!-- DEAL VIEW POPUP -->
-<div class="overlay" id="deal-view-overlay" style="display:none">
-  <div class="modal" style="width:720px;max-height:88vh;display:flex;flex-direction:column">
-    <div class="modal-head" style="align-items:flex-start;gap:12px">
-      <div style="flex:1;min-width:0">
-        <h2 id="dv-name" style="margin:0;font-size:18px;line-height:1.2;word-break:break-word"></h2>
-        <div id="dv-company" style="font-size:13px;color:var(--text3);margin-top:3px"></div>
-        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap" id="dv-badges"></div>
-      </div>
-      <button class="modal-x" onclick="closeDealView()" style="flex-shrink:0;margin-top:2px">✕</button>
-    </div>
-    <div id="dv-body" style="flex:1;overflow-y:auto;padding:20px;display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start"></div>
-    <div class="modal-foot">
-      <button class="btn btn-ghost" id="dv-delete-btn" style="color:var(--red);margin-right:auto;font-size:12px">Delete</button>
-      <button class="btn btn-outline" onclick="closeDealView()">Close</button>
-      <button class="btn btn-ghost" id="dv-log-btn">+ Log Activity</button>
-      <button class="btn btn-primary" id="dv-edit-btn">Edit Deal</button>
-    </div>
-  </div>
-</div>
-
 <!-- ADD STAGE MODAL -->
 <div class="overlay" id="addstage-overlay">
   <div class="modal" style="width:360px">
@@ -964,7 +869,7 @@
 <script>
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
 const FIREBASE_CONFIG = {
-  apiKey:            "AIzaSyBiRp3LzG-LSE6GRKiw7C58iLg41IwxXiU",
+  apiKey:            "AIzaSyBiRp3LzG-LSE6GRKiw7C58iLg41IwXiU",
   authDomain:        "swag-rt-20260727x.firebaseapp.com",
   databaseURL:       "https://swag-rt-20260727x-default-rtdb.firebaseio.com",
   projectId:         "swag-rt-20260727x",
@@ -990,7 +895,7 @@ const LEGACY_SEED_IDS = new Set(['d1','d2','d3','d4','d5','a1','a2','a3']);
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
 let deals = [], archive = [];
-let activeFilter = 'all', activeOwner = '', activeValue = '', activeStageFilter = '', searchQuery = '', activeMonthFilter = '';
+let activeFilter = 'all', activeOwner = '', activeValue = '', activeStageFilter = '', searchQuery = '';
 let dragId = null, editId = null, closeOutcome = '', panelTab = 'won';
 let collapsedCols = new Set();
 let dbRef = null, fbReady = false;
@@ -1010,16 +915,13 @@ try {
   firebase.initializeApp(FIREBASE_CONFIG);
   const db = firebase.database();
 
-  // Sign in anonymously so security rules (auth != null) are satisfied
-  firebase.auth().signInAnonymously().then(() => {
-
   // ── Load users first, then check session ─────────────────────────────────
   usersRef = db.ref('pipeline/users');
   usersRef.once('value', snap => {
     const data = snap.val();
     if (!data || Object.keys(data).length === 0) {
       // Seed a default admin on first run
-      usersRef.push({ name: 'Rizwan', email: 'rizwan@swagprint.com', pin: '1234', role: 'admin' }, () => {
+      usersRef.push({ name: 'Rizwan', pin: '1234', role: 'admin' }, () => {
         usersRef.once('value', s2 => { usersCache = s2.val() || {}; checkSession(); });
       });
     } else {
@@ -1066,8 +968,6 @@ try {
     updateTeamBadge();
     render();
   }, err => { console.warn('Firebase error', err); checkSession(); loadLocal(); });
-
-  }).catch(authErr => { console.warn('Anonymous auth failed', authErr); checkSession(); loadLocal(); });
 } catch(e) { console.warn('Firebase init error', e); checkSession(); loadLocal(); }
 
 function loadLocal() {
@@ -1111,58 +1011,6 @@ function agingBadge(d) {
   return `<span class="card-aging aging-stale"> ${days}d stale</span>`;
 }
 
-// ─── DEAL SCORE ───────────────────────────────────────────────────────────────
-function dealScore(d) {
-  let score = 0;
-
-  // Activity recency (0–40 pts)
-  const acts = d.activities || [];
-  const lastActAt = acts.length ? Math.max(...acts.map(a => Number(a.at))) : Number(d.createdAt || 0);
-  const actAge = lastActAt ? Math.floor((Date.now() - lastActAt) / 86400000) : 999;
-  if      (actAge === 0)  score += 40;
-  else if (actAge <= 2)   score += 35;
-  else if (actAge <= 5)   score += 25;
-  else if (actAge <= 10)  score += 12;
-  else if (actAge <= 21)  score += 5;
-  // 21+ days: 0
-
-  // Stage progression (0–25 pts)
-  const stagePts = { nurture:3, qualified:8, contacted:14, quote:20, proposal:25 };
-  score += stagePts[d.stage] || 0;
-
-  // Close date urgency (0–20 pts)
-  if (d.closeDate) {
-    const daysToClose = Math.ceil((new Date(d.closeDate) - new Date()) / 86400000);
-    if      (daysToClose < 0)   score += 5;   // overdue close — deal may be dead
-    else if (daysToClose <= 7)  score += 20;
-    else if (daysToClose <= 14) score += 15;
-    else if (daysToClose <= 30) score += 10;
-    else                         score += 5;
-  }
-
-  // Priority (0–10 pts)
-  if      (d.priority === 'high')   score += 10;
-  else if (d.priority === 'medium') score += 5;
-  else                              score += 2;
-
-  // Activity count bonus (0–5 pts — engaged prospects)
-  if      (acts.length >= 5) score += 5;
-  else if (acts.length >= 2) score += 3;
-  else if (acts.length >= 1) score += 1;
-
-  return Math.min(100, Math.max(0, score));
-}
-
-function dealScoreBadge(d) {
-  const s = dealScore(d);
-  let color, label;
-  if      (s >= 75) { color = '#10b981'; label = 'Hot'; }
-  else if (s >= 50) { color = '#f59e0b'; label = 'Warm'; }
-  else if (s >= 25) { color = '#f97316'; label = 'Cool'; }
-  else              { color = '#ef4444'; label = 'Cold'; }
-  return `<span title="Deal Score: ${s}/100" style="display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:4px;background:${color}18;border:1px solid ${color}44;font-size:10px;font-weight:700;color:${color};cursor:default">${s} ${label}</span>`;
-}
-
 // ─── FILTER / SEARCH ──────────────────────────────────────────────────────────
 function setFilter(f, el) {
   activeFilter = f;
@@ -1173,63 +1021,6 @@ function setFilter(f, el) {
 }
 function setOwnerFilter(v) { activeOwner = v; render(); }
 function setStageFilter(v) { activeStageFilter = v; render(); }
-
-function setMonthFilter(v) { activeMonthFilter = v; render(); }
-
-function refreshMonthFilter() {
-  const sel = document.getElementById('month-filter');
-  if (!sel) return;
-  // Build month options from deals that have a closeDate
-  const monthMap = {};
-  deals.forEach(d => {
-    if (!d.closeDate) return;
-    const dt = new Date(d.closeDate);
-    if (isNaN(dt)) return;
-    const key = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`;
-    const label = dt.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-    if (!monthMap[key]) monthMap[key] = { label, total: 0, count: 0 };
-    monthMap[key].total += Number(d.value) || 0;
-    monthMap[key].count++;
-  });
-  const months = Object.entries(monthMap).sort((a,b) => a[0].localeCompare(b[0]));
-  const prev = sel.value;
-  sel.innerHTML = '<option value="">All Months</option>' +
-    months.map(([k,v]) =>
-      `<option value="${k}">${v.label} — ${v.count} deal${v.count!==1?'s':''} · ${v.total>=1000?'$'+(v.total/1000).toFixed(1)+'k':'$'+v.total}</option>`
-    ).join('');
-  if (prev) sel.value = prev;
-
-  // Render monthly totals bar
-  const bar = document.getElementById('monthly-totals-bar');
-  if (!bar) return;
-  if (!months.length) { bar.style.display = 'none'; return; }
-  const activePipelineDeals = deals.filter(d => !['won','lost'].includes(d.stage));
-  const barMonths = {};
-  activePipelineDeals.forEach(d => {
-    if (!d.closeDate) return;
-    const dt = new Date(d.closeDate);
-    if (isNaN(dt)) return;
-    const key = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`;
-    const label = dt.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-    if (!barMonths[key]) barMonths[key] = { label, total: 0, count: 0 };
-    barMonths[key].total += Number(d.value) || 0;
-    barMonths[key].count++;
-  });
-  const barEntries = Object.entries(barMonths).sort((a,b) => a[0].localeCompare(b[0]));
-  if (!barEntries.length) { bar.style.display = 'none'; return; }
-  const maxVal = Math.max(...barEntries.map(([,v]) => v.total));
-  bar.style.display = 'flex';
-  bar.innerHTML = barEntries.map(([key, v]) => {
-    const pct = maxVal > 0 ? Math.round((v.total / maxVal) * 72) + 28 : 28;
-    const isActive = activeMonthFilter === key;
-    return `<div onclick="document.getElementById('month-filter').value='${key}';setMonthFilter('${key}')"
-      style="cursor:pointer;padding:6px 12px;border-radius:8px;background:${isActive?'var(--accent2)22':'var(--surface2)'};border:1px solid ${isActive?'var(--accent2)':'var(--border)'};text-align:center;min-width:90px;transition:all .15s">
-      <div style="font-size:11px;font-weight:700;color:${isActive?'var(--accent2)':'var(--text3)'};">${v.label}</div>
-      <div style="font-size:14px;font-weight:700;color:${isActive?'var(--accent2)':'var(--text)'};">${v.total>=1000?'$'+(v.total/1000).toFixed(1)+'k':'$'+v.total}</div>
-      <div style="font-size:10px;color:var(--text3)">${v.count} deal${v.count!==1?'s':''}</div>
-    </div>`;
-  }).join('');
-}
 
 // ─── AUTH SYSTEM ─────────────────────────────────────────────────────────────
 function checkSession() {
@@ -1254,14 +1045,10 @@ function checkSession() {
 function showLoginScreen() {
   const overlay = document.getElementById('login-overlay');
   if (overlay) overlay.style.display = 'flex';
-  // Reset to email step
+  renderLoginUsers();
+  // Show step 1
   document.getElementById('login-step-1').classList.add('active');
   document.getElementById('login-step-2').classList.remove('active');
-  const emailInput = document.getElementById('login-email-input');
-  if (emailInput) { emailInput.value = ''; }
-  const emailErr = document.getElementById('login-email-error');
-  if (emailErr) emailErr.textContent = '';
-  setTimeout(() => { const el = document.getElementById('login-email-input'); if(el) el.focus(); }, 80);
 }
 
 function hideLoginOverlay() {
@@ -1269,20 +1056,28 @@ function hideLoginOverlay() {
   if (overlay) overlay.style.display = 'none';
 }
 
-function submitLoginEmail() {
-  const emailInput = document.getElementById('login-email-input');
-  const errEl = document.getElementById('login-email-error');
-  const email = (emailInput ? emailInput.value.trim().toLowerCase() : '');
-  if (!email) { if(errEl) errEl.textContent = 'Please enter your email address.'; return; }
-  // Find user by email (case-insensitive)
-  const found = Object.entries(usersCache).find(([id, u]) => (u.email||'').toLowerCase() === email);
-  if (!found) {
-    if(errEl) errEl.textContent = 'No account found with that email. Contact your admin.';
+function renderLoginUsers() {
+  const list = document.getElementById('login-user-list');
+  if (!list) return;
+  const users = Object.entries(usersCache);
+  if (users.length === 0) {
+    list.innerHTML = '<div class="login-no-users">No users found.<br>Contact your admin to set up accounts.</div>';
     return;
   }
-  if(errEl) errEl.textContent = '';
-  const [id, u] = found;
-  selectLoginUser(id, u.name, u.role);
+  // Sort: admins first, then alphabetical
+  users.sort((a,b) => {
+    if (a[1].role === 'admin' && b[1].role !== 'admin') return -1;
+    if (b[1].role === 'admin' && a[1].role !== 'admin') return 1;
+    return (a[1].name||'').localeCompare(b[1].name||'');
+  });
+  list.innerHTML = users.map(([id, u]) => `
+    <button class="login-user-btn ${u.role==='admin'?'admin-btn':''}" onclick="selectLoginUser('${id}','${esc(u.name)}','${u.role}')">
+      <div class="lub-avatar">${esc(u.name).charAt(0).toUpperCase()}</div>
+      <div class="lub-info">
+        <span class="lub-name">${esc(u.name)}</span>
+        <span class="lub-role">${u.role === 'admin' ? 'Admin' : 'Sales Rep'}</span>
+      </div>
+    </button>`).join('');
 }
 
 let loginSelectedId = null, loginSelectedName = '', loginSelectedRole = '';
@@ -1303,7 +1098,6 @@ function loginBack() {
   document.getElementById('login-step-2').classList.remove('active');
   document.getElementById('login-step-1').classList.add('active');
   document.getElementById('login-error').textContent = '';
-  setTimeout(() => { const el = document.getElementById('login-email-input'); if(el) el.focus(); }, 80);
 }
 
 function loginPinInput() {
@@ -1321,13 +1115,9 @@ function attemptLogin() {
     document.getElementById('login-pin-input').focus();
     return;
   }
-  // Success — track login
+  // Success
   currentSession = { userId: loginSelectedId, name: user.name, role: user.role };
   localStorage.setItem(AUTH_KEY, JSON.stringify(currentSession));
-  if (usersRef) {
-    usersRef.child(loginSelectedId + '/loginCount').transaction(c => (c || 0) + 1);
-    usersRef.child(loginSelectedId + '/lastLogin').set(Date.now());
-  }
   hideLoginOverlay();
   updateNavForUser();
   render();
@@ -1448,43 +1238,32 @@ function renderUmUsers() {
   list.innerHTML = users.map(([id, u]) => `
     <div class="user-row">
       <div class="user-avatar ${u.role==='admin'?'admin-av':''}">${esc(u.name).charAt(0).toUpperCase()}</div>
-      <div class="user-info" style="flex:1;min-width:0">
-        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-          <span class="user-name-text">${esc(u.name)}</span>
-          <span class="user-role-badge ${u.role==='admin'?'admin-badge':''}">${u.role==='admin'?'Admin':'Rep'}</span>
-        </div>
-        ${u.email ? `<div style="font-size:11px;color:var(--text3);margin-top:2px">${esc(u.email)} <span style="cursor:pointer;color:var(--accent);font-size:10px" onclick="setUserEmail('${id}')">edit</span></div>` : `<div style="font-size:11px;color:var(--yellow);margin-top:2px;cursor:pointer" onclick="setUserEmail('${id}')">⚠ No email — click to set</div>`}
-        <div style="display:flex;gap:12px;margin-top:3px;flex-wrap:wrap">
-          <div class="user-pin-display">PIN: <span style="font-family:monospace;font-weight:700;letter-spacing:2px;color:var(--text)">${esc(String(u.pin||''))}</span></div>
-          <div style="font-size:11px;color:var(--text3)">Logins: <strong style="color:var(--text)">${u.loginCount||0}</strong>${u.lastLogin ? ' &bull; Last: '+new Date(u.lastLogin).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : ''}</div>
-        </div>
+      <div class="user-info">
+        <span class="user-name-text">${esc(u.name)}</span>
+        <span class="user-role-badge ${u.role==='admin'?'admin-badge':''}">${u.role==='admin'?'Admin':'Rep'}</span>
+        <div class="user-pin-display">PIN: ${'•'.repeat(String(u.pin||'').length)}</div>
       </div>
-      <button class="btn btn-ghost" style="font-size:12px;padding:4px 10px;flex-shrink:0" onclick="resetPin('${id}')">Reset PIN</button>
+      <button class="btn btn-ghost" style="font-size:12px;padding:4px 10px" onclick="resetPin('${id}')">Reset PIN</button>
       ${u.role !== 'admin' || Object.values(usersCache).filter(x=>x.role==='admin').length > 1 ?
-        `<button class="btn btn-ghost" style="font-size:12px;padding:4px 10px;color:var(--red);flex-shrink:0" onclick="removeUser('${id}','${esc(u.name)}')">Remove</button>` : ''}
+        `<button class="btn btn-ghost" style="font-size:12px;padding:4px 10px;color:var(--red)" onclick="removeUser('${id}','${esc(u.name)}')">Remove</button>` : ''}
     </div>`).join('');
 }
 
 function addUser() {
-  const name  = document.getElementById('um-name').value.trim();
-  const email = document.getElementById('um-email').value.trim().toLowerCase();
-  const pin   = document.getElementById('um-pin').value.trim();
-  const role  = document.getElementById('um-role').value;
-  const err   = document.getElementById('um-error');
+  const name = document.getElementById('um-name').value.trim();
+  const pin  = document.getElementById('um-pin').value.trim();
+  const role = document.getElementById('um-role').value;
+  const err  = document.getElementById('um-error');
   if (!name) { err.textContent = 'Name is required.'; return; }
-  if (!email || !email.includes('@')) { err.textContent = 'A valid email is required.'; return; }
   if (!pin || !/^\d{4,8}$/.test(pin)) { err.textContent = 'PIN must be 4–8 digits.'; return; }
+  // Check duplicate name
   if (Object.values(usersCache).some(u => u.name.toLowerCase() === name.toLowerCase())) {
     err.textContent = 'A user with that name already exists.'; return;
   }
-  if (Object.values(usersCache).some(u => (u.email||'').toLowerCase() === email)) {
-    err.textContent = 'A user with that email already exists.'; return;
-  }
   err.textContent = '';
   if (usersRef) {
-    usersRef.push({ name, email, pin, role }, () => {
+    usersRef.push({ name, pin, role }, () => {
       document.getElementById('um-name').value = '';
-      document.getElementById('um-email').value = '';
       document.getElementById('um-pin').value = '';
       document.getElementById('um-role').value = 'rep';
       renderUmUsers();
@@ -1507,18 +1286,6 @@ function resetPin(id) {
   if (newPin === null) return;
   if (!/^\d{4,8}$/.test(newPin.trim())) { toast('Invalid PIN — must be 4–8 digits.'); return; }
   if (usersRef) usersRef.child(id + '/pin').set(newPin.trim(), () => { renderUmUsers(); toast('PIN updated.'); });
-}
-
-function setUserEmail(id) {
-  const current = (usersCache[id] || {}).email || '';
-  const newEmail = prompt('Enter email address for this user:', current);
-  if (newEmail === null) return;
-  const email = newEmail.trim().toLowerCase();
-  if (!email || !email.includes('@')) { toast('Invalid email address.'); return; }
-  // Check duplicate (ignore current user's own email)
-  const dup = Object.entries(usersCache).find(([uid, u]) => uid !== id && (u.email||'').toLowerCase() === email);
-  if (dup) { toast('That email is already assigned to another user.'); return; }
-  if (usersRef) usersRef.child(id + '/email').set(email, () => { renderUmUsers(); toast('Email updated.'); });
 }
 
 // Legacy no-op stubs (old team badge system removed)
@@ -1561,13 +1328,6 @@ function applyFilters(list) {
     r = me ? r.filter(d => (d.owner||'').toLowerCase() === me) : r;
   }
   if (activeStageFilter)        r = r.filter(d => d.stage === activeStageFilter);
-  if (activeMonthFilter) {
-    r = r.filter(d => {
-      if (!d.closeDate) return false;
-      const dt = new Date(d.closeDate);
-      return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}` === activeMonthFilter;
-    });
-  }
   return r;
 }
 
@@ -1657,28 +1417,20 @@ function set(id, val) { const e=document.getElementById(id); if(e) e.textContent
 // ─── OWNER DROPDOWN ───────────────────────────────────────────────────────────
 function refreshOwnerDropdown() {
   const sel = document.getElementById('owner-filter');
-  const lbl = document.getElementById('rep-filter-label');
   if (!sel) return;
   // Hide owner filter for reps (they're locked to their own deals)
   if (currentSession && currentSession.role === 'rep') {
-    sel.style.display = 'none';
-    if (lbl) lbl.style.display = 'none';
-    return;
+    sel.style.display = 'none'; return;
   }
   sel.style.display = '';
-  if (lbl) lbl.style.display = '';
-  // Build list from all registered users (so filter works even if no deals assigned yet)
-  const userNames = Object.values(usersCache).map(u=>u.name).filter(Boolean).sort();
-  // Also include any deal owners not in usersCache (legacy / deleted users)
-  const legacyOwners = deals.map(d=>d.owner).filter(Boolean);
-  const allOwners = [...new Set([...userNames, ...legacyOwners])].sort();
+  const owners = [...new Set(deals.map(d=>d.owner).filter(Boolean))].sort();
   const cur = sel.value;
-  sel.innerHTML = '<option value="">All Reps</option>' +
-    allOwners.map(o=>`<option value="${esc(o)}"${o===cur?' selected':''}>${esc(o)}</option>`).join('');
+  sel.innerHTML = '<option value="">All Owners</option>' +
+    owners.map(o=>`<option value="${esc(o)}"${o===cur?' selected':''}>${esc(o)}</option>`).join('');
 }
 
 // ─── RENDER ───────────────────────────────────────────────────────────────────
-function render() { updateStats(); refreshOwnerDropdown(); refreshMonthFilter(); renderBoard(); renderPanel(); }
+function render() { updateStats(); refreshOwnerDropdown(); renderBoard(); renderPanel(); }
 
 function renderBoard() {
   const vis = applyFilters(deals);
@@ -1714,7 +1466,7 @@ function renderBoard() {
   const wonItems = archive.filter(a=>a.outcome==='won').sort((a,b)=>b.closedAt-a.closedAt);
   const wonVal = wonItems.reduce((s,a)=>s+(Number(a.value)||0),0);
   const wonCol = collapsedCols.has('won');
-  const wonHTML = `<div class="col won-col${wonCol?' collapsed':''}" id="col-won" ondragover="dOver(event,'won')" ondrop="dDropArchive(event,'won')" ondragleave="dLeave(event)">
+  const wonHTML = `<div class="col won-col${wonCol?' collapsed':''}" id="col-won">
     <div class="col-header">
       <div class="col-dot" style="background:var(--green)"></div>
       <div class="col-title">Won</div>
@@ -1735,7 +1487,7 @@ function renderBoard() {
   const lostItems = archive.filter(a=>a.outcome==='lost').sort((a,b)=>b.closedAt-a.closedAt);
   const lostVal = lostItems.reduce((s,a)=>s+(Number(a.value)||0),0);
   const lostCol = collapsedCols.has('lost');
-  const lostHTML = `<div class="col lost-col${lostCol?' collapsed':''}" id="col-lost" ondragover="dOver(event,'lost')" ondrop="dDropArchive(event,'lost')" ondragleave="dLeave(event)">
+  const lostHTML = `<div class="col lost-col${lostCol?' collapsed':''}" id="col-lost">
     <div class="col-header">
       <div class="col-dot" style="background:var(--red)"></div>
       <div class="col-title">Lost</div>
@@ -1755,7 +1507,7 @@ function renderBoard() {
   // Spam column
   const spamItems = archive.filter(a=>a.outcome==='spam').sort((a,b)=>b.closedAt-a.closedAt);
   const spamCol = collapsedCols.has('spam');
-  const spamHTML = `<div class="col spam-col${spamCol?' collapsed':''}" id="col-spam" ondragover="dOver(event,'spam')" ondrop="dDropArchive(event,'spam')" ondragleave="dLeave(event)">
+  const spamHTML = `<div class="col spam-col${spamCol?' collapsed':''}" id="col-spam">
     <div class="col-header">
       <div class="col-dot" style="background:#6b7280"></div>
       <div class="col-title">Spam / Scam</div>
@@ -1825,7 +1577,14 @@ function cardHTML(d) {
     ? `<div class="card-followup overdue">Follow-up overdue</div>`
     : d.followUpDate ? `<div class="card-followup">${fmtDate(d.followUpDate)}</div>` : '';
   const emailBtn = primaryEmail ? `
-    <button class="ca-btn mail" onclick="openEmailScripts('${d.id}');event.stopPropagation()">Email</button>` : '';
+    <div class="email-popup-wrap" onclick="event.stopPropagation()">
+      <button class="ca-btn mail" onclick="toggleEmailPopup('epop-${d.id}',event)">✉ Email ▾</button>
+      <div class="email-popup" id="epop-${d.id}">
+        <div class="email-popup-item" onclick="openGmail('${esc(primaryEmail)}','${esc(d.name)}')">Open in Gmail</div>
+        <div class="email-popup-item" onclick="copyEmail('${esc(primaryEmail)}')">Copy Email</div>
+        <div class="email-popup-item" onclick="window.location='mailto:${esc(primaryEmail)}'">Default Mail App</div>
+      </div>
+    </div>` : '';
 
   // Expanded section — contacts list
   const contactsDetail = contactsList.length
@@ -1849,7 +1608,7 @@ function cardHTML(d) {
   const acts = (d.activities || []).slice().reverse();
   const actItems = acts.map(a => `<div class="act-item">
     <span class="act-badge act-${a.type}">${actTypeLabel(a.type)}</span>
-    <span class="act-meta">${new Date(a.at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})} ${new Date(a.at).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})}</span>
+    <span class="act-meta">${new Date(a.at).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</span>
     ${a.by?`<span class="act-by">· ${esc(a.by)}</span>`:''}
     ${a.notes?`<div class="act-note">${esc(a.notes)}</div>`:''}
   </div>`).join('');
@@ -1861,30 +1620,61 @@ function cardHTML(d) {
     ${actItems || '<div class="act-empty">No activity yet — log a call, email, or text</div>'}
   </div>`;
 
-  return `<div class="card" id="card-${d.id}" draggable="true" style="cursor:pointer"
+  // Action Items section
+  const aiItems = (d.actionItems || []);
+  const openAiCount = aiItems.filter(a => !a.completed).length;
+  const aiRows = aiItems.map(a => `
+    <div class="ai-item" id="ai-item-${a.id}">
+      <input type="checkbox" class="ai-check" ${a.completed?'checked':''} onchange="toggleActionItem('${d.id}','${a.id}',this.checked)" onclick="event.stopPropagation()">
+      <div class="ai-body">
+        <div class="ai-text${a.completed?' done':''}">${esc(a.text)}</div>
+        <div class="ai-meta">${a.addedBy?esc(a.addedBy)+' · ':''}${new Date(a.addedAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</div>
+      </div>
+      <button class="ai-del" onclick="deleteActionItem('${d.id}','${a.id}');event.stopPropagation()" title="Remove">✕</button>
+    </div>`).join('');
+  const aiSection = `<div class="ai-section">
+    <div class="ai-header">
+      <span class="ai-title">Action Items ${openAiCount>0?`<span class="ai-count-badge">${openAiCount}</span>`:''}</span>
+      <button class="ai-add-btn" onclick="showAiInput('${d.id}');event.stopPropagation()">+ Add</button>
+    </div>
+    ${aiRows || '<div class="ai-empty">No action items — add one for next huddle</div>'}
+    <div class="ai-input-row" id="ai-input-${d.id}" onclick="event.stopPropagation()">
+      <input class="ai-input" id="ai-text-${d.id}" placeholder="e.g. Send pricing deck by Friday…"
+        onkeydown="if(event.key==='Enter'){saveActionItem('${d.id}');}if(event.key==='Escape'){hideAiInput('${d.id}');}event.stopPropagation()">
+      <button class="ai-save-btn" onclick="saveActionItem('${d.id}');event.stopPropagation()">Add</button>
+    </div>
+  </div>`;
+
+  // Open action items indicator (shown on collapsed card)
+  const aiIndicator = openAiCount > 0
+    ? `<div class="card-ai-indicator">⚡ ${openAiCount} open action${openAiCount>1?'s':''}</div>` : '';
+
+  return `<div class="card" id="card-${d.id}" draggable="true"
     ondragstart="dStart(event,'${d.id}')"
-    onclick="openDealView('${d.id}',event)">
+    onclick="toggleCard('${d.id}',event)">
     <div class="card-top">
       <div class="card-name">${esc(d.name)}</div>
       <span class="card-priority ${priCls}">${d.priority}</span>
     </div>
     ${d.company?`<div class="card-co">${esc(d.company)}</div>`:''}
-    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+    <div style="display:flex;align-items:baseline;gap:8px">
       <div class="card-value">${fmt(d.value)}</div>
       ${d.ltv?`<span style="font-size:10px;color:#a78bfa;font-weight:600" title="Lifetime Value">LTV ${fmt(d.ltv)}</span>`:''}
-      ${dealScoreBadge(d)}
     </div>
     ${(d.priority && d.priorityBy)?`<div style="font-size:10px;color:var(--text3);margin-bottom:3px"><span style="color:var(--yellow)">${esc(d.priorityBy)}</span> flagged ${d.priority}</div>`:''}
     ${notesHTML}${tagsRow}${followHTML}
-    ${d.closeDate ? `<div style="display:inline-flex;align-items:center;gap:4px;margin-bottom:4px;padding:2px 7px;border-radius:4px;background:var(--surface2);border:1px solid var(--border);font-size:10px;font-weight:600;color:var(--text3)">Close: ${fmtDate(d.closeDate)}</div>` : ''}
+    ${aiIndicator}
     ${agingBadge(d)}
     <div class="card-extra">
       ${detailRows}
       ${actSection}
+      ${aiSection}
     </div>
     <div class="card-actions">
       ${emailBtn}
       <button class="ca-btn" onclick="openEdit('${d.id}');event.stopPropagation()">Edit</button>
+      <button class="ca-btn" onclick="quickSpam('${d.id}');event.stopPropagation()" style="color:#9ca3af" title="Flag as spam/scam and remove from board">Spam</button>
+      <button class="ca-btn del" onclick="deleteDeal('${d.id}');event.stopPropagation()">Delete</button>
     </div>
     <div class="card-toggle"><span class="card-chevron">&#9660;</span></div>
   </div>`;
@@ -1964,11 +1754,71 @@ function saveActivity() {
   if (!d.activities) d.activities = [];
   d.activities.push({ id: uid(), type: actType, notes, by: currentSession ? currentSession.name : '', at: Date.now() });
   save(); closeActivityModal(); render();
-  if (dealViewId === dealId) {
-    const updated = deals.find(x => x.id === dealId);
-    if (updated) { renderDealView(updated); document.getElementById('deal-view-overlay').style.display = 'flex'; }
-  }
   toast(`${actTypeLabel(actType)} logged`);
+}
+
+// ─── ACTION ITEMS ─────────────────────────────────────────────────────────────
+function showAiInput(dealId) {
+  const row = document.getElementById('ai-input-'+dealId);
+  if (!row) return;
+  row.classList.add('open');
+  const inp = document.getElementById('ai-text-'+dealId);
+  if (inp) setTimeout(() => inp.focus(), 50);
+}
+function hideAiInput(dealId) {
+  const row = document.getElementById('ai-input-'+dealId);
+  if (row) row.classList.remove('open');
+  const inp = document.getElementById('ai-text-'+dealId);
+  if (inp) inp.value = '';
+}
+function saveActionItem(dealId) {
+  const inp = document.getElementById('ai-text-'+dealId);
+  const text = inp ? inp.value.trim() : '';
+  if (!text) { if(inp) inp.focus(); return; }
+  const d = deals.find(x => x.id === dealId);
+  if (!d) return;
+  if (!d.actionItems) d.actionItems = [];
+  d.actionItems.push({
+    id: uid(),
+    text,
+    addedBy: currentSession ? currentSession.name : '',
+    addedAt: Date.now(),
+    completed: false,
+    completedAt: null
+  });
+  save();
+  refreshCard(dealId, true);
+  toast('Action item added');
+}
+function toggleActionItem(dealId, aiId, checked) {
+  const d = deals.find(x => x.id === dealId);
+  if (!d || !d.actionItems) return;
+  const ai = d.actionItems.find(a => a.id === aiId);
+  if (!ai) return;
+  ai.completed = checked;
+  ai.completedAt = checked ? Date.now() : null;
+  save();
+  refreshCard(dealId, true);
+}
+function deleteActionItem(dealId, aiId) {
+  const d = deals.find(x => x.id === dealId);
+  if (!d || !d.actionItems) return;
+  d.actionItems = d.actionItems.filter(a => a.id !== aiId);
+  save();
+  refreshCard(dealId, true);
+  toast('Removed');
+}
+function refreshCard(dealId, keepOpen) {
+  const d = deals.find(x => x.id === dealId);
+  if (!d) return;
+  const cardEl = document.getElementById('card-'+dealId);
+  if (!cardEl) return;
+  const wasOpen = keepOpen || cardEl.classList.contains('open');
+  cardEl.outerHTML = cardHTML(d);
+  if (wasOpen) {
+    const newCard = document.getElementById('card-'+dealId);
+    if (newCard) newCard.classList.add('open');
+  }
 }
 
 // ─── ADD / DELETE CUSTOM STAGE ────────────────────────────────────────────────
@@ -2039,105 +1889,6 @@ function toggleCard(id, e) {
   el.classList.toggle('expanded');
 }
 
-// ─── DEAL VIEW POPUP ──────────────────────────────────────────────────────────
-let dealViewId = null;
-
-function openDealView(id, e) {
-  if (e && (e.target.closest('.ca-btn') || e.target.closest('.card-actions') ||
-      e.target.tagName === 'A')) return;
-  dealViewId = id;
-  const d = deals.find(x => x.id === id);
-  if (!d) return;
-  renderDealView(d);
-  document.getElementById('deal-view-overlay').style.display = 'flex';
-}
-
-function closeDealView() {
-  document.getElementById('deal-view-overlay').style.display = 'none';
-  dealViewId = null;
-}
-
-function renderDealView(d) {
-  document.getElementById('dv-name').textContent = d.name;
-  document.getElementById('dv-company').textContent = d.company || '';
-
-  // Badges row
-  const sColor = stageColor(d.stage);
-  const priColors = { high: '#ef4444', medium: '#f59e0b', low: '#6b7280' };
-  const priColor = priColors[d.priority] || '#6b7280';
-  const ageDays = daysSince(d.stageEnteredAt || d.createdAt);
-  const ageColor = ageDays < 3 ? '#10b981' : ageDays < 7 ? '#f59e0b' : '#ef4444';
-  document.getElementById('dv-badges').innerHTML = [
-    `<span style="padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:${sColor}22;color:${sColor};border:1px solid ${sColor}55">${stageLabel(d.stage)}</span>`,
-    d.priority ? `<span style="padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:${priColor}22;color:${priColor}">${d.priority}</span>` : '',
-    `<span style="padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:${ageColor}18;color:${ageColor}">${ageDays}d in stage</span>`,
-    isOverdue(d) ? `<span style="padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:#ef444422;color:#ef4444">Follow-up overdue</span>` : '',
-    dealScoreBadge(d),
-  ].filter(Boolean).join('');
-
-  // Helper: labelled field
-  const dvField = (label, val, style='') => val
-    ? `<div style="margin-bottom:14px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:4px">${label}</div><div style="font-size:14px;color:var(--text);${style}">${val}</div></div>`
-    : '';
-
-  // Contacts
-  const contactsList = (d.contacts && d.contacts.length)
-    ? d.contacts : (d.contact ? [{ name: d.contact, email: d.email || '' }] : []);
-  const contactsHTML = contactsList.length
-    ? `<div style="margin-bottom:14px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:4px">Contact${contactsList.length > 1 ? 's' : ''}</div>${contactsList.map(c =>
-        `<div style="font-size:14px;color:var(--text);margin-bottom:4px">${c.name ? esc(c.name) : ''}${c.email ? ` <a href="mailto:${esc(c.email)}" style="color:var(--accent2);font-size:12px" onclick="event.stopPropagation()">${esc(c.email)}</a>` : ''}</div>`
-      ).join('')}</div>` : '';
-
-  // Attachments
-  const attHTML = (d.attachments && d.attachments.length)
-    ? `<div style="margin-bottom:14px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:6px">Files (${d.attachments.length})</div><div style="display:flex;flex-wrap:wrap;gap:6px">${d.attachments.map(f =>
-        `<a href="${f.url}" download="${esc(f.name)}" target="_blank" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--text2);text-decoration:none;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${fileIcon(f.name)} ${esc(f.name)}</a>`
-      ).join('')}</div></div>` : '';
-
-  const leftCol = [
-    dvField('Deal Value', d.value ? fmt(d.value) : '', 'font-size:22px;font-weight:700;color:var(--accent2)'),
-    d.ltv ? `<div style="margin-bottom:14px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:4px">LTV</div><div style="font-size:16px;font-weight:700;color:#a78bfa">${fmt(d.ltv)}</div></div>` : '',
-    contactsHTML,
-    dvField('Owner / Rep', esc(d.owner||'')),
-    dvField('Category', esc(d.category||'')),
-    dvField('Product / Item', esc(d.product||'')),
-    dvField('Vendor', esc(d.vendor||'')),
-    dvField('Vendor POC', esc(d.poc||'')),
-    dvField('Follow-Up', d.followUpDate ? fmtDate(d.followUpDate) : '', isOverdue(d) ? 'color:#ef4444;font-weight:700' : ''),
-    dvField('Est. Close', d.closeDate ? fmtDate(d.closeDate) : ''),
-    d.notes ? `<div style="margin-bottom:14px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:4px">Notes</div><div style="font-size:13px;color:var(--text2);line-height:1.6;font-style:italic">${esc(d.notes)}</div></div>` : '',
-    attHTML,
-  ].filter(Boolean).join('');
-
-  // Activity log (right column)
-  const acts = (d.activities || []).slice().reverse();
-  const actItemsHTML = acts.map(a => `
-    <div style="border-bottom:1px solid var(--border);padding:10px 0">
-      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px">
-        <span class="act-badge act-${a.type}">${actTypeLabel(a.type)}</span>
-        <span style="font-size:11px;color:var(--text3)">${new Date(a.at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})} at ${new Date(a.at).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})}</span>
-        ${a.by ? `<span style="font-size:11px;color:var(--text3);font-style:italic">· ${esc(a.by)}</span>` : ''}
-      </div>
-      ${a.notes ? `<div style="font-size:13px;color:var(--text2);line-height:1.5">${esc(a.notes)}</div>` : ''}
-    </div>`).join('');
-
-  const rightCol = `
-    <div>
-      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between">
-        Activity ${acts.length ? `(${acts.length})` : ''}
-        <button class="act-log-btn" onclick="closeDealView();setTimeout(()=>openActivityModal('${d.id}'),80)">+ Log</button>
-      </div>
-      ${actItemsHTML || '<div style="font-size:12px;color:var(--text3);font-style:italic;padding:8px 0">No activity logged yet</div>'}
-    </div>`;
-
-  document.getElementById('dv-body').innerHTML = `<div>${leftCol}</div>${rightCol}`;
-
-  // Wire footer buttons
-  document.getElementById('dv-edit-btn').onclick = () => { closeDealView(); openEdit(d.id); };
-  document.getElementById('dv-log-btn').onclick  = () => { closeDealView(); setTimeout(() => openActivityModal(d.id), 80); };
-  document.getElementById('dv-delete-btn').onclick = () => { closeDealView(); deleteDeal(d.id); };
-}
-
 function toggleArcCard(id, e) {
   if (e.target.tagName === 'A') return;
   const el = document.getElementById('arc-'+id);
@@ -2165,10 +1916,7 @@ function toggleCol(colId, e) {
 function dStart(e, id) {
   dragId = id;
   e.dataTransfer.effectAllowed = 'move';
-  setTimeout(() => {
-    document.getElementById('card-'+id)?.classList.add('dragging');
-    document.body.classList.add('dragging-active');
-  }, 0);
+  setTimeout(() => document.getElementById('card-'+id)?.classList.add('dragging'), 0);
 }
 function dOver(e, stageId) {
   e.preventDefault();
@@ -2176,15 +1924,9 @@ function dOver(e, stageId) {
   document.querySelectorAll('.col').forEach(c => c.classList.remove('drag-over'));
   document.getElementById('col-'+stageId)?.classList.add('drag-over');
 }
-function dLeave(e) {
-  // Only remove highlight when leaving to an element outside this column
-  if (!e.currentTarget?.contains(e.relatedTarget)) {
-    e.currentTarget?.classList.remove('drag-over');
-  }
-}
+function dLeave(e) { e.currentTarget?.classList.remove('drag-over'); }
 function dDrop(e, stageId) {
   e.preventDefault();
-  document.body.classList.remove('dragging-active');
   document.querySelectorAll('.col').forEach(c => c.classList.remove('drag-over'));
   if (!dragId) return;
   const d = deals.find(x=>x.id===dragId);
@@ -2197,33 +1939,6 @@ function dDrop(e, stageId) {
     toast(`Moved to ${stageLabel(stageId)}`);
   }
   dragId = null;
-}
-document.addEventListener('dragend', () => {
-  document.body.classList.remove('dragging-active');
-  document.querySelectorAll('.col').forEach(c => c.classList.remove('drag-over'));
-  dragId = null;
-});
-
-function dDropArchive(e, outcome) {
-  e.preventDefault();
-  document.body.classList.remove('dragging-active');
-  document.querySelectorAll('.col').forEach(c => c.classList.remove('drag-over'));
-  if (!dragId) return;
-  const d = deals.find(x=>x.id===dragId);
-  if (!d) { dragId = null; return; }
-  const label = outcome==='won' ? 'Won' : outcome==='lost' ? 'Lost' : 'Spam/Scam';
-  archive.push({
-    id: uid(), name:d.name, company:d.company||'',
-    contacts: d.contacts||[], contact:d.contact||'',
-    email:d.email||'', owner:d.owner||'', value:d.value, outcome,
-    closedAt:Date.now(), createdAt:d.createdAt||Date.now(), lossReason:''
-  });
-  logChange('closed', d.id, d.name, label);
-  deals = deals.filter(x=>x.id!==dragId);
-  dragId = null;
-  save();
-  render();
-  toast(outcome==='won' ? 'Deal Won! 🎉' : outcome==='lost' ? 'Deal marked Lost' : 'Marked as Spam');
 }
 
 // ─── STAGE PICKER ─────────────────────────────────────────────────────────────
@@ -2330,8 +2045,6 @@ function openEdit(id) {
   fv('f-owner', d.owner); fv('f-value', d.value); fv('f-ltv', d.ltv||0);
   fv('f-product', d.product); fv('f-priority', d.priority||'medium'); fv('f-followup', d.followUpDate);
   fv('f-closedate', d.closeDate); fv('f-notes', d.notes);
-  fv('f-vendor', d.vendor||''); fv('f-poc', d.poc||'');
-  document.getElementById('f-category').value = d.category || '';
   fv('f-stage-entered', d.stageEnteredAt||''); fv('f-created-at', d.createdAt||'');
   // Populate contacts — support legacy single contact/email fields
   const existingContacts = d.contacts && d.contacts.length
@@ -2340,7 +2053,7 @@ function openEdit(id) {
   populateContactRows(existingContacts);
   syncStagePicker(d.stage || 'contacted');
   // Show more fields if they have data
-  const hasExtra = d.company||d.email||d.owner||d.product||d.ltv||d.followUpDate||d.closeDate||d.vendor||d.poc;
+  const hasExtra = d.company||d.email||d.owner||d.product||d.ltv||d.followUpDate||d.closeDate;
   document.getElementById('more-fields').style.display = hasExtra ? 'block' : 'none';
   document.getElementById('more-fields-arrow').textContent = hasExtra ? '▼' : '▶';
   const atts = d.attachments || [];
@@ -2379,9 +2092,6 @@ function saveDeal(e) {
     followUpDate:document.getElementById('f-followup').value,
     closeDate:   document.getElementById('f-closedate').value,
     notes:       document.getElementById('f-notes').value.trim(),
-    vendor:      document.getElementById('f-vendor').value.trim(),
-    poc:         document.getElementById('f-poc').value.trim(),
-    category:    document.getElementById('f-category').value,
     attachments: JSON.parse(document.getElementById('f-attachments').value || '[]'),
     createdAt:   prevCreated || Date.now(),
     stageEnteredAt: (stageChanged || !prevEntered) ? Date.now() : prevEntered,
@@ -2923,266 +2633,6 @@ function copyEmail(email) {
     document.body.appendChild(ta); ta.select(); document.execCommand('copy');
     document.body.removeChild(ta); toast('Email copied');
   });
-}
-
-// ─── EMAIL SCRIPT ENGINE ──────────────────────────────────────────────────────
-function openEmailScripts(dealId) {
-  document.querySelectorAll('.email-popup.open').forEach(p => p.classList.remove('open'));
-  const d = deals.find(x => x.id === dealId);
-  if (!d) return;
-  const scripts = buildEmailScripts(d);
-  const contact = ((d.contacts && d.contacts[0]) || {});
-  const firstName = (contact.name || d.contact || d.name || '').split(' ')[0] || 'there';
-  const email = contact.email || d.email || '';
-  document.getElementById('es-context-label').textContent =
-    `${d.name}${d.company ? ' · ' + d.company : ''}${email ? ' · ' + email : ''} — ${scripts.length} suggested scripts`;
-
-  const typeColors = {
-    'Initial Outreach':   '#6366f1',
-    'Quote Follow-Up':    '#f59e0b',
-    'Proposal Follow-Up': '#10b981',
-    'Overdue Follow-Up':  '#ef4444',
-    'Touch Base':         '#3b82f6',
-    'Closing Push':       '#a78bfa',
-    'Post-Demo Check-In': '#06b6d4',
-    'Re-Engagement':      '#ec4899',
-  };
-
-  document.getElementById('es-scripts-body').innerHTML = scripts.map((s, i) => {
-    const color = typeColors[s.type] || '#6366f1';
-    const safeSubj = s.subject.replace(/'/g,"&#39;");
-    const safeBody = s.body.replace(/'/g,"&#39;").replace(/\n/g,'\\n');
-    return `
-    <div class="es-card">
-      <div class="es-card-head">
-        <span class="es-type" style="background:${color}22;color:${color}">${s.type}</span>
-        <div class="es-card-actions">
-          ${email ? `<button class="btn btn-primary" style="font-size:11px;padding:4px 10px" onclick="openGmailScript('${esc(email)}','${safeSubj}','${safeBody}')">Open in Gmail ↗</button>` : ''}
-          <button class="btn btn-outline" style="font-size:11px;padding:4px 10px" onclick="copyEmailScript(${i})">Copy Script</button>
-        </div>
-      </div>
-      <div class="es-subject"><span>Subject:</span>${esc(s.subject)}</div>
-      <div class="es-body-text" id="es-body-${i}">${esc(s.body)}</div>
-    </div>`;
-  }).join('');
-
-  // Store scripts for copy function
-  window._esScripts = scripts;
-  // Quick action buttons in footer
-  const qa = document.getElementById('es-quick-actions');
-  if (qa) {
-    qa.innerHTML = email
-      ? `<span style="font-size:12px;color:var(--text3);align-self:center">${esc(email)}</span>
-         <button class="btn btn-outline" style="font-size:11px;padding:4px 10px" onclick="openGmail('${esc(email)}','${esc(d.name)}')">Open Gmail (blank)</button>
-         <button class="btn btn-outline" style="font-size:11px;padding:4px 10px" onclick="copyEmail('${esc(email)}')">Copy Address</button>`
-      : '';
-  }
-  document.getElementById('es-overlay').classList.add('open');
-}
-
-function closeEmailScripts() {
-  document.getElementById('es-overlay').classList.remove('open');
-}
-
-function copyEmailScript(i) {
-  const s = (window._esScripts || [])[i];
-  if (!s) return;
-  const text = `Subject: ${s.subject}\n\n${s.body}`;
-  navigator.clipboard.writeText(text).then(() => toast('Script copied to clipboard')).catch(() => {
-    const ta = document.createElement('textarea'); ta.value = text;
-    document.body.appendChild(ta); ta.select(); document.execCommand('copy');
-    document.body.removeChild(ta); toast('Script copied');
-  });
-}
-
-function openGmailScript(email, subject, body) {
-  const realBody = body.replace(/\\n/g, '\n');
-  const url = `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(email)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(realBody)}`;
-  window.open(url, '_blank');
-}
-
-function buildEmailScripts(d) {
-  const contact = ((d.contacts && d.contacts[0]) || {});
-  const firstName = (contact.name || d.contact || d.name || '').split(' ')[0] || 'there';
-  const company = d.company || 'your company';
-  const product = d.product || 'our products';
-  const value = d.value ? `$${Number(d.value).toLocaleString()}` : null;
-  const closeDate = d.closeDate ? fmtDate(d.closeDate) : null;
-  const lastActivity = d.activities && d.activities.length
-    ? d.activities[d.activities.length - 1] : null;
-  const lastActType = lastActivity ? actTypeLabel(lastActivity.type) : null;
-  const daysSinceActivity = lastActivity ? Math.floor((Date.now() - lastActivity.at) / 86400000) : null;
-  const overdue = isOverdue(d);
-  const scripts = [];
-
-  // ── STAGE-BASED SCRIPTS ──
-  if (d.stage === 'nurture' || d.stage === 'new') {
-    scripts.push({
-      type: 'Initial Outreach',
-      subject: `Custom Branded Products for ${company} — SwagPrint`,
-      body: `Hi ${firstName},
-
-I came across ${company} and wanted to reach out — we work with companies like yours to create custom branded merchandise that actually gets used (think: apparel, drinkware, bags, and promo items your team and customers will love).
-
-A few things that set SwagPrint apart:
-• No minimums on many items
-• Fast turnaround, even on rush orders
-• Full design support included
-
-Would it make sense to hop on a quick 15-minute call this week? I'd love to learn more about what you're working on and see if we'd be a fit.
-
-Best,
-[Your Name]
-SwagPrint.com`
-    });
-  }
-
-  if (d.stage === 'qualified' || d.stage === 'contacted') {
-    scripts.push({
-      type: 'Touch Base',
-      subject: `Following up — Custom Merch for ${company}`,
-      body: `Hi ${firstName},
-
-Just wanted to follow up on our last conversation about custom branded products for ${company}.
-
-${lastActType ? `Since our last ${lastActType.toLowerCase()}, I wanted to make sure nothing slipped through the cracks. ` : ''}We've been helping teams in your space create standout merch for events, employee kits, and client gifting.
-
-${closeDate ? `I know you mentioned timing around ${closeDate} — I want to make sure we have enough lead time to get this right for you. ` : ''}
-
-Do you have 10 minutes this week to reconnect? Happy to work around your schedule.
-
-Best,
-[Your Name]
-SwagPrint.com`
-    });
-  }
-
-  if (d.stage === 'quote') {
-    scripts.push({
-      type: 'Quote Follow-Up',
-      subject: `Your SwagPrint Quote — Any Questions?`,
-      body: `Hi ${firstName},
-
-I wanted to follow up on the quote we sent over for ${company}${value ? ` (${value})` : ''}.
-
-Have you had a chance to review it? I'm happy to:
-• Walk through any line items
-• Adjust quantities or styles
-• Share samples or mockups if that would help
-
-${closeDate ? `Given your timeline around ${closeDate}, we'd want to lock in your order soon to ensure on-time delivery. ` : 'We want to make sure you have plenty of time for production and delivery. '}
-
-Just reply here or give me a call — I'll make it quick.
-
-Best,
-[Your Name]
-SwagPrint.com`
-    });
-  }
-
-  if (d.stage === 'proposal') {
-    scripts.push({
-      type: 'Proposal Follow-Up',
-      subject: `SwagPrint Proposal for ${company} — Checking In`,
-      body: `Hi ${firstName},
-
-Hope things are going well! I'm following up on the proposal we put together for ${company}.
-
-I know decisions like this take time, and I want to make sure you have everything you need to move forward. If there's any hesitation — pricing, timeline, product selection — I'd love to address it directly.
-
-${value ? `The total we discussed was ${value}, and I want to make sure that works for your budget. ` : ''}${closeDate ? `With your target date of ${closeDate}, we're getting close to the window for production. ` : ''}
-
-Can we schedule a quick call to get any remaining questions answered? I'm confident we can make this work.
-
-Best,
-[Your Name]
-SwagPrint.com`
-    });
-  }
-
-  // ── OVERDUE FOLLOW-UP ──
-  if (overdue) {
-    scripts.push({
-      type: 'Overdue Follow-Up',
-      subject: `Still interested in custom merch? — ${company}`,
-      body: `Hi ${firstName},
-
-I don't want to be a pest, but I also don't want to let this slip through the cracks on my end.
-
-We last touched base a little while ago about custom branded products for ${company}, and I wanted to check in one more time. If the timing has changed or priorities have shifted, totally understand — just let me know and I'll update accordingly.
-
-If you are still interested, I'd love to pick this back up. Even a quick reply helps me know where things stand.
-
-Thanks for your time either way.
-
-Best,
-[Your Name]
-SwagPrint.com`
-    });
-  }
-
-  // ── CLOSE DATE APPROACHING ──
-  if (closeDate) {
-    const daysToClose = d.closeDate
-      ? Math.ceil((new Date(d.closeDate) - new Date()) / 86400000) : null;
-    if (daysToClose !== null && daysToClose > 0 && daysToClose <= 14) {
-      scripts.push({
-        type: 'Closing Push',
-        subject: `Time-sensitive: Let's finalize your ${company} order`,
-        body: `Hi ${firstName},
-
-I wanted to flag something on your end — based on the timeline we discussed (targeting ${closeDate}), we're getting close to the point where we need to lock in your order to guarantee on-time delivery.
-
-Production and shipping take time, and I'd hate for that date to slip because of a tight window on our end. If we confirm${value ? ` the ${value} order ` : ' the order '}this week, we should be in great shape.
-
-Can you give me a quick thumbs up to move forward, or let me know if anything has changed?
-
-Best,
-[Your Name]
-SwagPrint.com`
-      });
-    }
-  }
-
-  // ── RE-ENGAGEMENT (long gap since last activity) ──
-  if (daysSinceActivity !== null && daysSinceActivity >= 21 && scripts.length < 3) {
-    scripts.push({
-      type: 'Re-Engagement',
-      subject: `Checking back in — ${company} x SwagPrint`,
-      body: `Hi ${firstName},
-
-It's been a few weeks since we last connected, and I wanted to check back in.
-
-Things move fast, and I know priorities shift — but if custom merch for ${company} is still on your radar (events, gifting, employee swag, etc.), I'd love to reconnect with a fresh conversation.
-
-We've added some new products and can offer faster turnaround than before. Worth a quick chat?
-
-Best,
-[Your Name]
-SwagPrint.com`
-    });
-  }
-
-  // ── FALLBACK: always include a general touch base if nothing else fits ──
-  if (scripts.length === 0) {
-    scripts.push({
-      type: 'Touch Base',
-      subject: `Checking in — ${company} x SwagPrint`,
-      body: `Hi ${firstName},
-
-Just a quick note to check in and see how things are going on your end.
-
-We're always here if you need anything — new product ideas, a refreshed quote, or just want to talk through what you're planning. No pressure at all.
-
-Let me know if there's anything I can help with!
-
-Best,
-[Your Name]
-SwagPrint.com`
-    });
-  }
-
-  return scripts;
 }
 
 // ─── FILE ATTACHMENTS ─────────────────────────────────────────────────────────
