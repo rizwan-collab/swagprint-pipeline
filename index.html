@@ -7,6 +7,7 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234f46e5'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='system-ui,sans-serif' font-size='20' font-weight='700' fill='white'%3ES%3C/text%3E%3C/svg%3E">
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <style>
   :root {
     --bg: #f0f2f7;
@@ -475,6 +476,16 @@
         <div id="um-error" style="color:var(--red);font-size:12px;margin-top:8px;min-height:16px"></div>
       </div>
     </div>
+    <div style="margin-top:20px;border-top:1px solid var(--border);padding:16px 24px 0">
+      <div style="font-weight:600;margin-bottom:8px">Monthly Revenue Target</div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:10px">Set the won-revenue target for the current month.</div>
+      <div style="display:flex;gap:8px;align-items:flex-end">
+        <input id="um-target-amount" type="number" min="0" step="1000" placeholder="e.g. 50000" style="width:140px;padding:6px 8px;border:1px solid var(--border);border-radius:6px;background:var(--bg2);color:var(--text1)">
+        <button class="btn btn-primary" onclick="saveMonthlyTarget()">Save</button>
+        <button class="btn btn-outline" onclick="clearMonthlyTarget()">Clear</button>
+      </div>
+      <div id="um-target-status" style="font-size:12px;margin-top:6px;min-height:16px;color:var(--accent)"></div>
+    </div>
     <div class="modal-foot">
       <button class="btn btn-outline" onclick="closeUmModal()">Close</button>
     </div>
@@ -528,6 +539,10 @@
   <div class="stat" title="Largest single deal in pipeline"><span class="stat-label">Biggest Deal</span><span class="stat-value" id="st-biggest">$0</span></div>
   <div class="stat-divider"></div>
   <div class="stat" title="Weighted value of deals with close dates in next 30 days"><span class="stat-label">Forecast 30d</span><span class="stat-value" id="st-forecast30" style="color:#f59e0b">$0</span></div>
+  <div class="stat-divider"></div>
+  <div class="stat" title="Monthly revenue target"><span class="stat-label">Monthly Target</span><span class="stat-value" id="st-monthtarget">—</span></div>
+  <div class="stat-divider"></div>
+  <div class="stat" title="Won this month vs target"><span class="stat-label">vs Target</span><span class="stat-value" id="st-vstarget">—</span></div>
   <button class="stats-toggle" onclick="toggleStatsBar()" id="stats-toggle-btn" title="Collapse stats bar">▲</button>
 </div>
 
@@ -909,65 +924,53 @@ let currentSession = null; // { userId, name, role }
 let usersRef = null;
 let usersCache = {};   // { userId: { name, pin, role } }
 let changelogRef = null;
+let targetsRef = null;
+let monthlyTargets = {};
 
 // ─── FIREBASE ─────────────────────────────────────────────────────────────────
 try {
   firebase.initializeApp(FIREBASE_CONFIG);
   const db = firebase.database();
 
-  // ── Load users first, then check session ─────────────────────────────────
-  usersRef = db.ref('pipeline/users');
-  usersRef.once('value', snap => {
-    const data = snap.val();
-    if (!data || Object.keys(data).length === 0) {
-      // Seed a default admin on first run
-      usersRef.push({ name: 'Rizwan', pin: '1234', role: 'admin' }, () => {
-        usersRef.once('value', s2 => { usersCache = s2.val() || {}; checkSession(); });
-      });
-    } else {
-      usersCache = data;
-      checkSession();
-    }
-  }).catch(() => { usersCache = {}; checkSession(); });
-
-  // ── Live users listener (for user management UI) ──────────────────────────
-  usersRef.on('value', snap => { usersCache = snap.val() || {}; refreshOwnerSelect(); });
-
-  // ── Changelog ref ─────────────────────────────────────────────────────────
-  changelogRef = db.ref('pipeline/changelog');
-
-  // ── Custom stages ref ──────────────────────────────────────────────────────
-  customStagesRef = db.ref('pipeline/customStages');
-  customStagesRef.on('value', snap => {
-    customStages = snap.val() || [];
-    STAGES = [...DEFAULT_STAGES, ...customStages];
-    render();
-  });
-
-  dbRef = db.ref('pipeline/state');
-  dbRef.on('value', snap => {
-    const raw = snap.val();
-    if (raw && raw.data) {
-      const p = JSON.parse(raw.data);
-      deals = p.deals || [];
-      archive = p.archive || [];
-      // Auto-clear legacy placeholder data
-      const isLegacy = deals.every(d=>LEGACY_SEED_IDS.has(d.id)) && archive.every(a=>LEGACY_SEED_IDS.has(a.id));
-      if (isLegacy && deals.length > 0) {
-        deals = []; archive = [];
-        push();
+  function initFirebaseRefs() {
+    usersRef = db.ref('pipeline/users');
+    usersRef.once('value', snap => {
+      const data = snap.val();
+      if (!data || Object.keys(data).length === 0) {
+        usersRef.push({ name: 'Rizwan', pin: '1234', role: 'admin' }, () => {
+          usersRef.once('value', s2 => { usersCache = s2.val() || {}; checkSession(); });
+        });
+      } else {
+        usersCache = data;
+        checkSession();
       }
-    } else {
-      deals = []; archive = [];
-      push();
-    }
-    fbReady = true;
-    const el = document.getElementById('fb-status');
-    el.textContent = 'Live';
-    el.className = 'fb-live';
-    updateTeamBadge();
-    render();
-  }, err => { console.warn('Firebase error', err); checkSession(); loadLocal(); });
+    }).catch(() => { usersCache = {}; checkSession(); });
+    usersRef.on('value', snap => { usersCache = snap.val() || {}; refreshOwnerSelect(); });
+    changelogRef = db.ref('pipeline/changelog');
+    targetsRef = db.ref('pipeline/targets');
+    targetsRef.on('value', snap => { monthlyTargets = snap.val() || {}; updateStats(); });
+    customStagesRef = db.ref('pipeline/customStages');
+    customStagesRef.on('value', snap => { customStages = snap.val() || []; STAGES = [...DEFAULT_STAGES, ...customStages]; render(); });
+    dbRef = db.ref('pipeline/state');
+    dbRef.on('value', snap => {
+      const raw = snap.val();
+      if (raw && raw.data) {
+        const p = JSON.parse(raw.data);
+        deals = p.deals || [];
+        archive = p.archive || [];
+        const isLegacy = deals.every(d=>LEGACY_SEED_IDS.has(d.id)) && archive.every(a=>LEGACY_SEED_IDS.has(a.id));
+        if (isLegacy && deals.length > 0) { deals = []; archive = []; push(); }
+      } else { deals = []; archive = []; push(); }
+      fbReady = true;
+      const el = document.getElementById('fb-status');
+      el.textContent = 'Live'; el.className = 'fb-live';
+      updateTeamBadge(); render();
+    }, err => { console.warn('Firebase error', err); checkSession(); loadLocal(); });
+  } // end initFirebaseRefs
+
+  firebase.auth().signInAnonymously()
+    .then(() => { initFirebaseRefs(); })
+    .catch(err => { console.warn('Anonymous auth failed:', err); initFirebaseRefs(); });
 } catch(e) { console.warn('Firebase init error', e); checkSession(); loadLocal(); }
 
 function loadLocal() {
@@ -1225,6 +1228,31 @@ function openUmModal() {
 }
 function closeUmModal() { document.getElementById('um-overlay').style.display = 'none'; }
 
+function saveMonthlyTarget() {
+  if (!targetsRef) { alert('Not connected to Firebase.'); return; }
+  const now = new Date();
+  const monthKey = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+  const val = parseInt(document.getElementById('um-target-amount').value, 10);
+  if (isNaN(val) || val < 0) { document.getElementById('um-target-status').textContent = 'Enter a valid amount.'; return; }
+  targetsRef.update({ [monthKey]: val }).then(() => {
+    document.getElementById('um-target-status').textContent = 'Saved!';
+    setTimeout(() => { const el = document.getElementById('um-target-status'); if (el) el.textContent = ''; }, 2000);
+  }).catch(e => {
+    document.getElementById('um-target-status').textContent = 'Error: ' + e.message;
+  });
+}
+
+function clearMonthlyTarget() {
+  if (!targetsRef) return;
+  const now = new Date();
+  const monthKey = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+  targetsRef.update({ [monthKey]: null }).then(() => {
+    document.getElementById('um-target-amount').value = '';
+    document.getElementById('um-target-status').textContent = 'Cleared.';
+    setTimeout(() => { const el = document.getElementById('um-target-status'); if (el) el.textContent = ''; }, 2000);
+  });
+}
+
 function renderUmUsers() {
   const list = document.getElementById('um-user-list');
   if (!list) return;
@@ -1409,6 +1437,24 @@ function updateStats() {
     .reduce((s,d) => s+(Number(d.value)||0)*(STAGE_PROB[d.stage]||0.5), 0);
   const fcstEl = document.getElementById('st-forecast30');
   if (fcstEl) fcstEl.textContent = fcst30>=1000 ? '$'+(fcst30/1000).toFixed(1)+'k' : '$'+Math.round(fcst30);
+  // Monthly target vs actual
+  const todayD = new Date(), monthKey = todayD.getFullYear() + '-' + String(todayD.getMonth()+1).padStart(2,'0');
+  const monthStart = new Date(todayD.getFullYear(), todayD.getMonth(), 1).getTime();
+  const monthEnd = new Date(todayD.getFullYear(), todayD.getMonth()+1, 1).getTime();
+  const wonThisMonth = archive.filter(a => a.outcome==='won' && Number(a.closedAt) >= monthStart && Number(a.closedAt) < monthEnd).reduce((s,a) => s+(Number(a.value)||0), 0);
+  const target = Number(monthlyTargets[monthKey]) || 0;
+  const mtEl = document.getElementById('st-monthtarget');
+  const vtEl = document.getElementById('st-vstarget');
+  if (mtEl) mtEl.textContent = target > 0 ? (target>=1000 ? '$'+(target/1000).toFixed(1)+'k' : '$'+target) : '—';
+  if (vtEl) {
+    if (target > 0) {
+      const pct = Math.round(wonThisMonth / target * 100), wonFmt = wonThisMonth>=1000 ? '$'+(wonThisMonth/1000).toFixed(1)+'k' : '$'+wonThisMonth;
+      vtEl.textContent = wonFmt + ' (' + pct + '%)';
+      vtEl.className = 'stat-value ' + (pct >= 100 ? 'green' : pct >= 60 ? 'yellow' : 'red');
+    } else {
+      vtEl.textContent = '—'; vtEl.className = 'stat-value';
+    }
+  }
 
 }
 
