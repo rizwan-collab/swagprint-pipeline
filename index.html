@@ -565,16 +565,13 @@
   <div class="filter-sep"></div>
   <select class="owner-select" id="stage-filter" onchange="setStageFilter(this.value)">
     <option value="">All Stages</option>
-    <option value="nurture">Nurture</option>
-    <option value="qualified">Qualified</option>
+    <option value="follow-up">Follow-Up</option>
+    <option value="prospect">Prospect</option>
     <option value="contacted">Contact Made</option>
     <option value="quote">Quote Sent</option>
     <option value="proposal">Proposal Made</option>
   </select>
   <div class="filter-sep"></div>
-  <span class="chip" onclick="setFilter('hasltv',this)" title="Deals with LTV data">Has LTV</span>
-  <span class="chip" onclick="setFilter('highltv',this)" title="LTV over $5k">High LTV $5k+</span>
-  <span class="chip" id="my-deals-chip" onclick="setFilter('mydeals',this)" title="Only deals assigned to you">My Deals</span>
 </div>
 
 <!-- BOARD + SIDE PANEL -->
@@ -626,15 +623,15 @@
           <div class="fg"><label>Deal Value ($)</label><input id="f-value" type="number" placeholder="0" min="0"></div>
           <div class="fg full"><label>Stage</label>
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:4px" id="stage-picker">
-              <button type="button" class="stage-btn" data-stage="nurture" onclick="pickStage('nurture',this)">Nurture<span>Not ready yet</span></button>
-              <button type="button" class="stage-btn" data-stage="qualified" onclick="pickStage('qualified',this)">Qualified<span>Good prospect</span></button>
+              <button type="button" class="stage-btn" data-stage="follow-up" onclick="pickStage('follow-up',this)">Follow-Up<span>Not ready yet</span></button>
+              <button type="button" class="stage-btn" data-stage="prospect" onclick="pickStage('prospect',this)">Prospect<span>Good prospect</span></button>
               <button type="button" class="stage-btn active" data-stage="contacted" onclick="pickStage('contacted',this)">Contacted<span>In conversation</span></button>
               <button type="button" class="stage-btn" data-stage="quote" onclick="pickStage('quote',this)">Quote Sent<span>Waiting on them</span></button>
               <button type="button" class="stage-btn" data-stage="proposal" onclick="pickStage('proposal',this)">Proposal<span>Formal proposal out</span></button>
             </div>
             <select id="f-stage" style="display:none">
-              <option value="nurture">Nurture</option>
-              <option value="qualified">Qualified</option>
+              <option value="follow-up">Follow-Up</option>
+              <option value="prospect">Prospect</option>
               <option value="contacted" selected>Contact Made</option>
               <option value="quote">Quote Sent</option>
               <option value="proposal">Proposal Made</option>
@@ -744,7 +741,7 @@
     <div id="rq-actions" style="padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0">
       <button class="btn btn-primary" onclick="rqAction('contacted')" style="flex:1">Contact Made</button>
       <button class="btn btn-outline" onclick="rqAction('quote')" style="flex:1">Send Quote</button>
-      <button class="btn btn-outline" onclick="rqAction('nurture')" style="flex:1;color:var(--text3)">Move to Nurture</button>
+      <button class="btn btn-outline" onclick="rqAction('follow-up')" style="flex:1;color:var(--text3)">Move to Follow-Up</button>
       <button class="btn btn-outline" onclick="rqQuickSpam()" style="flex:1;color:#9ca3af">Spam</button>
       <button class="btn btn-ghost" onclick="rqSkip()" style="flex:1">Skip</button>
     </div>
@@ -782,7 +779,7 @@
         <textarea id="import-ta" class="import-ta" placeholder="Paste CSV data here — one file at a time, or mix multiple pastes…" oninput="parseImportPreview()"></textarea>
         <div class="import-hint">
           CSV header: <code>name,company,contact,email,owner,value,stage,product,priority,notes,ltv,followUpDate,closeDate</code><br>
-          Stages: <code>qualified · contacted · quote · proposal</code> &nbsp;|&nbsp; Priority: <code>high · medium · low</code> &nbsp;|&nbsp; Dates: <code>YYYY-MM-DD</code>
+          Stages: <code>prospect · contacted · quote · proposal</code> &nbsp;|&nbsp; Priority: <code>high · medium · low</code> &nbsp;|&nbsp; Dates: <code>YYYY-MM-DD</code>
         </div>
       </div>
       <div id="import-preview-wrap" style="display:none;margin-top:14px">
@@ -894,8 +891,8 @@ const FIREBASE_CONFIG = {
 };
 const LS_KEY = 'sp_pipeline_v3';
 const DEFAULT_STAGES = [
-  { id:'nurture',     label:'Nurture',       color:'#64748B' },
-  { id:'qualified',   label:'Qualified',     color:'#7C3AED' },
+  { id:'follow-up',     label:'Follow-Up',       color:'#64748B' },
+  { id:'prospect',   label:'Prospect',     color:'#7C3AED' },
   { id:'contacted',   label:'Contact Made',  color:'#2563EB' },
   { id:'quote',       label:'Quote Sent',    color:'#0891B2' },
   { id:'proposal',    label:'Proposal Made', color:'#059669' },
@@ -1360,7 +1357,7 @@ function applyFilters(list) {
 }
 
 // Stage probability weights for weighted pipeline
-const STAGE_PROB = { qualified:.2, contacted:.3, quote:.5, proposal:.65 };
+const STAGE_PROB = { prospect:.2, contacted:.3, quote:.5, proposal:.65 };
 
 // ─── STATS ────────────────────────────────────────────────────────────────────
 function updateStats() {
@@ -1911,7 +1908,7 @@ function deleteCustomStage(id) {
 
 // ─── STAGE PICKER (dynamic) ───────────────────────────────────────────────────
 function stageSubtitle(id) {
-  const subs = { nurture:'Not ready yet', qualified:'Good prospect', contacted:'In conversation', quote:'Waiting on them', proposal:'Formal proposal out' };
+  const subs = { follow-up:'Not ready yet', prospect:'Good prospect', contacted:'In conversation', quote:'Waiting on them', proposal:'Formal proposal out' };
   return subs[id] || 'Custom stage';
 }
 
@@ -2185,13 +2182,13 @@ function deleteDeal(id) {
 
 // ─── REVIEW QUEUE ─────────────────────────────────────────────────────────────
 let rqQueue = [], rqIndex = 0;
-let rqStats = { contacted:0, quote:0, nurture:0, spam:0, skipped:0 };
+let rqStats = { contacted:0, quote:0, follow-up:0, spam:0, skipped:0 };
 
 function openReviewQueue() {
-  // Build queue: qualified + nurture deals sorted by priority then createdAt
+  // Build queue: prospect + follow-up deals sorted by priority then createdAt
   const priorityOrder = { high:0, medium:1, low:2 };
   rqQueue = [...deals]
-    .filter(d => d.stage === 'qualified' || d.stage === 'nurture')
+    .filter(d => d.stage === 'prospect' || d.stage === 'follow-up')
     .sort((a,b) => {
       const pa = priorityOrder[a.priority] ?? 1;
       const pb = priorityOrder[b.priority] ?? 1;
@@ -2199,7 +2196,7 @@ function openReviewQueue() {
       return (a.createdAt||0) - (b.createdAt||0);
     });
   rqIndex = 0;
-  rqStats = { contacted:0, quote:0, nurture:0, spam:0, skipped:0 };
+  rqStats = { contacted:0, quote:0, follow-up:0, spam:0, skipped:0 };
   document.getElementById('review-overlay').classList.add('open');
   rqRender();
 }
@@ -2228,7 +2225,7 @@ function rqRender() {
     const parts = [];
     if (rqStats.contacted) parts.push(`${rqStats.contacted} moved to Contact Made`);
     if (rqStats.quote)     parts.push(`${rqStats.quote} sent quote`);
-    if (rqStats.nurture)   parts.push(`${rqStats.nurture} moved to Nurture`);
+    if (rqStats.follow-up)   parts.push(`${rqStats.follow-up} moved to Follow-Up`);
     if (rqStats.spam)      parts.push(`${rqStats.spam} flagged as Spam`);
     if (rqStats.skipped)   parts.push(`${rqStats.skipped} skipped`);
     document.getElementById('rq-summary').textContent = parts.length ? parts.join(' · ') : 'No actions taken.';
@@ -2242,7 +2239,7 @@ function rqRender() {
   const d = rqQueue[rqIndex];
   const remaining = total - rqIndex;
   document.getElementById('rq-queue-info').textContent =
-    `${remaining} deal${remaining===1?'':'s'} remaining · ${d.stage === 'qualified' ? 'Qualified' : 'Nurture'} stage`;
+    `${remaining} deal${remaining===1?'':'s'} remaining · ${d.stage === 'prospect' ? 'Prospect' : 'Follow-Up'} stage`;
 
   const stageLabel = STAGES.find(s=>s.id===d.stage);
   const stageColor = stageLabel ? stageLabel.color : '#64748b';
@@ -2528,7 +2525,7 @@ function parseImportPreview() {
         else if (h==='ltv') obj.ltv=Number(String(v).replace(/[$,]/g,''))||0;
       });
       if (!obj.name) return null;
-      if (!obj.stage) obj.stage='qualified';
+      if (!obj.stage) obj.stage='prospect';
       if (!obj.priority) obj.priority='medium';
       return obj;
     }).filter(Boolean);
@@ -2537,7 +2534,7 @@ function parseImportPreview() {
     // Plain list: one deal name per line
     importParsed = dataLines.map(line => ({
       id: uid(), name: line.trim(), company:'', contact:'', email:'',
-      owner:'', value:0, stage:'qualified', product:'', priority:'medium',
+      owner:'', value:0, stage:'prospect', product:'', priority:'medium',
       notes:'', followUpDate:'', closeDate:'', ltv:0, createdAt:Date.now(), stageEnteredAt:Date.now()
     })).filter(d=>d.name);
   }
@@ -2568,12 +2565,12 @@ function parseImportPreview() {
 
 function normalizeStage(v) {
   const s = (v||'').toLowerCase().trim();
-  if (s.includes('qual')) return 'qualified';
+  if (s.includes('qual')) return 'prospect';
   if (s.includes('contact')||s.includes('reach')) return 'contacted';
   if (s.includes('quot')) return 'quote';
   if (s.includes('prop')) return 'proposal';
   if (s.includes('neg')) return 'proposal';
-  return 'qualified';
+  return 'prospect';
 }
 
 function normalizePriority(v) {
@@ -2600,7 +2597,7 @@ function confirmImport() {
 // ─── IMPORT TEMPLATE ─────────────────────────────────────────────────────────
 function downloadImportTemplate() {
   const headers = 'name,company,contact,email,owner,value,stage,product,priority,notes,ltv,followUpDate,closeDate';
-  const example = '"Acme Corp","Acme Inc","Jane Smith","jane@acme.com","Craig","5000","qualified","Custom Pens","high","Great logo fit","10000","2026-08-15","2026-09-30"';
+  const example = '"Acme Corp","Acme Inc","Jane Smith","jane@acme.com","Craig","5000","prospect","Custom Pens","high","Great logo fit","10000","2026-08-15","2026-09-30"';
   const csv = headers + '\n' + example;
   const a = document.createElement('a');
   a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
