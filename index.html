@@ -658,7 +658,7 @@
                 </select>
               </div>
               <div class="fg"><label>LTV ($) <span style="font-weight:400;color:var(--text3);font-size:11px">lifetime value</span></label><input id="f-ltv" type="number" placeholder="0" min="0"></div>
-              <div class="fg"><label>Nurture Date</label><input id="f-followup" type="date"></div>
+              <div class="fg"><label>Follow-Up Date</label><input id="f-followup" type="date"></div>
               <div class="fg"><label>Est. Close Date</label><input id="f-closedate" type="date"></div>
               <div class="fg full">
                 <label>Attachments <span style="font-weight:400;color:var(--text3);font-size:11px">(PDFs, quotes — max 2MB each)</span></label>
@@ -741,7 +741,7 @@
     <div id="rq-actions" style="padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0">
       <button class="btn btn-primary" onclick="rqAction('contacted')" style="flex:1">Contact Made</button>
       <button class="btn btn-outline" onclick="rqAction('quote')" style="flex:1">Send Quote</button>
-      <button class="btn btn-outline" onclick="rqAction('follow-up')" style="flex:1;color:var(--text3)">Move to Nurture</button>
+      <button class="btn btn-outline" onclick="rqAction('follow-up')" style="flex:1;color:var(--text3)">Move to Follow-Up</button>
       <button class="btn btn-outline" onclick="rqQuickSpam()" style="flex:1;color:#9ca3af">Spam</button>
       <button class="btn btn-ghost" onclick="rqSkip()" style="flex:1">Skip</button>
     </div>
@@ -891,7 +891,7 @@ const FIREBASE_CONFIG = {
 };
 const LS_KEY = 'sp_pipeline_v3';
 const DEFAULT_STAGES = [
-  { id:'follow-up',     label:'Nurture',       color:'#64748B' },
+  { id:'follow-up',     label:'Follow-Up',       color:'#64748B' },
   { id:'prospect',   label:'Prospect',     color:'#7C3AED' },
   { id:'contacted',   label:'Contact Made',  color:'#2563EB' },
   { id:'quote',       label:'Quote Sent',    color:'#0891B2' },
@@ -2225,7 +2225,7 @@ function rqRender() {
     const parts = [];
     if (rqStats.contacted) parts.push(`${rqStats.contacted} moved to Contact Made`);
     if (rqStats.quote)     parts.push(`${rqStats.quote} sent quote`);
-    if (rqStats.nurture)   parts.push(`${rqStats.nurture} moved to Nurture`);
+    if (rqStats.nurture)   parts.push(`${rqStats.nurture} moved to Follow-Up`);
     if (rqStats.spam)      parts.push(`${rqStats.spam} flagged as Spam`);
     if (rqStats.skipped)   parts.push(`${rqStats.skipped} skipped`);
     document.getElementById('rq-summary').textContent = parts.length ? parts.join(' · ') : 'No actions taken.';
@@ -2239,7 +2239,7 @@ function rqRender() {
   const d = rqQueue[rqIndex];
   const remaining = total - rqIndex;
   document.getElementById('rq-queue-info').textContent =
-    `${remaining} deal${remaining===1?'':'s'} remaining · ${d.stage === 'prospect' ? 'Prospect' : 'Nurture'} stage`;
+    `${remaining} deal${remaining===1?'':'s'} remaining · ${d.stage === 'prospect' ? 'Prospect' : 'Follow-Up'} stage`;
 
   const stageLabel = STAGES.find(s=>s.id===d.stage);
   const stageColor = stageLabel ? stageLabel.color : '#64748b';
@@ -2368,7 +2368,7 @@ function confirmClose() {
 
 // ─── CSV EXPORT ───────────────────────────────────────────────────────────────
 function exportCSV() {
-  const rows = [['Deal Name','Company','Contact','Email','Owner','Value','Stage','Priority','Product','Nurture Date','Est. Close Date','Days In Stage','Notes']];
+  const rows = [['Deal Name','Company','Contact','Email','Owner','Value','Stage','Priority','Product','Follow-Up Date','Est. Close Date','Days In Stage','Notes']];
   deals.forEach(d => {
     rows.push([d.name, d.company||'', d.contact||'', d.email||'', d.owner||'', d.value,
       stageLabel(d.stage), d.priority, d.product||'', d.followUpDate||'', d.closeDate||'',
@@ -2667,7 +2667,7 @@ function toggleEmailPopup(id, e) {
   }
 }
 function openGmail(email, dealName) {
-  const subject = encodeURIComponent('SwagPrint Nurture — ' + dealName);
+  const subject = encodeURIComponent('SwagPrint Follow-Up — ' + dealName);
   window.open(`https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(email)}&su=${subject}`, '_blank');
 }
 function copyEmail(email) {
