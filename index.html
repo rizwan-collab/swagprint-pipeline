@@ -621,6 +621,7 @@
             <button type="button" class="btn-add-contact" onclick="addContactRow()">+ Add a Row</button>
           </div>
           <div class="fg"><label>Deal Value ($)</label><input id="f-value" type="number" placeholder="0" min="0"></div>
+          <div class="fg"><label>Phone</label><input id="f-phone" type="tel" placeholder="e.g. (555) 123-4567" autocomplete="off"></div>
           <div class="fg full"><label>Stage</label>
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:4px" id="stage-picker">
               <button type="button" class="stage-btn" data-stage="follow-up" onclick="pickStage('follow-up',this)">Follow-Up<span>Not ready yet</span></button>
@@ -2088,6 +2089,7 @@ function openEdit(id) {
   fv('f-owner', d.owner); fv('f-value', d.value); fv('f-ltv', d.ltv||0);
   fv('f-product', d.product); fv('f-priority', d.priority||'medium'); fv('f-followup', d.followUpDate);
   fv('f-closedate', d.closeDate); fv('f-notes', d.notes);
+  fv('f-phone', d.phone);
   fv('f-stage-entered', d.stageEnteredAt||''); fv('f-created-at', d.createdAt||'');
   // Populate contacts — support legacy single contact/email fields
   const existingContacts = d.contacts && d.contacts.length
@@ -2135,6 +2137,7 @@ function saveDeal(e) {
     followUpDate:document.getElementById('f-followup').value,
     closeDate:   document.getElementById('f-closedate').value,
     notes:       document.getElementById('f-notes').value.trim(),
+    phone:       document.getElementById('f-phone').value.trim(),
     attachments: JSON.parse(document.getElementById('f-attachments').value || '[]'),
     createdAt:   prevCreated || Date.now(),
     stageEnteredAt: (stageChanged || !prevEntered) ? Date.now() : prevEntered,
