@@ -413,6 +413,43 @@
   .contact-remove:hover { color:var(--red); }
   .btn-add-contact { display:block; width:100%; margin-top:6px; background:none; border:1px dashed var(--border); border-radius:7px; padding:5px 12px; color:var(--text3); font-size:12px; cursor:pointer; transition:all .15s; text-align:center; }
   .btn-add-contact:hover { border-color:var(--accent); color:var(--accent); }
+
+/* ── Detail Panel ── */
+#detail-overlay{position:fixed;inset:0;z-index:1100;background:rgba(0,0,0,.4);display:none;align-items:flex-start;justify-content:flex-end;}
+#detail-overlay.open{display:flex;}
+#detail-panel{background:#fff;width:480px;max-width:100vw;height:100vh;overflow-y:auto;box-shadow:-4px 0 24px rgba(0,0,0,.18);display:flex;flex-direction:column;}
+.dp-header{padding:18px 22px 14px;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+.dp-header h3{margin:0;font-size:17px;font-weight:700;color:#111827;}
+.dp-stage-lbl{font-size:12px;color:#6b7280;margin-top:3px;}
+.dp-tabs{display:flex;padding:0 22px;border-bottom:1px solid #e5e7eb;gap:4px;}
+.dp-tab{padding:11px 15px;cursor:pointer;font-size:13px;font-weight:500;color:#6b7280;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;}
+.dp-tab.active{color:#2563eb;border-bottom-color:#2563eb;font-weight:600;}
+.dp-body{padding:18px 22px;flex:1;}
+.dp-pane{display:none;}
+.dp-pane.active{display:block;}
+.act-add-box{background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:14px;margin-bottom:16px;}
+.act-type-row{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;}
+.act-type-btn{padding:5px 11px;border:1px solid #d1d5db;border-radius:20px;font-size:12px;cursor:pointer;background:#fff;}
+.act-type-btn.sel{background:#2563eb;color:#fff;border-color:#2563eb;}
+.act-textarea{width:100%;min-height:64px;border:1px solid #d1d5db;border-radius:6px;padding:8px 10px;font-size:13px;resize:vertical;box-sizing:border-box;font-family:inherit;}
+.act-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #f3f4f6;}
+.act-dot{width:9px;height:9px;border-radius:50%;background:#2563eb;margin-top:5px;flex-shrink:0;}
+.act-dot.call{background:#059669;}.act-dot.email{background:#7c3aed;}.act-dot.stage{background:#d97706;}
+.act-body{flex:1;}
+.act-type-lbl{font-size:11px;text-transform:uppercase;font-weight:600;color:#6b7280;letter-spacing:.4px;}
+.act-text-body{font-size:13px;color:#111827;margin:3px 0 2px;}
+.act-meta{font-size:11px;color:#9ca3af;}
+.task-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid #f3f4f6;}
+.task-check{width:16px;height:16px;cursor:pointer;margin-top:2px;flex-shrink:0;accent-color:#2563eb;}
+.task-body{flex:1;}
+.task-text{font-size:13px;color:#111827;}
+.task-text.done{text-decoration:line-through;color:#9ca3af;}
+.task-due{font-size:11px;color:#6b7280;margin-top:2px;}
+.task-due.overdue{color:#ef4444;font-weight:600;}
+.task-add-form{margin-top:14px;display:flex;flex-direction:column;gap:8px;}
+.task-inp{border:1px solid #d1d5db;border-radius:6px;padding:8px 10px;font-size:13px;width:100%;box-sizing:border-box;font-family:inherit;}
+.dp-no-items{color:#9ca3af;font-size:13px;padding:10px 0;text-align:center;}
+.task-badge{background:#ef4444;color:#fff;font-size:10px;border-radius:10px;padding:1px 5px;margin-left:5px;vertical-align:middle;}
 </style>
 </head>
 <body>
@@ -683,6 +720,44 @@
     <div class="modal-foot">
       <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
       <button class="btn btn-primary" onclick="document.getElementById('deal-form').requestSubmit()">Save Deal</button>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL PANEL -->
+<div id="detail-overlay" onclick="if(event.target===this)closeDetailPanel()">
+  <div id="detail-panel">
+    <div class="dp-header">
+      <div><h3 id="dp-deal-name">Deal</h3><div class="dp-stage-lbl" id="dp-deal-stage"></div></div>
+      <button class="btn btn-outline" onclick="closeDetailPanel()" style="padding:5px 12px;font-size:13px;">&#x2715;</button>
+    </div>
+    <div class="dp-tabs">
+      <div class="dp-tab active" onclick="switchDPTab('activity',this)">Activity Log</div>
+      <div class="dp-tab" onclick="switchDPTab('tasks',this)">Tasks<span id="task-open-badge"></span></div>
+    </div>
+    <div class="dp-body">
+      <div id="pane-activity" class="dp-pane active">
+        <div class="act-add-box">
+          <div class="act-type-row">
+            <button class="act-type-btn sel" onclick="selectActType('note',this)">&#x1F4DD; Note</button>
+            <button class="act-type-btn" onclick="selectActType('call',this)">&#x1F4DE; Call</button>
+            <button class="act-type-btn" onclick="selectActType('email',this)">&#x2709; Email</button>
+          </div>
+          <textarea id="act-text-input" class="act-textarea" placeholder="Add a note..."></textarea>
+          <button class="btn btn-primary" onclick="submitActivity()" style="margin-top:8px;padding:7px 16px;font-size:13px;">Log Activity</button>
+        </div>
+        <div id="act-feed-list"></div>
+      </div>
+      <div id="pane-tasks" class="dp-pane">
+        <div id="tasks-feed-list"></div>
+        <div class="task-add-form">
+          <input id="task-text-input" class="task-inp" placeholder="New task..." />
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input id="task-due-input" class="task-inp" type="date" style="flex:1;" />
+            <button class="btn btn-primary" onclick="submitTask()" style="padding:7px 16px;font-size:13px;white-space:nowrap;">Add Task</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -1717,6 +1792,7 @@ function cardHTML(d) {
     <div class="card-actions">
       ${emailBtn}
       <button class="ca-btn" onclick="openEdit('${d.id}');event.stopPropagation()">Edit</button>
+      <button class="ca-btn" style="color:#8b5cf6" onclick="openDetailPanel('${d.id}');event.stopPropagation()">Activity</button>
       <button class="ca-btn" onclick="quickSpam('${d.id}');event.stopPropagation()" style="color:#9ca3af" title="Flag as spam/scam and remove from board">Spam</button>
       <button class="ca-btn del" onclick="deleteDeal('${d.id}');event.stopPropagation()">Delete</button>
     </div>
@@ -2730,6 +2806,110 @@ function attachDrop(e) {
   e.preventDefault(); attachDragLeave(e);
   handleAttachFiles(e.dataTransfer.files);
 }
+
+/* ── Activity Log & Tasks ── */
+let _dpDealId=null,_actType='note',_actUnsub=null,_taskUnsub=null;
+function openDetailPanel(dealId){
+  _dpDealId=dealId;
+  const d=(typeof deals!=='undefined'?deals:[]).find(x=>x.id===dealId)||{};
+  document.getElementById('dp-deal-name').textContent=d.name||'Deal';
+  document.getElementById('dp-deal-stage').textContent=d.stage||'';
+  document.getElementById('detail-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+  const firstTab=document.querySelector('.dp-tab');
+  switchDPTab('activity',firstTab);
+  loadActivities(dealId);
+  loadTasks(dealId);
+}
+function closeDetailPanel(){
+  document.getElementById('detail-overlay').classList.remove('open');
+  document.body.style.overflow='';
+  if(_actUnsub){_actUnsub();_actUnsub=null;}
+  if(_taskUnsub){_taskUnsub();_taskUnsub=null;}
+  _dpDealId=null;
+}
+function switchDPTab(tab,el){
+  document.querySelectorAll('.dp-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.dp-pane').forEach(p=>p.classList.remove('active'));
+  if(el)el.classList.add('active');
+  const pane=document.getElementById('pane-'+tab);
+  if(pane)pane.classList.add('active');
+}
+function selectActType(type,el){
+  _actType=type;
+  document.querySelectorAll('.act-type-btn').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+  const ph={note:'Add a note...',call:'Log a call...',email:'Describe the email...'};
+  document.getElementById('act-text-input').placeholder=ph[type]||'Add a note...';
+}
+function submitActivity(){
+  const text=document.getElementById('act-text-input').value.trim();
+  if(!text||!_dpDealId)return;
+  const db=firebase.database();
+  db.ref('deals/'+_dpDealId+'/activities').push({type:_actType,text:text,user:'Rizwan',ts:Date.now()});
+  document.getElementById('act-text-input').value='';
+}
+function loadActivities(dealId){
+  if(_actUnsub)_actUnsub();
+  const db=firebase.database();
+  const ref=db.ref('deals/'+dealId+'/activities').orderByChild('ts');
+  const h=function(snap){var items=[];snap.forEach(function(c){items.push(Object.assign({id:c.key},c.val()));});renderActivities(items.reverse());};
+  ref.on('value',h);
+  _actUnsub=function(){ref.off('value',h);};
+}
+function renderActivities(items){
+  var el=document.getElementById('act-feed-list');
+  if(!el)return;
+  if(!items.length){el.innerHTML='<p class="dp-no-items">No activity yet.</p>';return;}
+  var icons={note:'📝',call:'📞',email:'✉️',stage_change:'🔄'};
+  var dots={note:'',call:'call',email:'email',stage_change:'stage'};
+  el.innerHTML=items.map(function(a){
+    var d=new Date(a.ts);
+    var dt=d.toLocaleDateString()+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    return '<div class="act-item"><div class="act-dot '+(dots[a.type]||'')+'"></div>'+
+           '<div class="act-body"><div class="act-type-lbl">'+(icons[a.type]||'📌')+' '+(a.type||'note')+'</div>'+
+           '<div class="act-text-body">'+dpEsc(a.text)+'</div>'+
+           '<div class="act-meta">'+(a.user||'')+' · '+dt+'</div></div></div>';
+  }).join('');
+}
+function submitTask(){
+  var text=document.getElementById('task-text-input').value.trim();
+  var due=document.getElementById('task-due-input').value;
+  if(!text||!_dpDealId)return;
+  var db=firebase.database();
+  db.ref('deals/'+_dpDealId+'/tasks').push({text:text,dueDate:due||'',done:false,user:'Rizwan',ts:Date.now()});
+  document.getElementById('task-text-input').value='';
+  document.getElementById('task-due-input').value='';
+}
+function toggleTask(taskId,done){
+  if(!_dpDealId)return;
+  var db=firebase.database();
+  db.ref('deals/'+_dpDealId+'/tasks/'+taskId).update({done:!done});
+}
+function loadTasks(dealId){
+  if(_taskUnsub)_taskUnsub();
+  var db=firebase.database();
+  var ref=db.ref('deals/'+dealId+'/tasks').orderByChild('ts');
+  var h=function(snap){var items=[];snap.forEach(function(c){items.push(Object.assign({id:c.key},c.val()));});renderTasks(items);};
+  ref.on('value',h);
+  _taskUnsub=function(){ref.off('value',h);};
+}
+function renderTasks(items){
+  var el=document.getElementById('tasks-feed-list');
+  var badge=document.getElementById('task-open-badge');
+  if(!el)return;
+  var today=new Date().toISOString().slice(0,10);
+  var open=items.filter(function(t){return !t.done;}).length;
+  if(badge)badge.innerHTML=open>0?'<span class="task-badge">'+open+'</span>':''; 
+  if(!items.length){el.innerHTML='<p class="dp-no-items">No tasks yet.</p>';return;}
+  el.innerHTML=items.map(function(t){
+    var ov=t.dueDate&&t.dueDate<today&&!t.done;
+    var dl=t.dueDate?'<div class="task-due'+(ov?' overdue':'')+'">'+(ov?'⚠ Overdue: ':'Due: ')+t.dueDate+'</div>':''; 
+    return '<div class="task-item"><input type="checkbox" class="task-check" '+(t.done?'checked':'')+
+           ' onchange="toggleTask(\''+t.id+'\','+t.done+')"><div class="task-body"><div class="task-text'+(t.done?' done':'')+'">'+dpEsc(t.text)+'</div>'+dl+'</div></div>';
+  }).join('');
+}
+function dpEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 </script>
 </body>
 </html>
