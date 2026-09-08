@@ -660,6 +660,7 @@
             <button type="button" class="btn-add-contact" onclick="addContactRow()">+ Add a Row</button>
           </div>
           <div class="fg"><label>Close % <span style="font-weight:400;color:var(--text3);font-size:11px">probability</span></label><input id="f-probability" type="number" placeholder="50" min="0" max="100"></div>
+              <div class="fg"><label>Order #</label><input id="f-order-num" type="text" placeholder="e.g. ORD-1234"></div>
               <div class="fg"><label>Deal Value ($)</label><input id="f-value" type="number" placeholder="0" min="0"></div>
           <div class="fg"><label>Phone</label><input id="f-phone" type="tel" placeholder="e.g. (555) 123-4567" autocomplete="off"></div>
           <div class="fg full"><label>Stage</label>
@@ -1782,8 +1783,9 @@ function cardHTML(d) {
     </div>
     ${d.company?`<div class="card-co">${esc(d.company)}</div>`:''}
     <div style="display:flex;align-items:baseline;gap:8px">
-      <div class="card-value">${fmt(d.value)}</div>
+      <div class="card-value">${Number(d.value)===0?' style="color:var(--text3)"':''}>${fmt(d.value)}</div>
               ${d.probability?`<span style="font-size:10px;font-weight:700;color:#6366f1" title="Close probability">${d.probability}%</span>`:''}
+              ${d.orderNum?'<div style="font-size:10px;color:var(--text3);margin-top:2px">Order #'+d.orderNum+'</div>':''}
       ${d.ltv?`<span style="font-size:10px;color:#a78bfa;font-weight:600" title="Lifetime Value">LTV ${fmt(d.ltv)}</span>`:''}
     </div>
     ${(d.priority && d.priorityBy)?`<div style="font-size:10px;color:var(--text3);margin-bottom:3px"><span style="color:var(--yellow)">${esc(d.priorityBy)}</span> flagged ${d.priority}</div>`:''}
@@ -2170,6 +2172,7 @@ function openEdit(id) {
   fv('f-id', d.id); fv('f-name', d.name); fv('f-company', d.company||'');
   fv('f-owner', d.owner); fv('f-value', d.value); fv('f-ltv', d.ltv||0);
       fv('f-probability', d.probability||0);
+      fv('f-order-num', d.orderNum||'');
   fv('f-product', d.product); fv('f-priority', d.priority||'medium'); fv('f-followup', d.followUpDate);
   fv('f-closedate', d.closeDate); fv('f-notes', d.notes);
   fv('f-phone', d.phone);
@@ -2214,6 +2217,7 @@ function saveDeal(e) {
     owner:       document.getElementById('f-owner').value.trim(),
     value:       Number(document.getElementById('f-value').value)||0,
           probability: Number(document.getElementById('f-probability').value)||0,
+          orderNum: document.getElementById('f-order-num').value.trim(),
     ltv:         Number(document.getElementById('f-ltv').value)||0,
     product:     document.getElementById('f-product').value.trim(),
     priority:    document.getElementById('f-priority').value,
