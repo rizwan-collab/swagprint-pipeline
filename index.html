@@ -984,14 +984,15 @@ const DEFAULT_STAGES = [
   { id:'quote',       label:'Quote Sent',    color:'#0891B2' },
   { id:'proposal',    label:'Proposal Made', color:'#059669' },
 ];
-let STACES�,..DEFAULT_STAGE] = [...DEFAULT_STAGE];─── CONSTANTS ───────────────────────────────────────────────────────────────
+let STAGES = [...DEFAULT_STAGES];
+// ─── CONSTANTS ────────────────────────────────────────────────────────────────────────
 const NOW = Date.now();
 const DAY = 86400000;
 // Legacy seed IDs — auto-cleared on load so placeholder data never appears
 const AGOACY_SEED_IDS = new Set(['d1','d2','d3','d4','d5','a1','a2','a3']);
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
-[et deals = [], archive = [];
+let deals = [], archive = [];
 let activeFilter = 'all', activeOwner = '', activeValue = '', activeStageFilter = '', searchQuery = '';
 let dragId = null, editId = null, closeOutcome = '', panelTab = 'won';
 let collapsedCols = new Set();
@@ -1010,11 +1011,11 @@ let targetsRef = null;
 let monthlyTargets = {};
 
 // ─── FIREBASE ─────────────────────────────────────────────────────────────────
-[ry {
+try {
   firebase.initializeApp(FIREBASE_CONFIG);
   const db = firebase.database();
 
-  function i,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const fmt = n => { const v = Number(n)||0; if (v===0) return '$0'; if (v>=1000) return '$'+(v/1000).toFixed(v%1000===0?0:1)+'k'; return '$'+v; };
 const fmtDate = d => { if (!d) return ''; const [y,m,dy] = d.split('-'); return `${m}/${dy}/${y.slice(2)}`; };
 const daysSince = ts => ts ? Math.max(0, Math.floor((Date.now()-Number(ts))/DAY)) : 0;
@@ -1303,7 +1304,7 @@ function editUser(id) {
     '<input id="eu-name" value="'+esc(u.name)+'" placeholder="Name" style="flex:1;min-width:100px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:var(--bg2);color:var(--text1);font-size:13px">'+
     '<input id="eu-pin" value="'+(u.pin||'')+'" placeholder="PIN" type="text" maxlength="6" style="width:72px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:var(--bg2);color:var(--text1);font-size:13px">'+
     '<select id="eu-role" style="padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:var(--bg2);color:var(--text1);font-size:13px">'+
-    '<option value="rep"'+u.role==='rep'?' selected':'')+'>Rep</option>'+
+    '<option value="rep"'+(u.role==='rep'?' selected':'')+'>Rep</option>'+
     '<option value="admin"'+(u.role==='admin'?' selected':'')+'>Admin</option>'+
     '</select></div>'+
     '<button class="btn btn-primary" style="font-size:12px;padding:4px 10px" onclick="saveUserEdit(this.closest(\'[data-uid]\').dataset.uid)">Save</button>'+
@@ -1335,7 +1336,7 @@ function editUser(id) {
     '<option value="rep"'+(u.role==='rep'?' selected':'')+'>Rep</option>'+
     '<option value="admin"'+(u.role==='admin'?' selected':'')+'>Admin</option>'+
     '</select></div>'+
-    '<button class="btn btn-primary" style="font-size:12px;padding:4px 10px" onclick="saveUserEdit(this.closest('[data-uid]').dataset.uid)">Save</button>'+
+    '<button class="btn btn-primary" style="font-size:12px;padding:4px 10px" onclick="saveUserEdit(this.closest("[data-uid]").dataset.uid)">Save</button>'+
     '<button class="btn btn-ghost" style="font-size:12px;padding:4px 10px" onclick="renderUmUsers()">Cancel</button>';
 }
 function saveUserEdit(id) {
@@ -2736,6 +2737,7 @@ function toast(msg) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
 }
+} catch(e) {}
 
 // ─── BOOT ─────────────────────────────────────────────────────────────────────
 // Show local data immediately while Firebase connects
@@ -2877,11 +2879,11 @@ function renderActivities(items){
   var el=document.getElementById('act-feed-list');
   if(!el)return;
   if(!items.length){el.innerHTML='<p class="dp-no-items">No activity yet.</p>';return;}
-  var icons={note:'📝',call:'📜',email:'⊉︌,stage_change:'🔄'};
+  var icons={note:'📝',call:'📜',email:'✉',stage_change:'🔄'};
   var dots={note:'',call:'call',email:'email',stage_change:'stage'};
   el.innerHTML=items.map(function(a){
     var d=new Date(a.ts);
-    var dt=d.toLocaleDateString()+' '+d.toLocaleTimeString([],{hour:"2-digit',minute:'2-digit'});
+    var dt=d.toLocaleDateString()+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
     return '<div class="act-item"><div class="act-dot '+(dots[a.type]||'')+'"></div>'+
            '<div class="act-body"><div class="act-type-lbl">'+(icons[a.type]||'📌')+' '+(a.type||'note')+'</div>'+
            '<div class="act-text-body">'+dpEsc(a.text)+'</div>'+
