@@ -145,6 +145,13 @@
   .ca-btn.del:hover { background: var(--red); border-color: var(--red); color: #fff; }
   .ca-btn.mail { color: var(--accent); border-color: rgba(99,102,241,.3); }
   .ca-btn.mail:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .ca-more-wrap { position: relative; display: inline-flex; }
+  .ca-more-menu { display: none; position: absolute; bottom: calc(100% + 4px); right: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,.18); min-width: 110px; z-index: 200; overflow: hidden; }
+  .ca-more-menu.open { display: block; }
+  .ca-more-item { padding: 7px 12px; font-size: 12px; color: var(--text2); cursor: pointer; white-space: nowrap; }
+  .ca-more-item:hover { background: var(--bg2); }
+  .ca-more-item.red { color: var(--red); }
+  .ca-more-item.muted { color: #9ca3af; }
 
   /* SIDE PANEL */
   .side-panel { width: 272px; min-width: 272px; background: var(--surface); border-left: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; flex-shrink: 0; transition: width .2s ease, min-width .2s ease; }
@@ -743,7 +750,7 @@
       <div id="pane-activity" class="dp-pane active">
         <div class="act-add-box">
           <div class="act-type-row">
-            <button class="act-type-btn sel" onclick="selectActType('note',this)">&#x1F4DD; Note</button>
+            <button class="act-type-btn sel" onclick="selectActType('note',this)">&#x1F4DE; Note</button>
             <button class="act-type-btn" onclick="selectActType('call',this)">&#x1F4DE; Call</button>
             <button class="act-type-btn" onclick="selectActType('email',this)">&#x2709; Email</button>
           </div>
@@ -977,16 +984,14 @@ const DEFAULT_STAGES = [
   { id:'quote',       label:'Quote Sent',    color:'#0891B2' },
   { id:'proposal',    label:'Proposal Made', color:'#059669' },
 ];
-let STAGES = [...DEFAULT_STAGES];
-
-// ─── CONSTANTS ────────────────────────────────────────────────────────────────
+let STACES�,..DEFAULT_STAGE] = [...DEFAULT_STAGE];─── CONSTANTS ───────────────────────────────────────────────────────────────
 const NOW = Date.now();
 const DAY = 86400000;
 // Legacy seed IDs — auto-cleared on load so placeholder data never appears
-const LEGACY_SEED_IDS = new Set(['d1','d2','d3','d4','d5','a1','a2','a3']);
+const AGOACY_SEED_IDS = new Set(['d1','d2','d3','d4','d5','a1','a2','a3']);
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
-let deals = [], archive = [];
+[et deals = [], archive = [];
 let activeFilter = 'all', activeOwner = '', activeValue = '', activeStageFilter = '', searchQuery = '';
 let dragId = null, editId = null, closeOutcome = '', panelTab = 'won';
 let collapsedCols = new Set();
@@ -1005,78 +1010,11 @@ let targetsRef = null;
 let monthlyTargets = {};
 
 // ─── FIREBASE ─────────────────────────────────────────────────────────────────
-try {
+[ry {
   firebase.initializeApp(FIREBASE_CONFIG);
   const db = firebase.database();
 
-  function initFirebaseRefs() {
-    usersRef = db.ref('pipeline/users');
-    usersRef.once('value', snap => {
-      const data = snap.val();
-      if (!data || Object.keys(data).length === 0) {
-        usersRef.push({ name: 'Rizwan', pin: '1234', role: 'admin' }, () => {
-          usersRef.once('value', s2 => { usersCache = s2.val() || {}; checkSession(); });
-        });
-      } else {
-        usersCache = data;
-        checkSession();
-      }
-    }).catch(() => { usersCache = {}; checkSession(); });
-    usersRef.on('value', snap => { usersCache = snap.val() || {}; refreshOwnerSelect(); });
-    changelogRef = db.ref('pipeline/changelog');
-    targetsRef = db.ref('pipeline/targets');
-    targetsRef.on('value', snap => { monthlyTargets = snap.val() || {}; updateStats(); });
-    customStagesRef = db.ref('pipeline/customStages');
-    customStagesRef.on('value', snap => { customStages = snap.val() || []; STAGES = [...DEFAULT_STAGES, ...customStages]; render(); });
-    dbRef = db.ref('pipeline/state');
-    dbRef.on('value', snap => {
-      const raw = snap.val();
-      if (raw && raw.data) {
-        const p = JSON.parse(raw.data);
-        deals = p.deals || [];
-        archive = p.archive || [];
-        const isLegacy = deals.every(d=>LEGACY_SEED_IDS.has(d.id)) && archive.every(a=>LEGACY_SEED_IDS.has(a.id));
-        if (isLegacy && deals.length > 0) { deals = []; archive = []; push(); }
-      } else { deals = []; archive = []; push(); }
-      fbReady = true;
-      const el = document.getElementById('fb-status');
-      el.textContent = 'Live'; el.className = 'fb-live';
-      updateTeamBadge(); render();
-    }, err => { console.warn('Firebase error', err); checkSession(); loadLocal(); });
-  } // end initFirebaseRefs
-
-  firebase.auth().signInAnonymously()
-    .then(() => { initFirebaseRefs(); })
-    .catch(err => { console.warn('Anonymous auth failed:', err); initFirebaseRefs(); });
-} catch(e) { console.warn('Firebase init error', e); checkSession(); loadLocal(); }
-
-function loadLocal() {
-  try {
-    const raw = localStorage.getItem(LS_KEY);
-    if (raw) {
-      const p = JSON.parse(raw);
-      deals = p.deals||[]; archive = p.archive||[];
-      // Clear legacy seed data
-      const isLegacy = deals.every(d=>LEGACY_SEED_IDS.has(d.id)) && archive.every(a=>LEGACY_SEED_IDS.has(a.id));
-      if (isLegacy && deals.length > 0) { deals = []; archive = []; ls(); }
-    } else { deals = []; archive = []; }
-  } catch(e) { deals = []; archive = []; }
-  render();
-}
-
-function push() {
-  const payload = { data: JSON.stringify({ deals, archive }), updatedAt: Date.now() };
-  if (dbRef) dbRef.set(payload).catch(() => ls());
-  else ls();
-}
-function ls() {
-  try { localStorage.setItem(LS_KEY, JSON.stringify({ deals, archive })); } catch(e) {}
-}
-function save() { push(); ls(); }
-
-// ─── HELPERS ──────────────────────────────────────────────────────────────────
-const uid = () => 'x' + Math.random().toString(36).slice(2,10);
-const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  function i,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const fmt = n => { const v = Number(n)||0; if (v===0) return '$0'; if (v>=1000) return '$'+(v/1000).toFixed(v%1000===0?0:1)+'k'; return '$'+v; };
 const fmtDate = d => { if (!d) return ''; const [y,m,dy] = d.split('-'); return `${m}/${dy}/${y.slice(2)}`; };
 const daysSince = ts => ts ? Math.max(0, Math.floor((Date.now()-Number(ts))/DAY)) : 0;
@@ -1350,6 +1288,7 @@ function renderUmUsers() {
       </div>
       <button class="btn btn-ghost" style="font-size:12px;padding:4px 10px" onclick="resetPin('${id}')">Reset PIN</button>
       <button class="btn btn-ghost" style="font-size:12px;padding:4px 10px" onclick="editUser('${id}')">Edit</button>
+      <button class="btn btn-ghost" style="font-size:12px;padding:4px 10px" onclick="editUser('${id}')">Edit</button>
       ${u.role !== 'admin' || Object.values(usersCache).filter(x=>x.role==='admin').length > 1 ?
         `<button class="btn btn-ghost" style="font-size:12px;padding:4px 10px;color:var(--red)" onclick="removeUser('${id}','${esc(u.name)}')">Remove</button>` : ''}
     </div>`).join('');
@@ -1364,7 +1303,7 @@ function editUser(id) {
     '<input id="eu-name" value="'+esc(u.name)+'" placeholder="Name" style="flex:1;min-width:100px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:var(--bg2);color:var(--text1);font-size:13px">'+
     '<input id="eu-pin" value="'+(u.pin||'')+'" placeholder="PIN" type="text" maxlength="6" style="width:72px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:var(--bg2);color:var(--text1);font-size:13px">'+
     '<select id="eu-role" style="padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:var(--bg2);color:var(--text1);font-size:13px">'+
-    '<option value="rep"'+(u.role==='rep'?' selected':'')+'>Rep</option>'+
+    '<option value="rep"'+u.role==='rep'?' selected':'')+'>Rep</option>'+
     '<option value="admin"'+(u.role==='admin'?' selected':'')+'>Admin</option>'+
     '</select></div>'+
     '<button class="btn btn-primary" style="font-size:12px;padding:4px 10px" onclick="saveUserEdit(this.closest(\'[data-uid]\').dataset.uid)">Save</button>'+
@@ -1383,6 +1322,33 @@ function saveUserEdit(id) {
 }
 
 
+function editUser(id) {
+  const u = usersCache[id];
+  if (!u) return;
+  const row = document.querySelector('[data-uid="'+id+'"]');
+  if (!row) return;
+  row.innerHTML =
+    '<div style="flex:1;display:flex;flex-wrap:wrap;gap:8px;align-items:center">'+
+    '<input id="eu-name" value="'+esc(u.name)+'" placeholder="Name" style="flex:1;min-width:100px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:var(--bg2);color:var(--text1);font-size:13px">'+
+    '<input id="eu-pin" value="'+(u.pin||'')+'" placeholder="PIN" type="text" maxlength="6" style="width:72px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:var(--bg2);color:var(--text1);font-size:13px">'+
+    '<select id="eu-role" style="padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:var(--bg2);color:var(--text1);font-size:13px">'+
+    '<option value="rep"'+(u.role==='rep'?' selected':'')+'>Rep</option>'+
+    '<option value="admin"'+(u.role==='admin'?' selected':'')+'>Admin</option>'+
+    '</select></div>'+
+    '<button class="btn btn-primary" style="font-size:12px;padding:4px 10px" onclick="saveUserEdit(this.closest('[data-uid]').dataset.uid)">Save</button>'+
+    '<button class="btn btn-ghost" style="font-size:12px;padding:4px 10px" onclick="renderUmUsers()">Cancel</button>';
+}
+function saveUserEdit(id) {
+  const name = (document.getElementById('eu-name')||{value:''}).value.trim();
+  const pin = (document.getElementById('eu-pin')||{value:''}).value.trim();
+  const role = (document.getElementById('eu-role')||{value:'rep'}).value;
+  if (!name) { alert('Name is required'); return; }
+  usersRef.child(id).update({name:name,pin:pin,role:role}).then(function() {
+    usersCache[id] = Object.assign({},usersCache[id],{name:name,pin:pin,role:role});
+    if (currentSession && currentSession.userId === id) currentSession.name = name;
+    renderUmUsers();
+  }).catch(function(e) { alert('Save failed: '+e.message); });
+}
 function addUser() {
   const name = document.getElementById('um-name').value.trim();
   const pin  = document.getElementById('um-pin').value.trim();
@@ -1683,7 +1649,7 @@ function renderBoard() {
       <span class="add-stage-label">Add Stage</span>
     </div>
   </div>`;
-  document.getElementById('board').innerHTML = stageHTML + wonHTML + lostHTML + spamHTML + addStageHTML;
+  document.getElementById('board').innerHTML = stagdHTML + wonHTML + lostHTML + spamHTML + addStageHTML;
 }
 
 function archiveCardHTML(a) {
@@ -1812,7 +1778,7 @@ function cardHTML(d) {
     </div>
     ${d.company?`<div class="card-co">${esc(d.company)}</div>`:''}
     <div style="display:flex;align-items:baseline;gap:8px">
-      <div class="card-value">${Number(d.value)===0?' style="color:var(--text3)"':''}>${fmt(d.value)}</div>
+      <div class="card-value"${Number(d.value)===0?' style="color:var(--text3)"':''}>${fmt(d.value)}</div>
               ${d.probability?`<span style="font-size:10px;font-weight:700;color:#6366f1" title="Close probability">${d.probability}%</span>`:''}
               ${d.orderNum?'<div style="font-size:10px;color:var(--text3);margin-top:2px">Order #'+d.orderNum+'</div>':''}
       ${d.ltv?`<span style="font-size:10px;color:#a78bfa;font-weight:600" title="Lifetime Value">LTV ${fmt(d.ltv)}</span>`:''}
@@ -1829,13 +1795,22 @@ function cardHTML(d) {
     <div class="card-actions">
       ${emailBtn}
       <button class="ca-btn" onclick="openEdit('${d.id}');event.stopPropagation()">Edit</button>
-      <button class="ca-btn" style="color:#8b5cf6" onclick="openDetailPanel('${d.id}');event.stopPropagation()">Activity</button>
-      <button class="ca-btn" onclick="quickSpam('${d.id}');event.stopPropagation()" style="color:#9ca3af" title="Flag as spam/scam and remove from board">Spam</button>
-      <button class="ca-btn del" onclick="deleteDeal('${d.id}');event.stopPropagation()">Delete</button>
+      <div class="ca-more-wrap" onclick="event.stopPropagation()">
+        <button class="ca-btn" onclick="toggleCardMore('cmore-${d.id}',event)">···</button>
+        <div class="ca-more-menu" id="cmore-${d.id}">
+          <div class="ca-more-item" onclick="openDetailPanel('${d.id}');closeAllCardMore()">Activity</div>
+          <div class="ca-more-item muted" onclick="quickSpam('${d.id}');closeAllCardMore()">Spam</div>
+          <div class="ca-more-item red" onclick="deleteDeal('${d.id}');closeAllCardMore()">Delete</div>
+        </div>
+      </div>
     </div>
     <div class="card-toggle"><span class="card-chevron">&#9660;</span></div>
   </div>`;
 }
+
+function toggleCardMore(id,e){e.stopPropagation();const m=document.getElementById(id);const wasOpen=m.classList.contains('open');closeAllCardMore();if(!wasOpen)m.classList.add('open');}
+function closeAllCardMore(){document.querySelectorAll('.ca-more-menu.open').forEach(el=>el.classList.remove('open'));}
+document.addEventListener('click',closeAllCardMore);
 
 // ─── PANEL ────────────────────────────────────────────────────────────────────
 function setPanelTab(tab) {
@@ -1876,7 +1851,7 @@ function renderPanel() {
  </div>`).join('');
 }
 
-// ─── SIDE PANEL TOGGLE ───────────────────────────────────────────────────────
+// ─── SIDE PANEL TOGGLE ──────────────────────────────────────────────────────
 function toggleSidePanel() {
   const panel = document.getElementById('side-panel');
   if (!panel) return;
@@ -2430,7 +2405,7 @@ function rqQuickSpam() {
     id: uid(), name:d.name, company:d.company||'',
     contacts: d.contacts||[], contact:d.contact||'',
     email:d.email||'', owner:d.owner||'', value:d.value||0, outcome:'spam',
-    closedAt:Date.now(), createdAt:d.createdAt||Date.now(), lossReason:''
+    closedAt:Date.now(), createdAt:d.createdAt||Date.now(), lostReason:''
   });
   deals = deals.filter(x=>x.id!==d.id);
   rqStats.spam++;
@@ -2499,7 +2474,7 @@ function exportCSV() {
   rows.push(['Deal Name','Company','Contact','Email','Owner','Value','Outcome','Closed Date','Loss Reason']);
   archive.forEach(a => {
     rows.push([a.name, a.company||'', a.contact||'', a.email||'', a.owner||'', a.value,
-      a.outcome, new Date(a.closedAt).toLocaleDateString(), a.lossReason||'']);
+      a.outcome, new Date(a.closedAt).toLocaleDateString(), a.lostReason||'']);
   });
   const csv = rows.map(r=>r.map(v=>`"${String(v==null?'':v).replace(/"/g,'""')}"`).join(',')).join('\n');
   const a = document.createElement('a');
@@ -2848,7 +2823,7 @@ function attachDrop(e) {
   handleAttachFiles(e.dataTransfer.files);
 }
 
-/* ── Activity Log & Tasks ── */
+/* ─ Activity Log & Tasks ─ */
 let _dpDealId=null,_actType='note',_actUnsub=null,_taskUnsub=null;
 function openDetailPanel(dealId){
   _dpDealId=dealId;
@@ -2891,22 +2866,22 @@ function submitActivity(){
   document.getElementById('act-text-input').value='';
 }
 function loadActivities(dealId){
-  if(_actUnsub)_actUnsub();
+  if(_actUnsub){_actUnsub()}
   const db=firebase.database();
   const ref=db.ref('deals/'+dealId+'/activities').orderByChild('ts');
-  const h=function(snap){var items=[];snap.forEach(function(c){items.push(Object.assign({id:c.key},c.val()));});renderActivities(items.reverse());};
+  const h=function(snap){var items=[];snap.forEach(function(c){items.push(Object.assign({id:c.key},c.val()));});renderActivities(items.reverse())};
   ref.on('value',h);
-  _actUnsub=function(){ref.off('value',h);};
+  _actUnsub=function(){ref.off('value',h)};
 }
 function renderActivities(items){
   var el=document.getElementById('act-feed-list');
   if(!el)return;
   if(!items.length){el.innerHTML='<p class="dp-no-items">No activity yet.</p>';return;}
-  var icons={note:'📝',call:'📞',email:'✉️',stage_change:'🔄'};
+  var icons={note:'📝',call:'📜',email:'⊉︌,stage_change:'🔄'};
   var dots={note:'',call:'call',email:'email',stage_change:'stage'};
   el.innerHTML=items.map(function(a){
     var d=new Date(a.ts);
-    var dt=d.toLocaleDateString()+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    var dt=d.toLocaleDateString()+' '+d.toLocaleTimeString([],{hour:"2-digit',minute:'2-digit'});
     return '<div class="act-item"><div class="act-dot '+(dots[a.type]||'')+'"></div>'+
            '<div class="act-body"><div class="act-type-lbl">'+(icons[a.type]||'📌')+' '+(a.type||'note')+'</div>'+
            '<div class="act-text-body">'+dpEsc(a.text)+'</div>'+
