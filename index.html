@@ -457,6 +457,77 @@
 .task-inp{border:1px solid #d1d5db;border-radius:6px;padding:8px 10px;font-size:13px;width:100%;box-sizing:border-box;font-family:inherit;}
 .dp-no-items{color:#9ca3af;font-size:13px;padding:10px 0;text-align:center;}
 .task-badge{background:#ef4444;color:#fff;font-size:10px;border-radius:10px;padding:1px 5px;margin-left:5px;vertical-align:middle;}
+
+/* ── BULK ACTIONS ── */
+.bulk-bar{display:none;position:fixed;bottom:28px;left:50%;transform:translateX(-50%);z-index:900;background:#1e293b;color:#fff;border-radius:12px;padding:10px 18px;gap:10px;align-items:center;box-shadow:0 8px 32px rgba(0,0,0,.35);font-size:13px;white-space:nowrap;}
+.bulk-bar.visible{display:flex;}
+.bulk-bar-count{font-weight:700;margin-right:4px;color:#93c5fd;}
+.bulk-bar button{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:7px;padding:5px 12px;font-size:12px;cursor:pointer;transition:background .15s;}
+.bulk-bar button:hover{background:rgba(255,255,255,.22);}
+.bulk-bar button.bulk-del{background:rgba(239,68,68,.25);border-color:rgba(239,68,68,.5);color:#fca5a5;}
+.bulk-bar button.bulk-del:hover{background:rgba(239,68,68,.4);}
+.bulk-bar-close{margin-left:6px;opacity:.6;cursor:pointer;font-size:16px;padding:0 4px;}
+.bulk-bar-close:hover{opacity:1;}
+.card-cb-wrap{position:absolute;top:8px;right:8px;z-index:10;}
+.card-cb{width:16px;height:16px;cursor:pointer;accent-color:#6366f1;}
+.card.selected{outline:2px solid #6366f1;outline-offset:-2px;}
+
+/* ── CONTACTS DATABASE ── */
+.contacts-toolbar{display:flex;gap:8px;align-items:center;margin-bottom:14px;}
+.contacts-toolbar input{flex:1;padding:7px 10px;border:1px solid var(--border);border-radius:7px;background:var(--bg);color:var(--text);font-size:13px;}
+.contacts-table{width:100%;border-collapse:collapse;font-size:13px;}
+.contacts-table th{background:var(--surface2);padding:8px 10px;text-align:left;font-weight:600;border-bottom:2px solid var(--border);color:var(--text3);font-size:11px;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;}
+.contacts-table td{padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.contacts-table tr:hover td{background:var(--surface2);}
+.ct-badge{display:inline-block;background:#e0e7ff;color:#4338ca;border-radius:5px;padding:1px 7px;font-size:11px;font-weight:600;}
+.ct-actions{display:flex;gap:6px;}
+.ct-actions button{padding:3px 8px;font-size:11px;border-radius:5px;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text2);}
+.ct-actions button:hover{background:var(--surface2);}
+.ct-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;}
+.ct-form-grid label{display:block;font-size:11px;font-weight:600;color:var(--text3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px;}
+.ct-form-grid input,.ct-form-grid textarea,.ct-form-grid select{width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:7px;background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;}
+.ct-form-grid .full{grid-column:1/-1;}
+.ct-empty{text-align:center;padding:40px;color:var(--text3);font-size:14px;}
+
+/* ── REPORTING DASHBOARD ── */
+.report-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.report-card{background:var(--surface2);border-radius:10px;padding:16px 18px;}
+.report-card.full{grid-column:1/-1;}
+.report-card h3{font-size:13px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px;}
+.rbar-wrap{display:flex;flex-direction:column;gap:8px;}
+.rbar-row{display:flex;align-items:center;gap:8px;font-size:12px;}
+.rbar-label{width:110px;text-align:right;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex-shrink:0;}
+.rbar-track{flex:1;background:var(--border);border-radius:4px;height:10px;overflow:hidden;}
+.rbar-fill{height:100%;border-radius:4px;transition:width .5s ease;}
+.rbar-val{width:70px;font-size:11px;font-weight:600;color:var(--text2);}
+.report-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:4px;}
+.rkpi{background:var(--surface);border-radius:8px;padding:12px 14px;border:1px solid var(--border);}
+.rkpi-val{font-size:22px;font-weight:700;color:var(--text);}
+.rkpi-lbl{font-size:11px;color:var(--text3);margin-top:3px;}
+.rtrend-wrap{display:flex;align-items:flex-end;gap:4px;height:80px;padding-top:4px;}
+.rtrend-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.rtrend-bar{width:100%;background:#6366f1;border-radius:3px 3px 0 0;min-height:2px;transition:height .4s ease;}
+.rtrend-lbl{font-size:9px;color:var(--text3);}
+.report-tabs{display:flex;gap:4px;margin-bottom:16px;}
+.report-tab{padding:5px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text2);}
+.report-tab.active{background:#6366f1;color:#fff;border-color:#6366f1;}
+
+/* ── TASKS UPGRADE ── */
+.task-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
+.task-item:last-child{border-bottom:none;}
+.task-item .task-check{margin-top:2px;width:15px;height:15px;cursor:pointer;accent-color:#6366f1;flex-shrink:0;}
+.task-body{flex:1;min-width:0;}
+.task-text{font-size:13px;color:var(--text);}
+.task-text.done{text-decoration:line-through;color:var(--text3);}
+.task-meta-row{display:flex;align-items:center;gap:8px;margin-top:4px;flex-wrap:wrap;}
+.task-assignee{font-size:11px;color:var(--text3);display:inline-flex;align-items:center;gap:3px;}
+.task-pri{font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;}
+.task-pri.high{background:#fee2e2;color:#dc2626;}
+.task-pri.medium{background:#fef3c7;color:#d97706;}
+.task-pri.low{background:#d1fae5;color:#059669;}
+.task-add-row{display:flex;gap:6px;align-items:center;margin-top:10px;flex-wrap:wrap;}
+.task-add-row input,.task-add-row select{padding:6px 9px;border:1px solid var(--border);border-radius:7px;font-size:12px;background:var(--bg);color:var(--text);font-family:inherit;}
+.task-add-row input[type=text]{flex:1;min-width:120px;}
 </style>
 </head>
 <body>
@@ -545,6 +616,8 @@
   <div class="nav-actions">
     <button class="btn btn-ghost" id="nav-manage-btn" onclick="openUmModal()" style="display:none" title="Manage team users">Users</button>
     <button class="btn btn-ghost" id="nav-changelog-btn" onclick="openChangelog()" style="display:none" title="View change history">Changelog</button>
+    <button class="btn btn-ghost" onclick="openContactsModal()" title="Contacts Database">Contacts</button>
+    <button class="btn btn-ghost" onclick="openReportModal()" title="Reporting Dashboard">Reports</button>
     <button class="btn btn-ghost" onclick="exportCSV()" title="Export to CSV">CSV</button>
     <button class="btn btn-ghost" onclick="openImportModal()" title="Import Deals">Import</button>
     <button class="btn btn-outline" onclick="openCloseModal()">Close Deal</button>
@@ -618,6 +691,72 @@
     <option value="proposal">Proposal Made</option>
   </select>
   <div class="filter-sep"></div>
+</div>
+
+<!-- BULK ACTIONS BAR -->
+<div class="bulk-bar" id="bulk-bar">
+  <span class="bulk-bar-count" id="bulk-count">0</span> selected
+  <button onclick="bulkMoveStage()">Move Stage</button>
+  <button onclick="bulkReassign()">Reassign</button>
+  <button onclick="bulkExport()">Export</button>
+  <button class="bulk-del" onclick="bulkDelete()">Delete</button>
+  <span class="bulk-bar-close" onclick="clearBulkSelection()" title="Clear selection">✕</span>
+</div>
+
+<!-- CONTACTS DATABASE MODAL -->
+<div class="overlay" id="contacts-overlay" style="z-index:1050">
+  <div class="modal" style="width:820px;max-height:88vh;display:flex;flex-direction:column">
+    <div class="modal-head">
+      <h2>Contacts Database</h2>
+      <button class="modal-x" onclick="closeContactsModal()">✕</button>
+    </div>
+    <div class="modal-body" style="overflow-y:auto;flex:1">
+      <div id="ct-view-list">
+        <div class="contacts-toolbar">
+          <input id="ct-search" type="text" placeholder="Search by name, company, email…" oninput="renderContactsList()">
+          <button class="btn btn-primary" onclick="showContactForm()">+ Add Contact</button>
+        </div>
+        <div id="ct-table-wrap"></div>
+      </div>
+      <div id="ct-view-form" style="display:none">
+        <button class="btn btn-ghost" style="margin-bottom:12px" onclick="showContactList()">← Back to List</button>
+        <div class="ct-form-grid">
+          <div><label>First Name *</label><input id="ct-fname" type="text" placeholder="Jane"></div>
+          <div><label>Last Name</label><input id="ct-lname" type="text" placeholder="Smith"></div>
+          <div><label>Company</label><input id="ct-company" type="text" placeholder="Acme Corp"></div>
+          <div><label>Title / Role</label><input id="ct-title" type="text" placeholder="Marketing Manager"></div>
+          <div><label>Email</label><input id="ct-email" type="email" placeholder="jane@acme.com"></div>
+          <div><label>Phone</label><input id="ct-phone" type="tel" placeholder="(555) 123-4567"></div>
+          <div class="full"><label>Notes</label><textarea id="ct-notes" rows="3" style="width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:7px;background:var(--bg);color:var(--text);font-size:13px;font-family:inherit;resize:vertical" placeholder="Any relevant context…"></textarea></div>
+        </div>
+        <input type="hidden" id="ct-edit-id">
+        <div style="display:flex;gap:8px;margin-top:16px">
+          <button class="btn btn-primary" onclick="saveContact()">Save Contact</button>
+          <button class="btn btn-outline" onclick="showContactList()">Cancel</button>
+        </div>
+        <div id="ct-form-error" style="color:var(--red);font-size:12px;margin-top:8px;min-height:16px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REPORTING DASHBOARD MODAL -->
+<div class="overlay" id="report-overlay" style="z-index:1050">
+  <div class="modal" style="width:900px;max-height:90vh;display:flex;flex-direction:column">
+    <div class="modal-head">
+      <h2>Reporting Dashboard</h2>
+      <button class="modal-x" onclick="closeReportModal()">✕</button>
+    </div>
+    <div class="modal-body" style="overflow-y:auto;flex:1">
+      <div class="report-kpis" id="report-kpis"></div>
+      <div class="report-tabs" style="margin-top:18px">
+        <div class="report-tab active" onclick="setReportTab('pipeline',this)">Pipeline</div>
+        <div class="report-tab" onclick="setReportTab('team',this)">Team</div>
+        <div class="report-tab" onclick="setReportTab('trend',this)">Monthly Trend</div>
+      </div>
+      <div id="report-body"></div>
+    </div>
+  </div>
 </div>
 
 <!-- BOARD + SIDE PANEL -->
@@ -761,12 +900,15 @@
       </div>
       <div id="pane-tasks" class="dp-pane">
         <div id="tasks-feed-list"></div>
-        <div class="task-add-form">
-          <input id="task-text-input" class="task-inp" placeholder="New task..." />
-          <div style="display:flex;gap:8px;align-items:center;">
-            <input id="task-due-input" class="task-inp" type="date" style="flex:1;" />
-            <button class="btn btn-primary" onclick="submitTask()" style="padding:7px 16px;font-size:13px;white-space:nowrap;">Add Task</button>
-          </div>
+        <div class="task-add-row" style="margin-top:12px;border-top:1px solid var(--border);padding-top:12px">
+          <input id="task-text-input" type="text" placeholder="New task description…" style="flex:1;min-width:120px;padding:6px 9px;border:1px solid var(--border);border-radius:7px;font-size:12px;background:var(--bg);color:var(--text);font-family:inherit;">
+          <input id="task-due-input" type="date" style="padding:6px 9px;border:1px solid var(--border);border-radius:7px;font-size:12px;background:var(--bg);color:var(--text);" title="Due date">
+          <select id="task-pri-input" style="padding:6px 9px;border:1px solid var(--border);border-radius:7px;font-size:12px;background:var(--bg);color:var(--text);">
+            <option value="medium">⚡ Medium</option>
+            <option value="high">🔴 High</option>
+            <option value="low">🟢 Low</option>
+          </select>
+          <button class="btn btn-primary" onclick="submitTask()" style="padding:6px 14px;font-size:12px;white-space:nowrap;">Add</button>
         </div>
       </div>
     </div>
@@ -1776,9 +1918,10 @@ function cardHTML(d) {
   const aiIndicator = openAiCount > 0
     ? `<div class="card-ai-indicator">⚡ ${openAiCount} open action${openAiCount>1?'s':''}</div>` : '';
 
-  return `<div class="card" id="card-${d.id}" draggable="true"
+  return `<div class="card${selectedDeals.has(d.id)?' selected':''}" id="card-${d.id}" draggable="true"
     ondragstart="dStart(event,'${d.id}')"
     onclick="toggleCard('${d.id}',event)">
+    <div class="card-cb-wrap"><input type="checkbox" class="card-cb" ${selectedDeals.has(d.id)?'checked':''} onclick="toggleBulkSelect('${d.id}',event)" title="Select deal"></div>
     <div class="card-top">
       <div class="card-name">${esc(d.name)}</div>
       <span class="card-priority ${priCls}">${d.priority}</span>
@@ -2949,6 +3092,453 @@ function renderTasks(items){
   }).join('');
 }
 function dpEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// ═══════════════════════════════════════════════════════════════
+// BULK ACTIONS
+// ═══════════════════════════════════════════════════════════════
+var selectedDeals = new Set();
+
+function toggleBulkSelect(id, event) {
+  event.stopPropagation();
+  if (selectedDeals.has(id)) {
+    selectedDeals.delete(id);
+  } else {
+    selectedDeals.add(id);
+  }
+  updateBulkBar();
+  // Update card visually without full re-render
+  var card = document.getElementById('card-' + id);
+  if (card) {
+    card.classList.toggle('selected', selectedDeals.has(id));
+    var cb = card.querySelector('.card-cb');
+    if (cb) cb.checked = selectedDeals.has(id);
+  }
+}
+
+function updateBulkBar() {
+  var bar = document.getElementById('bulk-bar');
+  var cnt = document.getElementById('bulk-count');
+  if (!bar) return;
+  bar.classList.toggle('visible', selectedDeals.size > 0);
+  if (cnt) cnt.textContent = selectedDeals.size;
+}
+
+function clearBulkSelection() {
+  selectedDeals.clear();
+  updateBulkBar();
+  document.querySelectorAll('.card.selected').forEach(function(c) { c.classList.remove('selected'); });
+  document.querySelectorAll('.card-cb').forEach(function(c) { c.checked = false; });
+}
+
+function bulkMoveStage() {
+  if (!selectedDeals.size) return;
+  var opts = STAGES.map(function(s){ return s.id; });
+  var target = prompt('Move ' + selectedDeals.size + ' deal(s) to stage:\n' + STAGES.map(function(s){ return s.id + ' — ' + s.label; }).join('\n'));
+  if (!target || !STAGES.find(function(s){ return s.id === target; })) return;
+  var db = firebase.database();
+  selectedDeals.forEach(function(id) {
+    db.ref('swagprint/deals/' + id).update({ stage: target, stageEnteredAt: Date.now() });
+  });
+  clearBulkSelection();
+  showToast(selectedDeals.size + ' deals moved to ' + target);
+}
+
+function bulkReassign() {
+  if (!selectedDeals.size) return;
+  var owners = Object.values(usersCache).map(function(u){ return u.name; });
+  var target = prompt('Reassign ' + selectedDeals.size + ' deal(s) to owner:\n' + owners.join(', '));
+  if (!target || !target.trim()) return;
+  var db = firebase.database();
+  selectedDeals.forEach(function(id) {
+    db.ref('swagprint/deals/' + id).update({ owner: target.trim() });
+  });
+  showToast(selectedDeals.size + ' deals reassigned to ' + target.trim());
+  clearBulkSelection();
+}
+
+function bulkExport() {
+  if (!selectedDeals.size) return;
+  var rows = deals.filter(function(d){ return selectedDeals.has(d.id); });
+  var headers = ['Name','Company','Value','Stage','Owner','Product','Close Date','Follow-up Date'];
+  var csv = headers.join(',') + '\n' + rows.map(function(d){
+    return [d.name, d.company||'', d.value||0, d.stage||'', d.owner||'', d.product||'', d.closeDate||'', d.followUpDate||''].map(function(v){ return '"'+String(v).replace(/"/g,'""')+'"'; }).join(',');
+  }).join('\n');
+  var blob = new Blob([csv], { type: 'text/csv' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'swagprint-selected-' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  showToast(rows.length + ' deals exported');
+}
+
+function bulkDelete() {
+  if (!selectedDeals.size) return;
+  if (!confirm('Delete ' + selectedDeals.size + ' selected deal(s)? This cannot be undone.')) return;
+  var db = firebase.database();
+  selectedDeals.forEach(function(id) {
+    db.ref('swagprint/deals/' + id).remove();
+  });
+  showToast(selectedDeals.size + ' deals deleted');
+  clearBulkSelection();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CONTACTS DATABASE
+// ═══════════════════════════════════════════════════════════════
+var contactsData = [];
+var contactsRef = null;
+
+function initContacts() {
+  if (contactsRef) return;
+  contactsRef = firebase.database().ref('swagprint/contacts');
+  contactsRef.on('value', function(snap) {
+    var items = [];
+    snap.forEach(function(c) { items.push(Object.assign({ id: c.key }, c.val())); });
+    contactsData = items;
+    if (document.getElementById('contacts-overlay') && document.getElementById('contacts-overlay').classList.contains('active')) {
+      renderContactsList();
+    }
+  });
+}
+
+function openContactsModal() {
+  initContacts();
+  document.getElementById('contacts-overlay').classList.add('active');
+  showContactList();
+}
+
+function closeContactsModal() {
+  document.getElementById('contacts-overlay').classList.remove('active');
+}
+
+function showContactList() {
+  document.getElementById('ct-view-list').style.display = '';
+  document.getElementById('ct-view-form').style.display = 'none';
+  document.getElementById('ct-edit-id').value = '';
+  renderContactsList();
+}
+
+function showContactForm(ct) {
+  document.getElementById('ct-view-list').style.display = 'none';
+  document.getElementById('ct-view-form').style.display = '';
+  document.getElementById('ct-form-error').textContent = '';
+  if (ct) {
+    document.getElementById('ct-fname').value = ct.firstName || '';
+    document.getElementById('ct-lname').value = ct.lastName || '';
+    document.getElementById('ct-company').value = ct.company || '';
+    document.getElementById('ct-title').value = ct.title || '';
+    document.getElementById('ct-email').value = ct.email || '';
+    document.getElementById('ct-phone').value = ct.phone || '';
+    document.getElementById('ct-notes').value = ct.notes || '';
+    document.getElementById('ct-edit-id').value = ct.id;
+  } else {
+    ['ct-fname','ct-lname','ct-company','ct-title','ct-email','ct-phone','ct-notes'].forEach(function(id){ document.getElementById(id).value=''; });
+    document.getElementById('ct-edit-id').value = '';
+  }
+}
+
+function renderContactsList() {
+  var q = (document.getElementById('ct-search').value || '').toLowerCase();
+  var filtered = contactsData.filter(function(c) {
+    var s = ((c.firstName||'') + ' ' + (c.lastName||'') + ' ' + (c.company||'') + ' ' + (c.email||'')).toLowerCase();
+    return !q || s.includes(q);
+  });
+  var wrap = document.getElementById('ct-table-wrap');
+  if (!wrap) return;
+  if (!filtered.length) {
+    wrap.innerHTML = '<div class="ct-empty">' + (q ? 'No contacts match your search.' : 'No contacts yet. Click <b>+ Add Contact</b> to get started.') + '</div>';
+    return;
+  }
+  // Count linked deals per contact (match by email)
+  var emailToDealCount = {};
+  deals.forEach(function(d) {
+    var contacts = d.contacts || (d.contact ? [{ email: d.email || '' }] : []);
+    contacts.forEach(function(c) {
+      if (c.email) { emailToDealCount[c.email.toLowerCase()] = (emailToDealCount[c.email.toLowerCase()] || 0) + 1; }
+    });
+  });
+  wrap.innerHTML = '<table class="contacts-table"><thead><tr>' +
+    '<th>Name</th><th>Company</th><th>Title</th><th>Email</th><th>Phone</th><th>Deals</th><th>Actions</th>' +
+    '</tr></thead><tbody>' +
+    filtered.map(function(c) {
+      var name = dpEsc((c.firstName || '') + ' ' + (c.lastName || '')).trim() || '<em style="color:var(--text3)">No name</em>';
+      var cnt = emailToDealCount[(c.email||'').toLowerCase()] || 0;
+      return '<tr>' +
+        '<td><strong>' + name + '</strong></td>' +
+        '<td>' + dpEsc(c.company || '') + '</td>' +
+        '<td style="color:var(--text3)">' + dpEsc(c.title || '') + '</td>' +
+        '<td>' + (c.email ? '<a href="mailto:' + dpEsc(c.email) + '" style="color:var(--accent)">' + dpEsc(c.email) + '</a>' : '') + '</td>' +
+        '<td>' + dpEsc(c.phone || '') + '</td>' +
+        '<td>' + (cnt > 0 ? '<span class="ct-badge">' + cnt + ' deal' + (cnt>1?'s':'') + '</span>' : '<span style="color:var(--text3);font-size:12px">—</span>') + '</td>' +
+        '<td><div class="ct-actions">' +
+          '<button onclick=\'showContactForm(' + JSON.stringify(c).replace(/'/g,'&#39;') + ')\'>Edit</button>' +
+          '<button onclick="deleteContact(\'' + c.id + '\')" style="color:var(--red)">Delete</button>' +
+        '</div></td>' +
+        '</tr>';
+    }).join('') +
+    '</tbody></table>';
+}
+
+function saveContact() {
+  var firstName = document.getElementById('ct-fname').value.trim();
+  if (!firstName) { document.getElementById('ct-form-error').textContent = 'First name is required.'; return; }
+  var data = {
+    firstName: firstName,
+    lastName: document.getElementById('ct-lname').value.trim(),
+    company: document.getElementById('ct-company').value.trim(),
+    title: document.getElementById('ct-title').value.trim(),
+    email: document.getElementById('ct-email').value.trim(),
+    phone: document.getElementById('ct-phone').value.trim(),
+    notes: document.getElementById('ct-notes').value.trim(),
+    updatedAt: Date.now()
+  };
+  var editId = document.getElementById('ct-edit-id').value;
+  var db = firebase.database();
+  if (editId) {
+    db.ref('swagprint/contacts/' + editId).update(data);
+  } else {
+    data.createdAt = Date.now();
+    db.ref('swagprint/contacts').push(data);
+  }
+  showToast((editId ? 'Contact updated' : 'Contact added'));
+  showContactList();
+}
+
+function deleteContact(id) {
+  if (!confirm('Delete this contact?')) return;
+  firebase.database().ref('swagprint/contacts/' + id).remove();
+  showToast('Contact deleted');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// REPORTING DASHBOARD
+// ═══════════════════════════════════════════════════════════════
+var _reportTab = 'pipeline';
+
+function openReportModal() {
+  document.getElementById('report-overlay').classList.add('active');
+  _reportTab = 'pipeline';
+  document.querySelectorAll('.report-tab').forEach(function(t,i){ t.classList.toggle('active', i===0); });
+  buildReport();
+}
+
+function closeReportModal() {
+  document.getElementById('report-overlay').classList.remove('active');
+}
+
+function setReportTab(tab, el) {
+  _reportTab = tab;
+  document.querySelectorAll('.report-tab').forEach(function(t){ t.classList.remove('active'); });
+  if (el) el.classList.add('active');
+  buildReport();
+}
+
+function buildReport() {
+  renderReportKPIs();
+  var body = document.getElementById('report-body');
+  if (!body) return;
+  if (_reportTab === 'pipeline') body.innerHTML = buildPipelineReport();
+  else if (_reportTab === 'team') body.innerHTML = buildTeamReport();
+  else body.innerHTML = buildTrendReport();
+}
+
+function renderReportKPIs() {
+  var el = document.getElementById('report-kpis');
+  if (!el) return;
+  var totalPipeline = deals.reduce(function(s,d){ return s + (Number(d.value)||0); }, 0);
+  var won = archive.filter(function(a){ return a.outcome === 'won'; });
+  var lost = archive.filter(function(a){ return a.outcome === 'lost'; });
+  var winRate = (won.length + lost.length) ? Math.round(won.length / (won.length + lost.length) * 100) : 0;
+  var wonRev = won.reduce(function(s,d){ return s + (Number(d.value)||0); }, 0);
+  var avgDeal = deals.length ? Math.round(totalPipeline / deals.length) : 0;
+  el.innerHTML = [
+    { val: '$' + fmt(totalPipeline), lbl: 'Pipeline Value' },
+    { val: deals.length, lbl: 'Active Deals' },
+    { val: winRate + '%', lbl: 'Win Rate' },
+    { val: '$' + fmt(wonRev), lbl: 'Total Won Revenue' }
+  ].map(function(k){
+    return '<div class="rkpi"><div class="rkpi-val">' + k.val + '</div><div class="rkpi-lbl">' + k.lbl + '</div></div>';
+  }).join('');
+}
+
+function buildPipelineReport() {
+  // Revenue by Stage
+  var stageMap = {};
+  STAGES.forEach(function(s){ stageMap[s.id] = { label: s.label, color: s.color, value: 0, count: 0 }; });
+  deals.forEach(function(d) {
+    if (stageMap[d.stage]) { stageMap[d.stage].value += Number(d.value)||0; stageMap[d.stage].count++; }
+  });
+  var stageRows = STAGES.map(function(s){ return { label: s.label, color: s.color, value: stageMap[s.id].value, count: stageMap[s.id].count }; });
+  var maxVal = Math.max.apply(null, stageRows.map(function(r){ return r.value; }).concat([1]));
+
+  // Deals by Product
+  var prodMap = {};
+  deals.forEach(function(d){ var p = d.product || 'Other'; prodMap[p] = (prodMap[p]||0) + 1; });
+  var prodRows = Object.keys(prodMap).sort(function(a,b){ return prodMap[b]-prodMap[a]; }).slice(0,8).map(function(p){ return { label: p, count: prodMap[p] }; });
+  var maxProd = Math.max.apply(null, prodRows.map(function(r){ return r.count; }).concat([1]));
+
+  return '<div class="report-grid">' +
+    '<div class="report-card"><h3>Revenue by Stage</h3><div class="rbar-wrap">' +
+    stageRows.map(function(r){
+      var pct = Math.round(r.value / maxVal * 100);
+      return '<div class="rbar-row"><div class="rbar-label" title="' + r.label + '">' + r.label + '</div>' +
+        '<div class="rbar-track"><div class="rbar-fill" style="width:' + pct + '%;background:' + r.color + '"></div></div>' +
+        '<div class="rbar-val">$' + fmt(r.value) + ' <span style="color:var(--text3);font-weight:400">(' + r.count + ')</span></div></div>';
+    }).join('') +
+    '</div></div>' +
+    '<div class="report-card"><h3>Deals by Product</h3><div class="rbar-wrap">' +
+    (prodRows.length ? prodRows.map(function(r){
+      var pct = Math.round(r.count / maxProd * 100);
+      return '<div class="rbar-row"><div class="rbar-label" title="' + r.label + '">' + r.label + '</div>' +
+        '<div class="rbar-track"><div class="rbar-fill" style="width:' + pct + '%;background:#6366f1"></div></div>' +
+        '<div class="rbar-val">' + r.count + ' deal' + (r.count>1?'s':'') + '</div></div>';
+    }).join('') : '<div class="dp-no-items">No product data yet</div>') +
+    '</div></div>' +
+    '</div>';
+}
+
+function buildTeamReport() {
+  // Win rate & pipeline by owner
+  var ownerMap = {};
+  deals.forEach(function(d){
+    var o = d.owner || 'Unassigned';
+    if (!ownerMap[o]) ownerMap[o] = { pipeline: 0, deals: 0, won: 0, wonVal: 0, lost: 0 };
+    ownerMap[o].pipeline += Number(d.value)||0;
+    ownerMap[o].deals++;
+  });
+  archive.forEach(function(a){
+    var o = a.owner || 'Unassigned';
+    if (!ownerMap[o]) ownerMap[o] = { pipeline: 0, deals: 0, won: 0, wonVal: 0, lost: 0 };
+    if (a.outcome === 'won') { ownerMap[o].won++; ownerMap[o].wonVal += Number(a.value)||0; }
+    else ownerMap[o].lost++;
+  });
+  var owners = Object.keys(ownerMap).sort(function(a,b){ return (ownerMap[b].pipeline) - (ownerMap[a].pipeline); });
+  var maxPipe = Math.max.apply(null, owners.map(function(o){ return ownerMap[o].pipeline; }).concat([1]));
+
+  return '<div class="report-grid">' +
+    '<div class="report-card full"><h3>Pipeline by Rep</h3><div class="rbar-wrap">' +
+    owners.map(function(o){
+      var r = ownerMap[o];
+      var pct = Math.round(r.pipeline / maxPipe * 100);
+      var wr = (r.won + r.lost) ? Math.round(r.won / (r.won + r.lost) * 100) : 0;
+      return '<div class="rbar-row"><div class="rbar-label" title="' + o + '">' + o + '</div>' +
+        '<div class="rbar-track"><div class="rbar-fill" style="width:' + pct + '%;background:#6366f1"></div></div>' +
+        '<div class="rbar-val">$' + fmt(r.pipeline) + '</div>' +
+        '<div style="font-size:11px;color:var(--text3);margin-left:4px;white-space:nowrap">' + r.deals + ' active · ' + wr + '% win rate</div>' +
+        '</div>';
+    }).join('') +
+    '</div></div>' +
+    '<div class="report-card full"><h3>Won Revenue by Rep</h3><div class="rbar-wrap">' +
+    owners.filter(function(o){ return ownerMap[o].won > 0; }).map(function(o){
+      var r = ownerMap[o];
+      var maxWon = Math.max.apply(null, owners.map(function(x){ return ownerMap[x].wonVal; }).concat([1]));
+      var pct = Math.round(r.wonVal / maxWon * 100);
+      return '<div class="rbar-row"><div class="rbar-label" title="' + o + '">' + o + '</div>' +
+        '<div class="rbar-track"><div class="rbar-fill" style="width:' + pct + '%;background:#059669"></div></div>' +
+        '<div class="rbar-val">$' + fmt(r.wonVal) + ' <span style="color:var(--text3);font-weight:400">(' + r.won + ' won)</span></div></div>';
+    }).join('') +
+    '</div></div></div>';
+}
+
+function buildTrendReport() {
+  // Monthly deal count + value for last 12 months using archive + active deals
+  var months = [];
+  var now = new Date();
+  for (var i = 11; i >= 0; i--) {
+    var d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    months.push({ key: d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0'), label: d.toLocaleDateString('en-US',{month:'short', year:'2-digit'}), wonCount: 0, wonVal: 0, lostCount: 0 });
+  }
+  archive.forEach(function(a) {
+    var ts = a.closedAt || a.createdAt || 0;
+    var d = new Date(ts);
+    var key = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+    var m = months.find(function(x){ return x.key === key; });
+    if (m) {
+      if (a.outcome === 'won') { m.wonCount++; m.wonVal += Number(a.value)||0; }
+      else m.lostCount++;
+    }
+  });
+  var maxWonVal = Math.max.apply(null, months.map(function(m){ return m.wonVal; }).concat([1]));
+
+  return '<div class="report-grid">' +
+    '<div class="report-card full"><h3>Won Revenue — Last 12 Months</h3>' +
+    '<div style="display:flex;align-items:flex-end;gap:6px;height:100px;padding:4px 0 0">' +
+    months.map(function(m) {
+      var h = Math.max(Math.round(m.wonVal / maxWonVal * 88), m.wonVal > 0 ? 4 : 2);
+      return '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">' +
+        '<div style="width:100%;background:#6366f1;border-radius:3px 3px 0 0;height:' + h + 'px;min-height:2px;transition:height .4s" title="' + m.label + ': $' + fmt(m.wonVal) + '"></div>' +
+        '<div style="font-size:9px;color:var(--text3);white-space:nowrap">' + m.label + '</div>' +
+        '</div>';
+    }).join('') +
+    '</div></div>' +
+    '<div class="report-card full"><h3>Won vs Lost — Monthly Count</h3>' +
+    '<div class="rbar-wrap">' +
+    months.filter(function(m){ return m.wonCount + m.lostCount > 0; }).map(function(m){
+      var total = m.wonCount + m.lostCount;
+      var wonPct = Math.round(m.wonCount / total * 100);
+      return '<div class="rbar-row"><div class="rbar-label">' + m.label + '</div>' +
+        '<div class="rbar-track" style="display:flex;gap:1px">' +
+          '<div style="height:100%;width:' + wonPct + '%;background:#059669;border-radius:4px 0 0 4px;min-width:' + (m.wonCount?2:0) + 'px"></div>' +
+          '<div style="height:100%;width:' + (100-wonPct) + '%;background:#dc2626;border-radius:0 4px 4px 0;min-width:' + (m.lostCount?2:0) + 'px"></div>' +
+        '</div>' +
+        '<div class="rbar-val" style="color:#059669">' + m.wonCount + 'W <span style="color:#dc2626">' + m.lostCount + 'L</span></div></div>';
+    }).join('') +
+    (months.every(function(m){ return m.wonCount + m.lostCount === 0; }) ? '<div class="dp-no-items">No closed deals yet</div>' : '') +
+    '</div></div></div>';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TASKS UPGRADE (override submitTask + renderTasks)
+// ═══════════════════════════════════════════════════════════════
+function submitTask() {
+  var text = document.getElementById('task-text-input').value.trim();
+  var due = document.getElementById('task-due-input').value;
+  var pri = document.getElementById('task-pri-input') ? document.getElementById('task-pri-input').value : 'medium';
+  if (!text || !_dpDealId) return;
+  var db = firebase.database();
+  db.ref('swagprint/deals/' + _dpDealId + '/tasks').push({
+    text: text, dueDate: due || '', done: false,
+    priority: pri, user: (currentSession && currentSession.name) || 'Rizwan', ts: Date.now()
+  });
+  document.getElementById('task-text-input').value = '';
+  document.getElementById('task-due-input').value = '';
+}
+
+function renderTasks(items) {
+  var el = document.getElementById('tasks-feed-list');
+  var badge = document.getElementById('task-open-badge');
+  if (!el) return;
+  var today = new Date().toISOString().slice(0, 10);
+  var open = items.filter(function(t) { return !t.done; }).length;
+  if (badge) badge.innerHTML = open > 0 ? '<span class="task-badge">' + open + '</span>' : '';
+  if (!items.length) { el.innerHTML = '<div class="dp-no-items">No tasks yet — add one below.</div>'; return; }
+  // Sort: open first, then by priority (high>medium>low), then by due date
+  var priOrder = { high: 0, medium: 1, low: 2 };
+  var sorted = items.slice().sort(function(a, b) {
+    if (a.done !== b.done) return a.done ? 1 : -1;
+    var pa = priOrder[a.priority || 'medium'] || 1;
+    var pb = priOrder[b.priority || 'medium'] || 1;
+    if (pa !== pb) return pa - pb;
+    if (a.dueDate && b.dueDate) return a.dueDate.localeCompare(b.dueDate);
+    if (a.dueDate) return -1;
+    if (b.dueDate) return 1;
+    return 0;
+  });
+  el.innerHTML = sorted.map(function(t) {
+    var ov = t.dueDate && t.dueDate < today && !t.done;
+    var priLabel = t.priority || 'medium';
+    var priTag = '<span class="task-pri ' + priLabel + '">' + priLabel.toUpperCase() + '</span>';
+    var dueTag = t.dueDate ? '<span class="task-due' + (ov ? ' overdue' : '') + '">' + (ov ? '⚠ ' : '📅 ') + t.dueDate + '</span>' : '';
+    var userTag = t.user ? '<span class="task-assignee">👤 ' + dpEsc(t.user) + '</span>' : '';
+    return '<div class="task-item">' +
+      '<input type="checkbox" class="task-check" ' + (t.done ? 'checked' : '') + ' onchange="toggleTask(\'' + t.id + '\',' + t.done + ')" onclick="event.stopPropagation()">' +
+      '<div class="task-body">' +
+        '<div class="task-text' + (t.done ? ' done' : '') + '">' + dpEsc(t.text) + '</div>' +
+        '<div class="task-meta-row">' + priTag + dueTag + userTag + '</div>' +
+      '</div>' +
+      '</div>';
+  }).join('');
+}
 </script>
 </body>
 </html>
