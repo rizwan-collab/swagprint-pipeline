@@ -1015,9 +1015,9 @@ try {
   firebase.initializeApp(FIREBASE_CONFIG);
   const db = firebase.database();
   dbRef = db;
-  usersRef    = db.ref('users');
-  changelogRef = db.ref('changelog');
-  targetsRef  = db.ref('targets');
+  usersRef    = db.ref('swagprint/users');
+  changelogRef = db.ref('swagprint/changelog');
+  targetsRef  = db.ref('swagprint/targets');
 
   // ── Users (drives login screen) ──────────────────────────────────────────
   usersRef.on('value', function(snap) {
@@ -1027,7 +1027,7 @@ try {
   });
 
   // ── Active deals ─────────────────────────────────────────────────────────
-  db.ref('deals').on('value', function(snap) {
+  db.ref('swagprint/deals').on('value', function(snap) {
     const data = snap.val() || {};
     deals = Object.values(data);
     fbReady = true;
@@ -1036,7 +1036,7 @@ try {
   });
 
   // ── Archive ───────────────────────────────────────────────────────────────
-  db.ref('archive').on('value', function(snap) {
+  db.ref('swagprint/archive').on('value', function(snap) {
     const data = snap.val() || {};
     archive = Object.values(data);
     render();
@@ -2742,10 +2742,10 @@ function save() {
   if (dbRef) {
     const dealsObj = {};
     deals.forEach(function(d) { if (d && d.id) dealsObj[d.id] = d; });
-    dbRef.ref('deals').set(dealsObj).catch(function(){});
+    dbRef.ref('swagprint/deals').set(dealsObj).catch(function(){});
     const archObj = {};
     archive.forEach(function(a) { if (a && a.id) archObj[a.id] = a; });
-    dbRef.ref('archive').set(archObj).catch(function(){});
+    dbRef.ref('swagprint/archive').set(archObj).catch(function(){});
   }
 }
 
@@ -2885,13 +2885,13 @@ function submitActivity(){
   const text=document.getElementById('act-text-input').value.trim();
   if(!text||!_dpDealId)return;
   const db=firebase.database();
-  db.ref('deals/'+_dpDealId+'/activities').push({type:_actType,text:text,user:'Rizwan',ts:Date.now()});
+  db.ref('swagprint/deals/'+_dpDealId+'/activities').push({type:_actType,text:text,user:'Rizwan',ts:Date.now()});
   document.getElementById('act-text-input').value='';
 }
 function loadActivities(dealId){
   if(_actUnsub){_actUnsub()}
   const db=firebase.database();
-  const ref=db.ref('deals/'+dealId+'/activities').orderByChild('ts');
+  const ref=db.ref('swagprint/deals/'+dealId+'/activities').orderByChild('ts');
   const h=function(snap){var items=[];snap.forEach(function(c){items.push(Object.assign({id:c.key},c.val()));});renderActivities(items.reverse())};
   ref.on('value',h);
   _actUnsub=function(){ref.off('value',h)};
@@ -2916,19 +2916,19 @@ function submitTask(){
   var due=document.getElementById('task-due-input').value;
   if(!text||!_dpDealId)return;
   var db=firebase.database();
-  db.ref('deals/'+_dpDealId+'/tasks').push({text:text,dueDate:due||'',done:false,user:'Rizwan',ts:Date.now()});
+  db.ref('swagprint/deals/'+_dpDealId+'/tasks').push({text:text,dueDate:due||'',done:false,user:'Rizwan',ts:Date.now()});
   document.getElementById('task-text-input').value='';
   document.getElementById('task-due-input').value='';
 }
 function toggleTask(taskId,done){
   if(!_dpDealId)return;
   var db=firebase.database();
-  db.ref('deals/'+_dpDealId+'/tasks/'+taskId).update({done:!done});
+  db.ref('swagprint/deals/'+_dpDealId+'/tasks/'+taskId).update({done:!done});
 }
 function loadTasks(dealId){
   if(_taskUnsub)_taskUnsub();
   var db=firebase.database();
-  var ref=db.ref('deals/'+dealId+'/tasks').orderByChild('ts');
+  var ref=db.ref('swagprint/deals/'+dealId+'/tasks').orderByChild('ts');
   var h=function(snap){var items=[];snap.forEach(function(c){items.push(Object.assign({id:c.key},c.val()));});renderTasks(items);};
   ref.on('value',h);
   _taskUnsub=function(){ref.off('value',h);};
