@@ -1014,6 +1014,39 @@ let monthlyTargets = {};
 try {
   firebase.initializeApp(FIREBASE_CONFIG);
   const db = firebase.database();
+  dbRef = db;
+  usersRef    = db.ref('users');
+  changelogRef = db.ref('changelog');
+  targetsRef  = db.ref('targets');
+
+  // ── Users (drives login screen) ──────────────────────────────────────────
+  usersRef.on('value', function(snap) {
+    usersCache = snap.val() || {};
+    renderLoginUsers();
+    checkSession();
+  });
+
+  // ── Active deals ─────────────────────────────────────────────────────────
+  db.ref('deals').on('value', function(snap) {
+    const data = snap.val() || {};
+    deals = Object.values(data);
+    fbReady = true;
+    render();
+    try { localStorage.setItem(LS_KEY, JSON.stringify({deals, archive})); } catch(e) {}
+  });
+
+  // ── Archive ───────────────────────────────────────────────────────────────
+  db.ref('archive').on('value', function(snap) {
+    const data = snap.val() || {};
+    archive = Object.values(data);
+    render();
+  });
+
+  // ── Monthly targets ───────────────────────────────────────────────────────
+  targetsRef.on('value', function(snap) {
+    monthlyTargets = snap.val() || {};
+    render();
+  });
 
 const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const fmt = n => { const v = Number(n)||0; if (v===0) return '$0'; if (v>=1000) return '$'+(v/1000).toFixed(v%1000===0?0:1)+'k'; return '$'+v; };
@@ -1323,33 +1356,6 @@ function saveUserEdit(id) {
 }
 
 
-function editUser(id) {
-  const u = usersCache[id];
-  if (!u) return;
-  const row = document.querySelector('[data-uid="'+id+'"]');
-  if (!row) return;
-  row.innerHTML =
-    '<div style="flex:1;display:flex;flex-wrap:wrap;gap:8px;align-items:center">'+
-    '<input id="eu-name" value="'+esc(u.name)+'" placeholder="Name" style="flex:1;min-width:100px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:var(--bg2);color:var(--text1);font-size:13px">'+
-    '<input id="eu-pin" value="'+(u.pin||'')+'" placeholder="PIN" type="text" maxlength="6" style="width:72px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:var(--bg2);color:var(--text1);font-size:13px">'+
-    '<select id="eu-role" style="padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:var(--bg2);color:var(--text1);font-size:13px">'+
-    '<option value="rep"'+(u.role==='rep'?' selected':'')+'>Rep</option>'+
-    '<option value="admin"'+(u.role==='admin'?' selected':'')+'>Admin</option>'+
-    '</select></div>'+
-    '<button class="btn btn-primary" style="font-size:12px;padding:4px 10px" onclick="saveUserEdit(this.closest("[data-uid]").dataset.uid)">Save</button>'+
-    '<button class="btn btn-ghost" style="font-size:12px;padding:4px 10px" onclick="renderUmUsers()">Cancel</button>';
-}
-function saveUserEdit(id) {
-  const name = (document.getElementById('eu-name')||{value:''}).value.trim();
-  const pin = (document.getElementById('eu-pin')||{value:''}).value.trim();
-  const role = (document.getElementById('eu-role')||{value:'rep'}).value;
-  if (!name) { alert('Name is required'); return; }
-  usersRef.child(id).update({name:name,pin:pin,role:role}).then(function() {
-    usersCache[id] = Object.assign({},usersCache[id],{name:name,pin:pin,role:role});
-    if (currentSession && currentSession.userId === id) currentSession.name = name;
-    renderUmUsers();
-  }).catch(function(e) { alert('Save failed: '+e.message); });
-}
 function addUser() {
   const name = document.getElementById('um-name').value.trim();
   const pin  = document.getElementById('um-pin').value.trim();
@@ -2727,6 +2733,21 @@ document.addEventListener('keydown', e => {
     s.focus(); s.select();
   }
 });
+
+// ─── SAVE ─────────────────────────────────────────────────────────────────────
+function save() {
+  // localStorage backup
+  try { localStorage.setItem(LS_KEY, JSON.stringify({deals, archive})); } catch(e) {}
+  // Firebase sync
+  if (dbRef) {
+    const dealsObj = {};
+    deals.forEach(function(d) { if (d && d.id) dealsObj[d.id] = d; });
+    dbRef.ref('deals').set(dealsObj).catch(function(){});
+    const archObj = {};
+    archive.forEach(function(a) { if (a && a.id) archObj[a.id] = a; });
+    dbRef.ref('archive').set(archObj).catch(function(){});
+  }
+}
 
 // ─── TOAST ────────────────────────────────────────────────────────────────────
 let toastTimer;
