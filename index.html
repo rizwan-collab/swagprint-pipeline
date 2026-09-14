@@ -1047,7 +1047,8 @@
       </select>
     </div>
     <div id="cl-list" style="flex:1;overflow-y:auto;padding:12px 20px"></div>
-    <div class="modal-foot">
+    <div class="modal-foot" style="justify-content:space-between">
+      <button class="btn btn-outline" id="cl-backfill-btn" onclick="backfillChangelog()" style="font-size:12px;display:none" title="One-time: import all existing deal history into changelog">↺ Import History</button>
       <button class="btn btn-outline" onclick="closeChangelog()">Close</button>
     </div>
   </div>
@@ -1380,14 +1381,88 @@ function openChangelog() {
   document.getElementById('cl-list').innerHTML = '<div style="color:var(--text3);font-size:13px;padding:20px 0">Loading…</div>';
   document.getElementById('cl-search').value = '';
   document.getElementById('cl-filter').value = '';
+  // Show backfill button only for admins
+  const bfBtn = document.getElementById('cl-backfill-btn');
+  if (bfBtn) bfBtn.style.display = (currentSession && currentSession.role === 'admin') ? 'inline-flex' : 'none';
   if (!changelogRef) { document.getElementById('cl-list').innerHTML = '<div style="color:var(--text3);font-size:13px">Changelog not available offline.</div>'; return; }
-  changelogRef.orderByChild('ts').limitToLast(200).once('value', snap => {
+  changelogRef.orderByChild('ts').limitToLast(500).once('value', snap => {
     const data = snap.val();
     changelogCache = data ? Object.values(data).reverse() : [];
     renderChangelog();
   });
 }
 function closeChangelog() { document.getElementById('changelog-overlay').style.display = 'none'; }
+
+async function backfillChangelog() {
+  if (!changelogRef) return;
+  const btn = document.getElementById('cl-backfill-btn');
+  btn.disabled = true;
+  btn.textContent = 'Importing…';
+  const el = document.getElementById('cl-list');
+  el.innerHTML = '<div style="color:var(--text3);font-size:13px;padding:20px 0">Reading existing deals and archive…</div>';
+
+  try {
+    // Get existing changelog keys so we don't double-import
+    const existingSnap = await changelogRef.once('value');
+    const existingData = existingSnap.val() || {};
+    // Build a set of dealId+action combos already logged to avoid duplicates
+    const alreadyLogged = new Set(
+      Object.values(existingData).map(e => e.dealId + '|' + e.action + '|' + e.ts)
+    );
+
+    const entries = [];
+    const by = currentSession ? currentSession.name : 'System';
+
+    // Active deals → "created" entries
+    const dealsSnap = await db.ref('swagprint/deals').once('value');
+    const dealsData = dealsSnap.val() || {};
+    Object.values(dealsData).forEach(d => {
+      if (!d || !d.id) return;
+      const ts = d.createdAt || Date.now();
+      entries.push({ ts, action:'created', dealId:d.id, dealName:d.company||d.name||'Unknown', details:'Deal created (imported from history)', by, byRole:'admin' });
+      if (d.stage && d.stageEnteredAt) {
+        entries.push({ ts:d.stageEnteredAt, action:'stage', dealId:d.id, dealName:d.company||d.name||'Unknown', details:'Stage: '+d.stage+' (imported from history)', by, byRole:'admin' });
+      }
+      if (d.owner) {
+        entries.push({ ts:(d.createdAt||Date.now())+1, action:'assigned', dealId:d.id, dealName:d.company||d.name||'Unknown', details:'Assigned to '+d.owner+' (imported from history)', by, byRole:'admin' });
+      }
+    });
+
+    // Archive → "closed" entries
+    const archSnap = await db.ref('swagprint/archive').once('value');
+    const archData = archSnap.val() || {};
+    Object.values(archData).forEach(a => {
+      if (!a || !a.id) return;
+      const ts = a.createdAt || Date.now();
+      entries.push({ ts, action:'created', dealId:a.id, dealName:a.company||a.name||'Unknown', details:'Deal created (imported from history)', by, byRole:'admin' });
+      const closedTs = a.closedAt || Date.now();
+      const outcome = a.outcome === 'won' ? 'Won' : 'Lost';
+      entries.push({ ts:closedTs, action:'closed', dealId:a.id, dealName:a.company||a.name||'Unknown', details:outcome+' — '+(a.lossReason||a.lostReason||'') + ' (imported from history)', by, byRole:'admin' });
+    });
+
+    // Write all entries as a batch
+    const updates = {};
+    entries.forEach(entry => {
+      const key = changelogRef.push().key;
+      updates[key] = entry;
+    });
+    await changelogRef.update(updates);
+
+    btn.textContent = '✓ Done (' + entries.length + ' entries)';
+    setTimeout(() => { btn.textContent = '↺ Import History'; btn.disabled = false; }, 3000);
+
+    // Reload changelog
+    changelogRef.orderByChild('ts').limitToLast(500).once('value', snap => {
+      const data = snap.val();
+      changelogCache = data ? Object.values(data).reverse() : [];
+      renderChangelog();
+    });
+  } catch(err) {
+    btn.textContent = 'Error — try again';
+    btn.disabled = false;
+    el.innerHTML = '<div style="color:var(--red);font-size:13px;padding:20px 0">Import failed: ' + err.message + '</div>';
+  }
+}
 
 function renderChangelog() {
   const q = (document.getElementById('cl-search').value || '').toLowerCase();
