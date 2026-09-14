@@ -3292,12 +3292,12 @@ function initContacts() {
 
 function openContactsModal() {
   initContacts();
-  document.getElementById('contacts-overlay').classList.add('active');
+  document.getElementById('contacts-overlay').style.display = 'flex';
   showContactList();
 }
 
 function closeContactsModal() {
-  document.getElementById('contacts-overlay').classList.remove('active');
+  document.getElementById('contacts-overlay').style.display = 'none';
 }
 
 function showContactList() {
@@ -3405,14 +3405,14 @@ function deleteContact(id) {
 var _reportTab = 'pipeline';
 
 function openReportModal() {
-  document.getElementById('report-overlay').classList.add('active');
+  document.getElementById('report-overlay').style.display = 'flex';
   _reportTab = 'pipeline';
   document.querySelectorAll('.report-tab').forEach(function(t,i){ t.classList.toggle('active', i===0); });
   buildReport();
 }
 
 function closeReportModal() {
-  document.getElementById('report-overlay').classList.remove('active');
+  document.getElementById('report-overlay').style.display = 'none';
 }
 
 function setReportTab(tab, el) {
