@@ -1155,6 +1155,9 @@ let changelogRef = null;
 let targetsRef = null;
 let monthlyTargets = {};
 
+// ─── HELPERS ──────────────────────────────────────────────────────────────────
+function uid() { return '-' + Math.random().toString(36).slice(2, 11) + Math.random().toString(36).slice(2, 6); }
+
 // ─── FIREBASE ─────────────────────────────────────────────────────────────────
 try {
   firebase.initializeApp(FIREBASE_CONFIG);
