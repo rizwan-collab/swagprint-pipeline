@@ -2399,7 +2399,16 @@ function openAddModal(preStage) {
   refreshOwnerSelect();
   if (currentSession && currentSession.role === 'rep') {
     const sel = document.getElementById('f-owner');
-    if (sel) sel.value = currentSession.name;
+    if (sel) {
+      // Ensure rep's own option exists even if usersCache hasn't loaded yet
+      if (!sel.querySelector(`option[value="${currentSession.name}"]`)) {
+        const opt = document.createElement('option');
+        opt.value = currentSession.name;
+        opt.textContent = currentSession.name;
+        sel.appendChild(opt);
+      }
+      sel.value = currentSession.name;
+    }
   }
   document.getElementById('deal-overlay').classList.add('open');
   setTimeout(() => document.getElementById('f-name').focus(), 100);
@@ -2457,7 +2466,7 @@ function saveDeal(e) {
     contact:     contactsList[0] ? contactsList[0].name  : '',  // backward compat
     email:       contactsList[0] ? contactsList[0].email : '',  // backward compat
     company:     document.getElementById('f-company').value.trim(),
-    owner:       document.getElementById('f-owner').value.trim(),
+    owner:       document.getElementById('f-owner').value.trim() || (currentSession && currentSession.role === 'rep' ? currentSession.name : ''),
     value:       Number(document.getElementById('f-value').value)||0,
           probability: Number(document.getElementById('f-probability').value)||0,
           orderNum: document.getElementById('f-order-num').value.trim(),
