@@ -5,7 +5,45 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SwagPrint Sales Pipeline</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234f46e5'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='system-ui,sans-serif' font-size='20' font-weight='700' fill='white'%3ES%3C/text%3E%3C/svg%3E">
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
+function dOverClose(e, outcome) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  document.querySelectorAll('.close-drop-zone').forEach(z => z.classList.remove('drag-over'));
+  e.currentTarget.classList.add('drag-over');
+}
+function dLeaveClose(e) { e.currentTarget.classList.remove('drag-over'); }
+function dDropClose(e, outcome) {
+  e.preventDefault();
+  document.querySelectorAll('.close-drop-zone').forEach(z => z.classList.remove('drag-over'));
+  document.getElementById('close-drop-zones').classList.remove('visible');
+  if (!dragId) return;
+  const d = deals.find(x => x.id === dragId);
+  if (!d) { dragId = null; return; }
+  const lossReason = outcome === 'lost' ? (prompt('Loss reason (optional):') || '') : '';
+  archive.push({
+    id: uid(), name: d.name, company: d.company || '',
+    contacts: d.contacts || [], contact: d.contact || '',
+    email: d.email || '', owner: d.owner || '', value: d.value,
+    outcome: outcome, closedAt: Date.now(), createdAt: d.createdAt || Date.now(),
+    lossReason: lossReason
+  });
+  deals = deals.filter(x => x.id !== dragId);
+  logChange('closed', d.id, d.name, outcome === 'won' ? 'Won (drag)' : 'Lost (drag)');
+  save(); renderBoard();
+  toast(outcome === 'won' ? '🏆 ' + d.name + ' marked Won!' : '❌ ' + d.name + ' marked Lost');
+  dragId = null;
+}
+document.addEventListener('dragend', function() {
+  document.getElementById('close-drop-zones').classList.remove('visible');
+  document.querySelectorAll('.close-drop-zone').forEach(z => z.classList.remove('drag-over'));
+}, true);
+window.showDragZones = function() { document.getElementById('close-drop-zones').classList.add('visible'); };
+window.hideDragZones = function() {
+  document.getElementById('close-drop-zones').classList.remove('visible');
+  document.querySelectorAll('.close-drop-zone').forEach(z => z.classList.remove('drag-over'));
+};
+</script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <style>
@@ -530,6 +568,25 @@
 .task-add-row{display:flex;gap:6px;align-items:center;margin-top:10px;flex-wrap:wrap;}
 .task-add-row input,.task-add-row select{padding:6px 9px;border:1px solid var(--border);border-radius:7px;font-size:12px;background:var(--bg);color:var(--text);font-family:inherit;}
 .task-add-row input[type=text]{flex:1;min-width:120px;}
+
+#close-drop-zones {
+  position: fixed; bottom: -120px; left: 0; right: 0;
+  display: flex; gap: 16px; padding: 0 32px 20px;
+  z-index: 9999; pointer-events: none;
+  transition: bottom .25s cubic-bezier(.4,0,.2,1);
+}
+#close-drop-zones.visible { bottom: 0; pointer-events: all; }
+.close-drop-zone {
+  flex: 1; height: 80px; border-radius: 16px; border: 2.5px dashed;
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; font-size: 15px; font-weight: 700;
+  transition: all .15s; backdrop-filter: blur(6px); cursor: pointer;
+}
+.close-drop-zone.won-zone  { border-color:#10b981; background:rgba(16,185,129,.08); color:#10b981; }
+.close-drop-zone.lost-zone { border-color:#ef4444; background:rgba(239,68,68,.08);  color:#ef4444; }
+.close-drop-zone.drag-over { transform: scale(1.03); }
+.close-drop-zone.won-zone.drag-over  { background:rgba(16,185,129,.22); border-style:solid; box-shadow:0 0 24px rgba(16,185,129,.25); }
+.close-drop-zone.lost-zone.drag-over { background:rgba(239,68,68,.22);  border-style:solid; box-shadow:0 0 24px rgba(239,68,68,.25); }
 </style>
 </head>
 <body>
@@ -2288,6 +2345,7 @@ function toggleCol(colId, e) {
 
 // ─── DRAG & DROP ──────────────────────────────────────────────────────────────
 function dStart(e, id) {
+  document.getElementById('close-drop-zones').classList.add('visible');
   dragId = id;
   e.dataTransfer.effectAllowed = 'move';
   setTimeout(() => document.getElementById('card-'+id)?.classList.add('dragging'), 0);
@@ -3642,5 +3700,20 @@ function renderTasks(items) {
   }).join('');
 }
 </script>
+
+<div id="close-drop-zones">
+  <div class="close-drop-zone won-zone"
+    ondragover="dOverClose(event,'won')"
+    ondragleave="dLeaveClose(event)"
+    ondrop="dDropClose(event,'won')">
+    🏆 Drop to Mark Won
+  </div>
+  <div class="close-drop-zone lost-zone"
+    ondragover="dOverClose(event,'lost')"
+    ondragleave="dLeaveClose(event)"
+    ondrop="dDropClose(event,'lost')">
+    ❌ Drop to Mark Lost
+  </div>
+</div>
 </body>
 </html>
